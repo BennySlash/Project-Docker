@@ -1,0 +1,46 @@
+.questions {
+  background-color: $off-white;
+  border-left: 5px solid $blue;
+  margin: $lg auto 0 auto;
+  width: 80%;
+
+  padding: $sm $lg;
+  text-align: center;
+
+  .lifeline-container {
+    display: flex;
+    flex-direction: column;
+
+    .lifeline {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+  .clock {
+    text-align: start;
+    display: flex;
+    justify-content: space-between;
+  }
+  .option {
+    display: flex;
+    justify-content: space-around;
+    cursor: pointer;
+
+    .option {
+      margin: $sm;
+      width: auto;
+    }
+    .option:hover {
+      opacity: 0.8;
+    }
+  }
+  .quiz-direction {
+    display: flex;
+    gap: $normal;
+    margin-block-start: $md;
+
+    .direction-key:hover {
+      opacity: 0.8;
+    }
+  }
+}

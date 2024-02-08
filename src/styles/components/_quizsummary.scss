@@ -1,0 +1,16 @@
+.summary {
+  margin-inline: auto;
+  margin-block: 7rem;
+  width: 75%;
+  aspect-ratio: 1;
+  box-shadow: 5px 5px rgba(0, 98, 90, 0.4), 10px 10px rgba(0, 98, 90, 0.3),
+    15px 15px rgba(0, 98, 90, 0.2), 20px 20px rgba(0, 98, 90, 0.1),
+    25px 25px rgba(0, 98, 90, 0.05);
+}
+.summary-container {
+  background-color: rgb(51 65 85);
+  text-align: center;
+  border-radius: 10%;
+  padding: 20px;
+  box-shadow: inset -12px -8px 40px #46464620;
+}
