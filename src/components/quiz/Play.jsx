@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import questionsData from "../../questions.json";
-import isEmpty from "../../utils/is-empty";
 import M from "materialize-css";
-
-import { browserHistory } from "../../main";
 
 function Play() {
   const [questions, setQuestions] = useState();
@@ -19,6 +16,9 @@ function Play() {
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [wrongAnswers, setWrongAnswers] = useState(0);
   const [time, setTime] = useState({});
+  const [displayNext, setDisplayNext] = useState(false);
+  const [tries, setTries] = useState(0);
+
   let interval = null;
 
   const location = useLocation();
@@ -27,11 +27,12 @@ function Play() {
 
   const displayQuestions = () => {
     setQuestions(questionsData);
-    console.log(score);
+    // console.log(score);
     setCurrentQuestion(questionsData[currentQuestionIndex]);
     setNextQuestion(questionsData[currentQuestionIndex + 1]);
     setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
     setAnswer(questionsData[currentQuestionIndex].answer);
+    setDisplayNext(false);
   };
 
   const correctAnswer = () => {
@@ -46,6 +47,7 @@ function Play() {
     setCorrectAnswers((prevState) => prevState + 1);
     setCurrentQuestionIndex((prevState) => prevState + 1);
     setNumberOfAnsweredQuestion((prevState) => prevState + 1);
+    setTries(0);
 
     if (nextQuestion === undefined) {
       endQuiz();
@@ -55,7 +57,6 @@ function Play() {
   };
 
   const wrongAnswer = () => {
-    // navigator.vibrate(1000);
     M.toast({
       html: "Wrong Answer!",
       classes: "toast-invalid",
@@ -65,6 +66,7 @@ function Play() {
     setWrongAnswers((prevState) => prevState + 1);
     setCurrentQuestionIndex((prevState) => prevState + 1);
     setNumberOfAnsweredQuestion((prevState) => prevState);
+    setTries(0);
 
     if (nextQuestion === undefined) {
       endQuiz();
@@ -73,41 +75,79 @@ function Play() {
     }
   };
 
+  const secondChance = (body) => {
+    console.log(body);
+    M.toast({
+      html: "Wrong Answer, Second chance!",
+      classes: "toast-invalid",
+      displayLength: 1500,
+    });
+    setTries((prevState) => prevState + 1);
+  };
+
+  const skipedQuestion = () => {
+    M.toast({
+      html: "You skipped this question",
+      classes: "toast-valid",
+      displayLength: 1500,
+    });
+
+    setScore((prevState) => prevState);
+
+    setCorrectAnswers((prevState) => prevState);
+    setCurrentQuestionIndex((prevState) => prevState + 1);
+    setNumberOfAnsweredQuestion((prevState) => prevState);
+
+    if (nextQuestion === undefined) {
+      endQuiz();
+    } else {
+      displayQuestions();
+    }
+  };
   const handleNextButton = () => {
     if (nextQuestion !== undefined) {
       setCurrentQuestionIndex((prevState) => prevState + 1);
       displayQuestions();
     }
   };
-  const handlePreviousButton = () => {
-    if (previousQuestion !== undefined) {
-      setCurrentQuestionIndex((prevState) => prevState - 1);
-      displayQuestions();
-    }
+  // const handlePreviousButton = () => {
+  //   if (previousQuestion !== undefined) {
+  //     setCurrentQuestionIndex((prevState) => prevState - 1);
+  //     displayQuestions();
+  //   }
+  // };
+  const handleSkipButton = () => {
+    skipedQuestion();
   };
 
   const handleQuitButton = () => {
     if (window.confirm("Are you sure you want to Quit?")) {
-      // browserHistory.push("/");
-      // window.location.reload(false);
       navigate("/");
     }
   };
 
   const handleOptionClick = (body) => {
-    console.log({ answer, e: body.event.target.innerHTML });
+    // console.log({ answer, e: body.event.target.innerHTML });
+
+    // console.log(body.state.tries);
 
     const e = body.event.target.innerHTML;
     // console.log(e);
     if (e.toLowerCase() === answer.toLocaleLowerCase()) {
       correctAnswer();
-    } else {
+    } else if (e.toLowerCase() !== answer.toLocaleLowerCase() && tries === 0) {
+      setTries(1);
+      secondChance(body.event.target);
+    } else if (e.toLowerCase() !== answer.toLocaleLowerCase() && tries === 2) {
       wrongAnswer();
     }
   };
 
   const handleButtonClick = (e) => {
     switch (e.target.id) {
+      case "skip-button":
+        handleSkipButton();
+        break;
       case "next-button":
         handleNextButton();
         break;
@@ -131,7 +171,7 @@ function Play() {
       const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
       if (distance < 0) {
-        clearInterval(this.interval);
+        clearInterval(interval);
         setTime({
           minutes: 0,
           seconds: 0,
@@ -206,6 +246,7 @@ function Play() {
         <div className="option">
           <div className="options-container">
             <p
+              id="a"
               onClick={() =>
                 handleOptionClick({
                   event: event,
@@ -214,6 +255,7 @@ function Play() {
                     score: score,
                     correctAnswer: correctAnswer,
                     wrongAnswer: wrongAnswer,
+                    tries: tries,
                   },
                 })
               }
@@ -222,6 +264,7 @@ function Play() {
               {currentQuestion.optionA}
             </p>
             <p
+              id="b"
               onClick={() =>
                 handleOptionClick({
                   event: event,
@@ -230,6 +273,7 @@ function Play() {
                     score: score,
                     correctAnswer: correctAnswer,
                     wrongAnswer: wrongAnswer,
+                    tries: tries,
                   },
                 })
               }
@@ -240,6 +284,7 @@ function Play() {
           </div>
           <div className="options-container">
             <p
+              id="c"
               onClick={() =>
                 handleOptionClick({
                   event: event,
@@ -248,6 +293,7 @@ function Play() {
                     score: score,
                     correctAnswer: correctAnswer,
                     wrongAnswer: wrongAnswer,
+                    tries: tries,
                   },
                 })
               }
@@ -256,6 +302,7 @@ function Play() {
               {currentQuestion.optionC}
             </p>
             <p
+              id="d"
               onClick={() =>
                 handleOptionClick({
                   event: event,
@@ -264,6 +311,7 @@ function Play() {
                     score: score,
                     correctAnswer: correctAnswer,
                     wrongAnswer: wrongAnswer,
+                    tries: tries,
                   },
                 })
               }
@@ -274,26 +322,35 @@ function Play() {
           </div>
         </div>
         <div className="quiz-direction">
-          <button
+          {/* <button
             id="previous-button"
             onClick={handleButtonClick}
             className="direction-key rounded-sm bg-blue-700 p-2 text-sm text-white"
           >
             Previous
-          </button>
-          <button
-            id="next-button"
-            onClick={handleButtonClick}
-            className="direction-key rounded-sm bg-green-700 p-2 text-sm text-white"
-          >
-            Next
-          </button>
+          </button> */}
+          {displayNext && (
+            <button
+              id="next-button"
+              onClick={handleButtonClick}
+              className="direction-key rounded-sm bg-green-700 p-2 text-sm text-white"
+            >
+              Next
+            </button>
+          )}
           <button
             id="quit-button"
             onClick={handleButtonClick}
             className="direction-key rounded-sm bg-red-700 p-2 text-sm text-white"
           >
             Quit
+          </button>
+          <button
+            id="skip-button"
+            onClick={handleButtonClick}
+            className="direction-key rounded-sm bg-red-700 p-2 text-sm text-white"
+          >
+            Skip
           </button>
         </div>
       </div>
