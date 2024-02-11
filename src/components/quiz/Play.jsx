@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import questionsData from "../../questions.json";
+import Modal from "./Modal";
 import M from "materialize-css";
 
 function Play() {
@@ -18,11 +19,16 @@ function Play() {
   const [time, setTime] = useState({});
   const [displayNext, setDisplayNext] = useState(false);
   const [tries, setTries] = useState(0);
+  const [skippedIndex, setSkippedIndex] = useState([]);
+
+  const [inactive, setInactive] = useState(false);
+  const [modal, setModal] = useState(false);
 
   let interval = null;
 
   const location = useLocation();
   const name = location.state.name;
+
   const navigate = useNavigate();
 
   const displayQuestions = () => {
@@ -35,7 +41,7 @@ function Play() {
     setDisplayNext(false);
   };
 
-  const correctAnswer = () => {
+  const correctAnswer = (body) => {
     M.toast({
       html: "Correct Answer!",
       classes: "toast-valid",
@@ -48,15 +54,16 @@ function Play() {
     setCurrentQuestionIndex((prevState) => prevState + 1);
     setNumberOfAnsweredQuestion((prevState) => prevState + 1);
     setTries(0);
+    // setInactive(true);
 
     if (nextQuestion === undefined) {
       endQuiz();
     } else {
-      displayQuestions();
+      displayQuestions(body);
     }
   };
 
-  const wrongAnswer = () => {
+  const wrongAnswer = (body) => {
     M.toast({
       html: "Wrong Answer!",
       classes: "toast-invalid",
@@ -68,16 +75,28 @@ function Play() {
     setNumberOfAnsweredQuestion((prevState) => prevState);
     setTries(0);
 
+    displayAnswer();
+
+    if (!modal) {
+      if (nextQuestion === undefined) {
+        endQuiz();
+      } else {
+        displayQuestions();
+      }
+    }
+  };
+
+  const displayAnswer = () => {
+    setModal(true);
+
     if (nextQuestion === undefined) {
       endQuiz();
     } else {
       displayQuestions();
     }
   };
-
   const secondChance = (body) => {
-    console.log(body);
-    M.toast({
+    +M.toast({
       html: "Wrong Answer, Second chance!",
       classes: "toast-invalid",
       displayLength: 1500,
@@ -98,6 +117,9 @@ function Play() {
     setCurrentQuestionIndex((prevState) => prevState + 1);
     setNumberOfAnsweredQuestion((prevState) => prevState);
 
+    setSkippedIndex((prevState) => [...prevState, currentQuestionIndex]);
+    console.log(skippedIndex);
+
     if (nextQuestion === undefined) {
       endQuiz();
     } else {
@@ -110,16 +132,18 @@ function Play() {
       displayQuestions();
     }
   };
-  // const handlePreviousButton = () => {
-  //   if (previousQuestion !== undefined) {
-  //     setCurrentQuestionIndex((prevState) => prevState - 1);
-  //     displayQuestions();
-  //   }
-  // };
+  const handlePreviousButton = () => {
+    if (previousQuestion !== undefined) {
+      setCurrentQuestionIndex((prevState) => prevState - 1);
+      displayQuestions();
+    }
+  };
   const handleSkipButton = () => {
     skipedQuestion();
   };
-
+  const setModalFun = () => {
+    setModal(false);
+  };
   const handleQuitButton = () => {
     if (window.confirm("Are you sure you want to Quit?")) {
       navigate("/");
@@ -134,12 +158,12 @@ function Play() {
     const e = body.event.target.innerHTML;
     // console.log(e);
     if (e.toLowerCase() === answer.toLocaleLowerCase()) {
-      correctAnswer();
+      correctAnswer(body.event.target);
     } else if (e.toLowerCase() !== answer.toLocaleLowerCase() && tries === 0) {
       setTries(1);
       secondChance(body.event.target);
     } else if (e.toLowerCase() !== answer.toLocaleLowerCase() && tries === 2) {
-      wrongAnswer();
+      wrongAnswer(body.event.target);
     }
   };
 
@@ -157,6 +181,8 @@ function Play() {
       case "quit-button":
         handleQuitButton();
         break;
+      case "a":
+        inactiveA();
       default:
         break;
     }
@@ -197,18 +223,16 @@ function Play() {
     };
     setTimeout(() => {
       navigate("/quiz-summary", { state: { stats: playerStats } });
-      // browserHistory.push("/quiz-summary", playerStats);
-      // window.location.reload(false);
     }, 1000);
   };
 
   useEffect(() => {
     setAnswer(questionsData[currentQuestionIndex].answer);
-    setScore((prevState) => prevState + 1);
+    setScore((prevState) => prevState);
     setCorrectAnswers((prevState) => prevState + 1);
     setCurrentQuestionIndex((prevState) => prevState + 1);
-    setNumberOfAnsweredQuestion((prevState) => prevState + 1);
-    setWrongAnswers((prevState) => prevState + 1);
+    setNumberOfAnsweredQuestion((prevState) => prevState);
+    setWrongAnswers((prevState) => prevState);
 
     displayQuestions();
     startTimer();
@@ -219,13 +243,7 @@ function Play() {
       <div className="questions">
         <div className="lifeline-container">
           <div className="lifeline">
-            <p className="text-yellow-700 text-lg p-2">
-              {/* <span className="mdi mdi-set-center mdi-24px lifeline-icon"></span> */}
-              Questions
-            </p>
-            {/* <p>
-                <span className="mdi mdi-lightbulb-on-outline mdi-24px lifeline-icon"></span>
-              </p> */}
+            <p className="text-yellow-700 text-lg p-2">Questions</p>
           </div>
           <div className="clock">
             <p>
@@ -244,6 +262,9 @@ function Play() {
         </div>
         <h5 className="text-3xl my-8">{currentQuestion.question}</h5>
         <div className="option">
+          {modal && (
+            <Modal explanation={currentQuestion.answer} toggle={setModalFun} />
+          )}
           <div className="options-container">
             <p
               id="a"

@@ -25,10 +25,17 @@
     display: flex;
     justify-content: space-around;
     cursor: pointer;
-
+    p.inactive {
+      pointer-events: none;
+      background-color: #040000;
+    }
     .option {
       margin: $sm;
       width: auto;
+      .active {
+        pointer-events: auto;
+        background-color: #1d4ed8;
+      }
     }
     .option:hover {
       opacity: 0.8;
