@@ -1,15 +1,23 @@
-export default function Indicator() {
+import { useEffect, useRef, useState } from "react";
+import questionsData from "../../questions.json";
+
+export default function Indicator(props) {
+  const paginator = () => {
+    return questionsData.map((questions, index) => {
+      return (
+        <span
+          key={index}
+          className={`flex w-3 h-3 me-3 ${
+            index === props.led - 1 ? "bg-current" : "bg-slate-500"
+          } rounded-full`}
+        ></span>
+      );
+    });
+  };
+
   return (
     <>
-      <span class="flex w-3 h-3 me-3 bg-gray-200 rounded-full"></span>
-      <span class="flex w-3 h-3 me-3 bg-gray-900 rounded-full dark:bg-gray-700"></span>
-      <span class="flex w-3 h-3 me-3 bg-blue-600 rounded-full"></span>
-      <span class="flex w-3 h-3 me-3 bg-green-500 rounded-full"></span>
-      <span class="flex w-3 h-3 me-3 bg-red-500 rounded-full"></span>
-      <span class="flex w-3 h-3 me-3 bg-purple-500 rounded-full"></span>
-      <span class="flex w-3 h-3 me-3 bg-indigo-500 rounded-full"></span>
-      <span class="flex w-3 h-3 me-3 bg-yellow-300 rounded-full"></span>
-      <span class="flex w-3 h-3 me-3 bg-teal-500 rounded-full"></span>
+      <div className="flex gap-x-3">{paginator()}</div>
     </>
   );
 }

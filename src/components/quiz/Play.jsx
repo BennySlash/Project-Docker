@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import questionsData from "../../questions.json";
 import Modal from "./Modal";
+import Indicator from "./indicator";
 import M from "materialize-css";
 
 function Play() {
@@ -17,12 +18,10 @@ function Play() {
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [wrongAnswers, setWrongAnswers] = useState(0);
   const [time, setTime] = useState({});
-  const [displayNext, setDisplayNext] = useState(false);
   const [tries, setTries] = useState(0);
-  const [skippedIndex, setSkippedIndex] = useState([]);
-
-  const [inactive, setInactive] = useState(false);
   const [modal, setModal] = useState(false);
+  const skippedRef = useRef([]);
+  const takenRef = useRef([]);
 
   let interval = null;
 
@@ -33,12 +32,10 @@ function Play() {
 
   const displayQuestions = () => {
     setQuestions(questionsData);
-    // console.log(score);
     setCurrentQuestion(questionsData[currentQuestionIndex]);
     setNextQuestion(questionsData[currentQuestionIndex + 1]);
     setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
     setAnswer(questionsData[currentQuestionIndex].answer);
-    setDisplayNext(false);
   };
 
   const correctAnswer = (body) => {
@@ -54,12 +51,18 @@ function Play() {
     setCurrentQuestionIndex((prevState) => prevState + 1);
     setNumberOfAnsweredQuestion((prevState) => prevState + 1);
     setTries(0);
-    // setInactive(true);
 
     if (nextQuestion === undefined) {
-      endQuiz();
+      if (skippedRef.length === 0) {
+        endQuiz();
+      } else {
+        alert(
+          `there are ${skippedRef.current.length} skipped questions, please go back`
+        );
+      }
     } else {
-      displayQuestions(body);
+      takenRef.current = [...takenRef.current, currentQuestionIndex];
+      displayQuestions();
     }
   };
 
@@ -79,8 +82,15 @@ function Play() {
 
     if (!modal) {
       if (nextQuestion === undefined) {
-        endQuiz();
+        if (skippedRef.length === 0) {
+          endQuiz();
+        } else {
+          alert(
+            `there are ${skippedRef.current.length} skipped questions, please go back`
+          );
+        }
       } else {
+        takenRef.current = [...takenRef.current, currentQuestionIndex];
         displayQuestions();
       }
     }
@@ -90,13 +100,17 @@ function Play() {
     setModal(true);
 
     if (nextQuestion === undefined) {
-      endQuiz();
+      if (skippedRef.length === 0) {
+        endQuiz();
+      } else {
+        `there are ${skippedRef.current.length}skipped questions, please go back`;
+      }
     } else {
       displayQuestions();
     }
   };
   const secondChance = (body) => {
-    +M.toast({
+    M.toast({
       html: "Wrong Answer, Second chance!",
       classes: "toast-invalid",
       displayLength: 1500,
@@ -104,7 +118,13 @@ function Play() {
     setTries((prevState) => prevState + 1);
   };
 
-  const skipedQuestion = () => {
+  const handlePreviousButton = () => {
+    if (previousQuestion !== undefined) {
+      setCurrentQuestionIndex((prevState) => prevState - 1);
+      displayQuestions();
+    }
+  };
+  const handleSkipButton = () => {
     M.toast({
       html: "You skipped this question",
       classes: "toast-valid",
@@ -117,29 +137,13 @@ function Play() {
     setCurrentQuestionIndex((prevState) => prevState + 1);
     setNumberOfAnsweredQuestion((prevState) => prevState);
 
-    setSkippedIndex((prevState) => [...prevState, currentQuestionIndex]);
-    console.log(skippedIndex);
+    skippedRef.current = [...skippedRef.current, currentQuestionIndex];
 
-    if (nextQuestion === undefined) {
-      endQuiz();
+    if (currentQuestionIndex === 15) {
+      alert("You are at the last question, Can't Skip!");
     } else {
       displayQuestions();
     }
-  };
-  const handleNextButton = () => {
-    if (nextQuestion !== undefined) {
-      setCurrentQuestionIndex((prevState) => prevState + 1);
-      displayQuestions();
-    }
-  };
-  const handlePreviousButton = () => {
-    if (previousQuestion !== undefined) {
-      setCurrentQuestionIndex((prevState) => prevState - 1);
-      displayQuestions();
-    }
-  };
-  const handleSkipButton = () => {
-    skipedQuestion();
   };
   const setModalFun = () => {
     setModal(false);
@@ -172,17 +176,12 @@ function Play() {
       case "skip-button":
         handleSkipButton();
         break;
-      case "next-button":
-        handleNextButton();
-        break;
       case "previous-button":
         handlePreviousButton();
         break;
       case "quit-button":
         handleQuitButton();
         break;
-      case "a":
-        inactiveA();
       default:
         break;
     }
@@ -239,7 +238,8 @@ function Play() {
   }, []);
 
   return (
-    <div>
+    <div className="flex flex-col items-center">
+      <Indicator led={currentQuestionIndex} />
       <div className="questions">
         <div className="lifeline-container">
           <div className="lifeline">
@@ -342,36 +342,29 @@ function Play() {
             </p>
           </div>
         </div>
-        <div className="quiz-direction">
-          {/* <button
-            id="previous-button"
-            onClick={handleButtonClick}
-            className="direction-key rounded-sm bg-blue-700 p-2 text-sm text-white"
-          >
-            Previous
-          </button> */}
-          {displayNext && (
+        <div className="quiz-direction flex justify-between">
+          <div className="flex gap-x-4">
             <button
-              id="next-button"
+              id="previous-button"
               onClick={handleButtonClick}
-              className="direction-key rounded-sm bg-green-700 p-2 text-sm text-white"
+              className="direction-key rounded-sm bg-green-700 p-3 text-sm text-white"
             >
-              Next
+              Previous
             </button>
-          )}
+            <button
+              id="skip-button"
+              onClick={handleButtonClick}
+              className="direction-key rounded-sm bg-orange-400 p-3 text-sm text-white"
+            >
+              Skip
+            </button>
+          </div>
           <button
             id="quit-button"
             onClick={handleButtonClick}
-            className="direction-key rounded-sm bg-red-700 p-2 text-sm text-white"
+            className="direction-key rounded-sm bg-red-700 p-3 text-sm text-white"
           >
             Quit
-          </button>
-          <button
-            id="skip-button"
-            onClick={handleButtonClick}
-            className="direction-key rounded-sm bg-red-700 p-2 text-sm text-white"
-          >
-            Skip
           </button>
         </div>
       </div>
