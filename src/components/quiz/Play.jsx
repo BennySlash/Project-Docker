@@ -123,7 +123,7 @@ function Play() {
   };
 
   const handlePreviousButton = () => {
-    setCurrentQuestionIndex((prevState) => prevState + 1);
+    setCurrentQuestionIndex((prevState) => prevState - 1);
 
     console.log(currentQuestionIndex);
     if (previousQuestion !== undefined) {
