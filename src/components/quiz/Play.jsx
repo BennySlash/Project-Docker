@@ -36,6 +36,9 @@ function Play() {
     setNextQuestion(questionsData[currentQuestionIndex + 1]);
     setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
     setAnswer(questionsData[currentQuestionIndex].answer);
+    if (takenRef.current.includes(currentQuestion)) {
+      document.getElementsByClassName("option").classList.add("inactive");
+    }
   };
 
   const correctAnswer = (body) => {
@@ -62,6 +65,7 @@ function Play() {
       }
     } else {
       takenRef.current = [...takenRef.current, currentQuestionIndex];
+      console.log(currentQuestionIndex);
       displayQuestions();
     }
   };
@@ -91,7 +95,6 @@ function Play() {
         }
       } else {
         takenRef.current = [...takenRef.current, currentQuestionIndex];
-        displayQuestions();
       }
     }
   };
@@ -110,6 +113,7 @@ function Play() {
     }
   };
   const secondChance = (body) => {
+    console.log(currentQuestionIndex);
     M.toast({
       html: "Wrong Answer, Second chance!",
       classes: "toast-invalid",
@@ -119,8 +123,10 @@ function Play() {
   };
 
   const handlePreviousButton = () => {
+    setCurrentQuestionIndex((prevState) => prevState + 1);
+
+    console.log(currentQuestionIndex);
     if (previousQuestion !== undefined) {
-      setCurrentQuestionIndex((prevState) => prevState - 1);
       displayQuestions();
     }
   };
@@ -132,7 +138,6 @@ function Play() {
     });
 
     setScore((prevState) => prevState);
-
     setCorrectAnswers((prevState) => prevState);
     setCurrentQuestionIndex((prevState) => prevState + 1);
     setNumberOfAnsweredQuestion((prevState) => prevState);
@@ -142,9 +147,11 @@ function Play() {
     if (currentQuestionIndex === 15) {
       alert("You are at the last question, Can't Skip!");
     } else {
+      console.log(currentQuestionIndex);
       displayQuestions();
     }
   };
+
   const setModalFun = () => {
     setModal(false);
   };
@@ -179,6 +186,9 @@ function Play() {
       case "previous-button":
         handlePreviousButton();
         break;
+      // case "next-button":
+      //   handleNextButton();
+      //   break;
       case "quit-button":
         handleQuitButton();
         break;
@@ -241,6 +251,30 @@ function Play() {
     <div className="flex flex-col items-center">
       <Indicator led={currentQuestionIndex} />
       <div className="questions">
+        {takenRef.current.includes(currentQuestionIndex) && (
+          <div>
+            <div className="rounded-full bg-green-200 p-2 w-max mx-auto">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-500 p-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="h-8 w-8 text-white"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4.5 12.75l6 6 9-13.5"
+                  />
+                </svg>
+              </div>
+            </div>
+            <p className="text-xl mt-2 text-green-200">Question Completed!</p>
+          </div>
+        )}
+
         <div className="lifeline-container">
           <div className="lifeline">
             <p className="text-yellow-700 text-lg p-2">Questions</p>
@@ -344,13 +378,24 @@ function Play() {
         </div>
         <div className="quiz-direction flex justify-between">
           <div className="flex gap-x-4">
-            <button
-              id="previous-button"
-              onClick={handleButtonClick}
-              className="direction-key rounded-sm bg-green-700 p-3 text-sm text-white"
-            >
-              Previous
-            </button>
+            {skippedRef.current.length > 0 && (
+              <button
+                id="previous-button"
+                onClick={handleButtonClick}
+                className="direction-key rounded-sm bg-green-700 p-3 text-sm text-white"
+              >
+                Previous
+              </button>
+            )}
+            {/* {skippedRef.current.length > 0 && (
+              <button
+                id="next-button"
+                onClick={handleButtonClick}
+                className="direction-key rounded-sm bg-green-700 p-3 text-sm text-white"
+              >
+                Next
+              </button>
+            )} */}
             <button
               id="skip-button"
               onClick={handleButtonClick}

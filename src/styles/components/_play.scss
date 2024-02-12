@@ -25,10 +25,7 @@
     display: flex;
     justify-content: space-around;
     cursor: pointer;
-    p.inactive {
-      pointer-events: none;
-      background-color: #040000;
-    }
+
     .option {
       margin: $sm;
       width: auto;
@@ -50,4 +47,7 @@
       opacity: 0.8;
     }
   }
+}
+.inactive {
+  pointer-events: none;
 }

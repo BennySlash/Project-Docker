@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-// import { browserHistory } from "../../main";
 import { Link, useLocation } from "react-router-dom";
 import { sendDataToServer } from "../../utils/api";
 import { sendDataToBackend } from "../admin/utils/api";
 
 function QuizSummary() {
-  // const locationState = browserHistory.location.state;
   const location = useLocation();
   const [displayCheck, setDisplayCheck] = useState(false);
   const [displayComparison, setDisplayComparison] = useState(false);
