@@ -20,6 +20,8 @@ function Play() {
   const [time, setTime] = useState({});
   const [tries, setTries] = useState(0);
   const [modal, setModal] = useState(false);
+  const [prevClicked, setPrevClicked] = useState(false);
+  const [attempt, setAttempt] = useState(2);
   const skippedRef = useRef([]);
   const takenRef = useRef([]);
 
@@ -36,9 +38,6 @@ function Play() {
     setNextQuestion(questionsData[currentQuestionIndex + 1]);
     setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
     setAnswer(questionsData[currentQuestionIndex].answer);
-    if (takenRef.current.includes(currentQuestion)) {
-      document.getElementsByClassName("option").classList.add("inactive");
-    }
   };
 
   const correctAnswer = (body) => {
@@ -113,6 +112,7 @@ function Play() {
     }
   };
   const secondChance = (body) => {
+    setAttempt(1);
     console.log(currentQuestionIndex);
     M.toast({
       html: "Wrong Answer, Second chance!",
@@ -124,9 +124,19 @@ function Play() {
 
   const handlePreviousButton = () => {
     setCurrentQuestionIndex((prevState) => prevState - 1);
-
-    console.log(currentQuestionIndex);
+    setPrevClicked(true);
+    console.log;
     if (previousQuestion !== undefined) {
+      displayQuestions();
+    }
+  };
+
+  const displaySkippedQuestions = () => {};
+
+  const handleNextButton = () => {
+    setCurrentQuestionIndex((prevState) => prevState + 1);
+    if (previousQuestion !== undefined) {
+      console.log(currentQuestionIndex);
       displayQuestions();
     }
   };
@@ -152,9 +162,9 @@ function Play() {
     }
   };
 
-  const setModalFun = () => {
-    setModal(false);
-  };
+  // const setModalFun = () => {
+  //   setModal(false);
+  // };
   const handleQuitButton = () => {
     if (window.confirm("Are you sure you want to Quit?")) {
       navigate("/");
@@ -186,9 +196,9 @@ function Play() {
       case "previous-button":
         handlePreviousButton();
         break;
-      // case "next-button":
-      //   handleNextButton();
-      //   break;
+      case "next-button":
+        handleNextButton();
+        break;
       case "quit-button":
         handleQuitButton();
         break;
@@ -271,7 +281,7 @@ function Play() {
                 </svg>
               </div>
             </div>
-            <p className="text-xl mt-2 text-green-200">Question Completed!</p>
+            <p className="text-xl mt-2 text-green-700">Question Completed!</p>
           </div>
         )}
 
@@ -286,6 +296,13 @@ function Play() {
               </span>
             </p>
 
+            <div className="text-green-700 px-3 flex flex-col justify-center items-center">
+              <p>{attempt}</p>
+              <div>
+                <i className="large material-icons"></i>
+              </div>
+            </div>
+
             <div className="px-2 flex items-center g-2">
               <span className="text-green-800 text-xl">
                 {time.minutes}:{time.seconds}
@@ -297,7 +314,12 @@ function Play() {
         <h5 className="text-3xl my-8">{currentQuestion.question}</h5>
         <div className="option">
           {modal && (
-            <Modal explanation={currentQuestion.answer} toggle={setModalFun} />
+            <Modal
+              explanation={currentQuestion.answer}
+              toggle={() => {
+                setModal(false);
+              }}
+            />
           )}
           <div className="options-container">
             <p
@@ -387,6 +409,15 @@ function Play() {
                 Previous
               </button>
             )}
+
+            {/* <button
+              id="previous-button"
+              onClick={handleButtonClick}
+              className="direction-key rounded-sm bg-green-700 p-3 text-sm text-white"
+            >
+              Previous
+            </button> */}
+
             {/* {skippedRef.current.length > 0 && (
               <button
                 id="next-button"
@@ -396,6 +427,17 @@ function Play() {
                 Next
               </button>
             )} */}
+
+            {prevClicked && (
+              <button
+                id="next-button"
+                onClick={handleButtonClick}
+                className="direction-key rounded-sm bg-purple-700 p-3 text-sm text-white"
+              >
+                Next
+              </button>
+            )}
+
             <button
               id="skip-button"
               onClick={handleButtonClick}
