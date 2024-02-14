@@ -7,7 +7,9 @@ const Modal = (props) => {
   return (
     <>
       <div className="flex flex-col h-full bg-stone-950 text-white z-50 items-center justify-center items-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0  md:inset-0 h-[calc(100%-20rem)]">
-        <p className="px-40 mx-40 py-20">
+        <p className="font-bold text-2xl">the answer is:</p>
+        <p className="font-bold my-10"> {props.explanation}</p>
+        <p className="px-20 mx-20 pb-10">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea deserunt
           repellat repellendus quos culpa quod, error accusantium. Natus
           corrupti et deserunt in dignissimos, nulla reiciendis impedit,
@@ -19,10 +21,7 @@ const Modal = (props) => {
           neque ea quaerat laborum et alias aliquid. Ducimus, minus. Voluptate,
           sint quae molestiae quo dicta et aspernatur omnis eos ipsam veniam
           architecto ipsa suscipit placeat veritatis facere ut eveniet!
-          Voluptatum optio provident aut sint illo at sapiente voluptatibus
-          aliquam ducimus omnis, ipsum vbl ackoluptatem itaque debitis
-          repellendus. Aliquid nesciunt aliquam expedita?
-          {props.explanation}
+          <br />
         </p>
         <button
           onClick={props.toggle}

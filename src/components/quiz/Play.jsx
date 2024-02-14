@@ -24,10 +24,6 @@ function Play() {
   const [attempt, setAttempt] = useState(2);
   const skippedRef = useRef([]);
   const takenRef = useRef([]);
-  // const [inactiveA, setInactiveA] = useState(false);
-  // const [inactiveB, setInactiveB] = useState(false);
-  // const [inactiveC, setInactiveC] = useState(false);
-  // const [inactiveD, setInactiveD] = useState(false);
   const [inactive, setInactive] = useState(false);
   const inactiveA = useRef(inactive);
   const inactiveB = useRef(inactive);
@@ -46,8 +42,11 @@ function Play() {
     setNextQuestion(questionsData[currentQuestionIndex + 1]);
     setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
     setAnswer(questionsData[currentQuestionIndex].answer);
-    // setCurrentQuestionIndex((prevState) => prevState + 1);
     setAttempt(2);
+    inactiveA.current = inactive;
+    inactiveB.current = inactive;
+    inactiveC.current = inactive;
+    inactiveD.current = inactive;
   };
 
   const correctAnswer = (body) => {
@@ -64,11 +63,6 @@ function Play() {
     setNumberOfAnsweredQuestion((prevState) => prevState + 1);
     setTries(0);
     setAttempt(2);
-    console.log(inactive);
-    inactiveA.current = inactive;
-    inactiveB.current = inactive;
-    inactiveC.current = inactive;
-    inactiveD.current = inactive;
 
     if (nextQuestion === undefined) {
       if (skippedRef.length === 0) {
@@ -85,7 +79,7 @@ function Play() {
     }
   };
 
-  const wrongAnswer = (body) => {
+  const wrongAnswer = () => {
     M.toast({
       html: "Wrong Answer!",
       classes: "toast-invalid",
@@ -186,35 +180,30 @@ function Play() {
     // console.log({ answer, e: body.event.target.innerHTML });
     const btn = body.event.target.id;
     console.log(btn);
-    // console.log(inactiveA.current);
     switch (btn) {
       case "a":
         inactiveA.current = !inactiveA.current;
-        console.log(inactiveA.current);
-        console.log(inactiveB.current);
-
+        break;
       case "b":
         inactiveB.current = !inactiveB.current;
-
+        break;
       case "c":
         inactiveC.current = !inactiveC.current;
-
+        break;
       case "d":
         inactiveD.current = !inactiveD.current;
-
+        break;
       default:
         break;
     }
-    // console.log(body.event.target);
     const e = body.event.target.innerHTML;
-    // console.log(e);
     if (e.toLowerCase() === answer.toLocaleLowerCase()) {
-      correctAnswer(body.event.target);
+      correctAnswer();
     } else if (e.toLowerCase() !== answer.toLocaleLowerCase() && tries === 0) {
       setTries(1);
-      secondChance(body.event.target);
+      secondChance();
     } else if (e.toLowerCase() !== answer.toLocaleLowerCase() && tries === 2) {
-      wrongAnswer(body.event.target);
+      wrongAnswer();
     }
   };
 
@@ -326,12 +315,14 @@ function Play() {
               </span>
             </p>
 
-            <div className="text-green-700 px-3 flex flex-col justify-center items-center font-bold">
-              <p>tries left: {attempt}</p>
-              <div>
-                <span className="mdi mdi-lightbulb-on-outline mdi-24px"></span>
+            {!takenRef.current.includes(currentQuestionIndex) && (
+              <div className="text-green-700 px-3 flex flex-col justify-center items-center font-bold">
+                {<p>tries left: {attempt}</p>}
+                <div>
+                  <span className="mdi mdi-lightbulb-on-outline mdi-24px"></span>
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="px-2 flex items-center g-2">
               <span className="text-green-800 text-xl font-bold">
@@ -417,7 +408,8 @@ function Play() {
                 })
               }
               className={`${
-                inactiveC.current === true && "inactive"
+                inactiveC.current === true &&
+                "pointer-events-none bg-rose-400 line-through"
               } option rounded-md bg-blue-700 p-3 text-lg text-white`}
             >
               {!prevClicked
@@ -439,7 +431,8 @@ function Play() {
                 })
               }
               className={`${
-                inactiveD.current === true && "inactive"
+                inactiveD.current === true &&
+                "pointer-events-none bg-rose-400 line-through"
               } option rounded-md bg-blue-700 p-3 text-lg text-white`}
             >
               {!prevClicked
