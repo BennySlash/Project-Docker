@@ -24,7 +24,6 @@ function Play() {
   const [attempt, setAttempt] = useState(2);
   const skippedRef = useRef([]);
   const takenRef = useRef([]);
-
   let interval = null;
 
   const location = useLocation();
@@ -38,6 +37,8 @@ function Play() {
     setNextQuestion(questionsData[currentQuestionIndex + 1]);
     setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
     setAnswer(questionsData[currentQuestionIndex].answer);
+    // setCurrentQuestionIndex((prevState) => prevState + 1);
+    setAttempt(2);
   };
 
   const correctAnswer = (body) => {
@@ -53,6 +54,7 @@ function Play() {
     setCurrentQuestionIndex((prevState) => prevState + 1);
     setNumberOfAnsweredQuestion((prevState) => prevState + 1);
     setTries(0);
+    setAttempt(2);
 
     if (nextQuestion === undefined) {
       if (skippedRef.length === 0) {
@@ -80,6 +82,7 @@ function Play() {
     setCurrentQuestionIndex((prevState) => prevState + 1);
     setNumberOfAnsweredQuestion((prevState) => prevState);
     setTries(0);
+    setAttempt(0);
 
     displayAnswer();
 
@@ -125,19 +128,15 @@ function Play() {
   const handlePreviousButton = () => {
     setCurrentQuestionIndex((prevState) => prevState - 1);
     setPrevClicked(true);
-    console.log;
     if (previousQuestion !== undefined) {
       displayQuestions();
     }
   };
 
-  const displaySkippedQuestions = () => {};
-
   const handleNextButton = () => {
     setCurrentQuestionIndex((prevState) => prevState + 1);
     if (previousQuestion !== undefined) {
       console.log(currentQuestionIndex);
-      displayQuestions();
     }
   };
   const handleSkipButton = () => {
@@ -151,6 +150,7 @@ function Play() {
     setCorrectAnswers((prevState) => prevState);
     setCurrentQuestionIndex((prevState) => prevState + 1);
     setNumberOfAnsweredQuestion((prevState) => prevState);
+    setCurrentQuestion(questionsData[currentQuestionIndex - 1]);
 
     skippedRef.current = [...skippedRef.current, currentQuestionIndex];
 
@@ -162,9 +162,6 @@ function Play() {
     }
   };
 
-  // const setModalFun = () => {
-  //   setModal(false);
-  // };
   const handleQuitButton = () => {
     if (window.confirm("Are you sure you want to Quit?")) {
       navigate("/");
@@ -296,22 +293,24 @@ function Play() {
               </span>
             </p>
 
-            <div className="text-green-700 px-3 flex flex-col justify-center items-center">
-              <p>{attempt}</p>
+            <div className="text-green-700 px-3 flex flex-col justify-center items-center font-bold">
+              <p>tries left: {attempt}</p>
               <div>
-                <i className="large material-icons"></i>
+                <span className="mdi mdi-lightbulb-on-outline mdi-24px"></span>
               </div>
             </div>
 
             <div className="px-2 flex items-center g-2">
-              <span className="text-green-800 text-xl">
+              <span className="text-green-800 text-xl font-bold">
                 {time.minutes}:{time.seconds}
               </span>
-              <span className="mdi mdi-clock-outline mdi-24px  text-orange-700"></span>
+              <span className="mdi mdi-clock-outline mdi-24px text-orange-700"></span>
             </div>
           </div>
         </div>
-        <h5 className="text-3xl my-8">{currentQuestion.question}</h5>
+        <h5 className="text-3xl my-8">
+          {!prevClicked ? currentQuestion.question : previousQuestion.question}
+        </h5>
         <div className="option">
           {modal && (
             <Modal
@@ -338,7 +337,9 @@ function Play() {
               }
               className="option rounded-md bg-blue-700 p-3 text-lg text-white"
             >
-              {currentQuestion.optionA}
+              {!prevClicked
+                ? currentQuestion.optionA
+                : previousQuestion.optionA}
             </p>
             <p
               id="b"
@@ -356,7 +357,9 @@ function Play() {
               }
               className="option rounded-md bg-blue-700 p-3 text-lg text-white"
             >
-              {currentQuestion.optionB}
+              {!prevClicked
+                ? currentQuestion.optionB
+                : previousQuestion.optionB}
             </p>
           </div>
           <div className="options-container">
@@ -376,7 +379,9 @@ function Play() {
               }
               className="option rounded-md bg-blue-700 p-3 text-lg text-white"
             >
-              {currentQuestion.optionC}
+              {!prevClicked
+                ? currentQuestion.optionC
+                : previousQuestion.optionC}
             </p>
             <p
               id="d"
@@ -394,7 +399,9 @@ function Play() {
               }
               className="option rounded-md bg-blue-700 p-3 text-lg text-white"
             >
-              {currentQuestion.optionD}
+              {!prevClicked
+                ? currentQuestion.optionD
+                : previousQuestion.optionD}
             </p>
           </div>
         </div>
