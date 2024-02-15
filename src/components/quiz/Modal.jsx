@@ -8,7 +8,7 @@ const Modal = (props) => {
     <>
       <div className="flex flex-col h-full bg-stone-950 text-white z-50 items-center justify-center items-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0  md:inset-0 h-[calc(100%-20rem)]">
         <p className="font-bold text-2xl">the answer is:</p>
-        <p className="font-bold my-10"> {props.explanation}</p>
+        <p className="font-bold my-10 text-xl"> {props.explanation}</p>
         <p className="px-20 mx-20 pb-10">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea deserunt
           repellat repellendus quos culpa quod, error accusantium. Natus

@@ -14,6 +14,7 @@ function Play() {
   const [numberOfQuestions, setNumberOfQuestions] = useState(15);
   const [numberOfAnsweredQuestion, setNumberOfAnsweredQuestion] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [prevQuestionIndex, setPrevQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [wrongAnswers, setWrongAnswers] = useState(0);
@@ -40,16 +41,18 @@ function Play() {
     setQuestions(questionsData);
     setCurrentQuestion(questionsData[currentQuestionIndex]);
     setNextQuestion(questionsData[currentQuestionIndex + 1]);
-    setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
+    setPreviousQuestion(questionsData[prevQuestionIndex - 1]);
     setAnswer(questionsData[currentQuestionIndex].answer);
+    setPrevQuestionIndex(currentQuestionIndex);
     setAttempt(2);
+
     inactiveA.current = inactive;
     inactiveB.current = inactive;
     inactiveC.current = inactive;
     inactiveD.current = inactive;
   };
 
-  const correctAnswer = (body) => {
+  const correctAnswer = () => {
     M.toast({
       html: "Correct Answer!",
       classes: "toast-valid",
@@ -63,9 +66,13 @@ function Play() {
     setNumberOfAnsweredQuestion((prevState) => prevState + 1);
     setTries(0);
     setAttempt(2);
+    inactiveA.current = inactive;
+    inactiveB.current = inactive;
+    inactiveC.current = inactive;
+    inactiveD.current = inactive;
 
     if (nextQuestion === undefined) {
-      if (skippedRef.length === 0) {
+      if (skippedRef.current.length === 0) {
         endQuiz();
       } else {
         alert(
@@ -74,7 +81,6 @@ function Play() {
       }
     } else {
       takenRef.current = [...takenRef.current, currentQuestionIndex];
-      console.log(currentQuestionIndex);
       displayQuestions();
     }
   };
@@ -94,26 +100,26 @@ function Play() {
 
     displayAnswer();
 
-    if (!modal) {
-      if (nextQuestion === undefined) {
-        if (skippedRef.length === 0) {
-          endQuiz();
-        } else {
-          alert(
-            `there are ${skippedRef.current.length} skipped questions, please go back`
-          );
-        }
-      } else {
-        takenRef.current = [...takenRef.current, currentQuestionIndex];
-      }
-    }
+    // if (!modal) {
+    //   if (nextQuestion === undefined) {
+    //     if (skippedRef.current.length === 0) {
+    //       endQuiz();
+    //     } else {
+    //       alert(
+    //         `there are ${skippedRef.current.length} skipped questions, please go back`
+    //       );
+    //     }
+    //   } else {
+    //     takenRef.current = [...takenRef.current, currentQuestionIndex];
+    //   }
+    // }
   };
 
   const displayAnswer = () => {
     setModal(true);
 
     if (nextQuestion === undefined) {
-      if (skippedRef.length === 0) {
+      if (skippedRef.current.length === 0) {
         endQuiz();
       } else {
         `there are ${skippedRef.current.length}skipped questions, please go back`;
@@ -134,8 +140,11 @@ function Play() {
   };
 
   const handlePreviousButton = () => {
-    setCurrentQuestionIndex((prevState) => prevState - 1);
     setPrevClicked(true);
+
+    setCurrentQuestionIndex((prevState) => prevState - 1);
+    setPreviousQuestion(questionsData[prevQuestionIndex - 1]);
+    console.log(prevQuestionIndex);
     if (previousQuestion !== undefined) {
       displayQuestions();
     }
@@ -179,7 +188,7 @@ function Play() {
   const handleOptionClick = (body) => {
     // console.log({ answer, e: body.event.target.innerHTML });
     const btn = body.event.target.id;
-    console.log(btn);
+
     switch (btn) {
       case "a":
         inactiveA.current = !inactiveA.current;
@@ -269,6 +278,7 @@ function Play() {
     setScore((prevState) => prevState);
     setCorrectAnswers((prevState) => prevState + 1);
     setCurrentQuestionIndex((prevState) => prevState + 1);
+
     setNumberOfAnsweredQuestion((prevState) => prevState);
     setWrongAnswers((prevState) => prevState);
 
