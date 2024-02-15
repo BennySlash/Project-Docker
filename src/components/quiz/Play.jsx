@@ -14,7 +14,6 @@ function Play() {
   const [numberOfQuestions, setNumberOfQuestions] = useState(15);
   const [numberOfAnsweredQuestion, setNumberOfAnsweredQuestion] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [prevQuestionIndex, setPrevQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [wrongAnswers, setWrongAnswers] = useState(0);
@@ -25,6 +24,7 @@ function Play() {
   const [attempt, setAttempt] = useState(2);
   const skippedRef = useRef([]);
   const takenRef = useRef([]);
+  const prevRef = useRef(currentQuestionIndex);
   const [inactive, setInactive] = useState(false);
   const inactiveA = useRef(inactive);
   const inactiveB = useRef(inactive);
@@ -41,10 +41,19 @@ function Play() {
     setQuestions(questionsData);
     setCurrentQuestion(questionsData[currentQuestionIndex]);
     setNextQuestion(questionsData[currentQuestionIndex + 1]);
-    setPreviousQuestion(questionsData[prevQuestionIndex - 1]);
+    prevRef.current = currentQuestionIndex - 1;
+    setPreviousQuestion(questionsData[prevRef.current]);
     setAnswer(questionsData[currentQuestionIndex].answer);
-    setPrevQuestionIndex(currentQuestionIndex);
     setAttempt(2);
+    console.log(`currentQuestionIndex: ${currentQuestionIndex}`);
+    console.log(`curenAnswer: ${answer}`);
+    console.log(`prevRef: ${prevRef.current}`);
+    console.log(previousQuestion);
+    console.log(score);
+    console.log(correctAnswer);
+    console.log(wrongAnswer);
+    console.log(nextQuestion);
+    console.log(previousQuestion);
 
     inactiveA.current = inactive;
     inactiveB.current = inactive;
@@ -130,7 +139,6 @@ function Play() {
   };
   const secondChance = (body) => {
     setAttempt(1);
-    // console.log(currentQuestionIndex);
     M.toast({
       html: "Wrong Answer, Second chance!",
       classes: "toast-invalid",
@@ -141,10 +149,12 @@ function Play() {
 
   const handlePreviousButton = () => {
     setPrevClicked(true);
+    setCurrentQuestionIndex((prevState) => prevState - 1);
+    prevRef.current = prevRef.current - 1;
+    setAnswer(questionsData[prevRef.current].answer);
 
     setCurrentQuestionIndex((prevState) => prevState - 1);
-    setPreviousQuestion(questionsData[prevQuestionIndex - 1]);
-    console.log(prevQuestionIndex);
+    setPreviousQuestion(questionsData[prevRef.current - 1]);
     if (previousQuestion !== undefined) {
       displayQuestions();
     }
@@ -153,10 +163,9 @@ function Play() {
   const handleNextButton = () => {
     setCurrentQuestionIndex((prevState) => prevState + 1);
     if (previousQuestion !== undefined) {
-      console.log(currentQuestionIndex);
     }
   };
-  const handleSkipButton = () => {
+  const handleSkipButton = (currentIndex) => {
     M.toast({
       html: "You skipped this question",
       classes: "toast-valid",
@@ -174,7 +183,6 @@ function Play() {
     if (currentQuestionIndex === 15) {
       alert("You are at the last question, Can't Skip!");
     } else {
-      console.log(currentQuestionIndex);
       displayQuestions();
     }
   };
@@ -186,7 +194,6 @@ function Play() {
   };
 
   const handleOptionClick = (body) => {
-    // console.log({ answer, e: body.event.target.innerHTML });
     const btn = body.event.target.id;
 
     switch (btn) {
@@ -216,8 +223,8 @@ function Play() {
     }
   };
 
-  const handleButtonClick = (e) => {
-    switch (e.target.id) {
+  const handleButtonClick = (body) => {
+    switch (body.event.target.id) {
       case "skip-button":
         handleSkipButton();
         break;
@@ -278,7 +285,6 @@ function Play() {
     setScore((prevState) => prevState);
     setCorrectAnswers((prevState) => prevState + 1);
     setCurrentQuestionIndex((prevState) => prevState + 1);
-
     setNumberOfAnsweredQuestion((prevState) => prevState);
     setWrongAnswers((prevState) => prevState);
 
@@ -345,6 +351,7 @@ function Play() {
         <h5 className="text-3xl my-8">
           {!prevClicked ? currentQuestion.question : previousQuestion.question}
         </h5>
+        {/* <h5 className="text-3xl my-8">{currentQuestion.question}</h5> */}
         <div className="option">
           {modal && (
             <Modal
@@ -377,6 +384,7 @@ function Play() {
               {!prevClicked
                 ? currentQuestion.optionA
                 : previousQuestion.optionA}
+              {/* {currentQuestion.optionA} */}
             </p>
             <p
               id="b"
@@ -400,6 +408,7 @@ function Play() {
               {!prevClicked
                 ? currentQuestion.optionB
                 : previousQuestion.optionB}
+              {/* {currentQuestion.optionB} */}
             </p>
           </div>
           <div className="options-container">
@@ -425,6 +434,7 @@ function Play() {
               {!prevClicked
                 ? currentQuestion.optionC
                 : previousQuestion.optionC}
+              {/* {currentQuestion.optionC} */}
             </p>
             <p
               id="d"
@@ -448,6 +458,7 @@ function Play() {
               {!prevClicked
                 ? currentQuestion.optionD
                 : previousQuestion.optionD}
+              {/* {currentQuestion.optionD} */}
             </p>
           </div>
         </div>
@@ -456,7 +467,14 @@ function Play() {
             {skippedRef.current.length > 0 && (
               <button
                 id="previous-button"
-                onClick={handleButtonClick}
+                onClick={() =>
+                  handleButtonClick({
+                    event: event,
+                    state: {
+                      currentQuestionIndex: currentQuestionIndex,
+                    },
+                  })
+                }
                 className="direction-key rounded-sm bg-green-700 p-3 text-sm text-white"
               >
                 Previous
@@ -493,7 +511,14 @@ function Play() {
 
             <button
               id="skip-button"
-              onClick={handleButtonClick}
+              onClick={() =>
+                handleButtonClick({
+                  event: event,
+                  state: {
+                    currentQuestionIndex: currentQuestionIndex,
+                  },
+                })
+              }
               className="direction-key rounded-sm bg-orange-400 p-3 text-sm text-white"
             >
               Skip
@@ -501,7 +526,14 @@ function Play() {
           </div>
           <button
             id="quit-button"
-            onClick={handleButtonClick}
+            onClick={() =>
+              handleButtonClick({
+                event: event,
+                state: {
+                  currentQuestionIndex: currentQuestionIndex,
+                },
+              })
+            }
             className="direction-key rounded-sm bg-red-700 p-3 text-sm text-white"
           >
             Quit
