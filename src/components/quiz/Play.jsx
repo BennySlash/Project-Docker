@@ -24,7 +24,6 @@ function Play() {
   const [attempt, setAttempt] = useState(2);
   const skippedRef = useRef([]);
   const takenRef = useRef([]);
-  const prevRef = useRef(currentQuestionIndex);
   const [inactive, setInactive] = useState(false);
   const inactiveA = useRef(inactive);
   const inactiveB = useRef(inactive);
@@ -38,22 +37,14 @@ function Play() {
   const navigate = useNavigate();
 
   const displayQuestions = () => {
-    setQuestions(questionsData);
+    console.log(previousQuestion, nextQuestion);
+
     setCurrentQuestion(questionsData[currentQuestionIndex]);
     setNextQuestion(questionsData[currentQuestionIndex + 1]);
-    prevRef.current = currentQuestionIndex - 1;
-    setPreviousQuestion(questionsData[prevRef.current]);
+    setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
     setAnswer(questionsData[currentQuestionIndex].answer);
+
     setAttempt(2);
-    console.log(`currentQuestionIndex: ${currentQuestionIndex}`);
-    console.log(`curenAnswer: ${answer}`);
-    console.log(`prevRef: ${prevRef.current}`);
-    console.log(previousQuestion);
-    console.log(score);
-    console.log(correctAnswer);
-    console.log(wrongAnswer);
-    console.log(nextQuestion);
-    console.log(previousQuestion);
 
     inactiveA.current = inactive;
     inactiveB.current = inactive;
@@ -108,20 +99,6 @@ function Play() {
     setAttempt(0);
 
     displayAnswer();
-
-    // if (!modal) {
-    //   if (nextQuestion === undefined) {
-    //     if (skippedRef.current.length === 0) {
-    //       endQuiz();
-    //     } else {
-    //       alert(
-    //         `there are ${skippedRef.current.length} skipped questions, please go back`
-    //       );
-    //     }
-    //   } else {
-    //     takenRef.current = [...takenRef.current, currentQuestionIndex];
-    //   }
-    // }
   };
 
   const displayAnswer = () => {
@@ -150,11 +127,6 @@ function Play() {
   const handlePreviousButton = () => {
     setPrevClicked(true);
     setCurrentQuestionIndex((prevState) => prevState - 1);
-    prevRef.current = prevRef.current - 1;
-    setAnswer(questionsData[prevRef.current].answer);
-
-    setCurrentQuestionIndex((prevState) => prevState - 1);
-    setPreviousQuestion(questionsData[prevRef.current - 1]);
     if (previousQuestion !== undefined) {
       displayQuestions();
     }
@@ -163,20 +135,18 @@ function Play() {
   const handleNextButton = () => {
     setCurrentQuestionIndex((prevState) => prevState + 1);
     if (previousQuestion !== undefined) {
+      displayQuestions();
     }
   };
-  const handleSkipButton = (currentIndex) => {
+  const handleSkipButton = () => {
     M.toast({
       html: "You skipped this question",
       classes: "toast-valid",
       displayLength: 1500,
     });
 
-    setScore((prevState) => prevState);
-    setCorrectAnswers((prevState) => prevState);
     setCurrentQuestionIndex((prevState) => prevState + 1);
-    setNumberOfAnsweredQuestion((prevState) => prevState);
-    setCurrentQuestion(questionsData[currentQuestionIndex - 1]);
+    setPreviousQuestion;
 
     skippedRef.current = [...skippedRef.current, currentQuestionIndex];
 
@@ -282,19 +252,19 @@ function Play() {
 
   useEffect(() => {
     setAnswer(questionsData[currentQuestionIndex].answer);
-    setScore((prevState) => prevState);
-    setCorrectAnswers((prevState) => prevState + 1);
-    setCurrentQuestionIndex((prevState) => prevState + 1);
-    setNumberOfAnsweredQuestion((prevState) => prevState);
-    setWrongAnswers((prevState) => prevState);
+    setCurrentQuestionIndex((prevState) => prevState);
+    setCurrentQuestion(questionsData[currentQuestionIndex]);
+
+    setNextQuestion(questionsData[currentQuestionIndex + 1]);
+    setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
 
     displayQuestions();
     startTimer();
-  }, []);
+  }, [currentQuestionIndex, previousQuestion, currentQuestion, answer]);
 
   return (
     <div className="flex flex-col items-center">
-      <Indicator led={currentQuestionIndex} />
+      <Indicator led={currentQuestionIndex} skip={skippedRef.current} />
       <div className="questions">
         {takenRef.current.includes(currentQuestionIndex) && (
           <div>
@@ -349,10 +319,16 @@ function Play() {
           </div>
         </div>
         <h5 className="text-3xl my-8">
-          {!prevClicked ? currentQuestion.question : previousQuestion.question}
+          {/* {!prevClicked ? currentQuestion.question : previousQuestion.question} */}
+          {currentQuestion.questions}
         </h5>
         {/* <h5 className="text-3xl my-8">{currentQuestion.question}</h5> */}
-        <div className="option">
+        <div
+          className={`option ${
+            takenRef.current.includes(currentQuestionIndex) &&
+            "pointer-events-none opacity-25"
+          }`}
+        >
           {modal && (
             <Modal
               explanation={currentQuestion.answer}
@@ -381,10 +357,7 @@ function Play() {
                 "pointer-events-none bg-rose-400 line-through"
               } option rounded-md bg-blue-700 p-3 text-lg text-white`}
             >
-              {!prevClicked
-                ? currentQuestion.optionA
-                : previousQuestion.optionA}
-              {/* {currentQuestion.optionA} */}
+              {currentQuestion.optionA}
             </p>
             <p
               id="b"
@@ -405,10 +378,7 @@ function Play() {
                 "pointer-events-none bg-rose-400 line-through"
               } option rounded-md bg-blue-700 p-3 text-lg text-white`}
             >
-              {!prevClicked
-                ? currentQuestion.optionB
-                : previousQuestion.optionB}
-              {/* {currentQuestion.optionB} */}
+              {currentQuestion.optionB}
             </p>
           </div>
           <div className="options-container">
@@ -431,10 +401,7 @@ function Play() {
                 "pointer-events-none bg-rose-400 line-through"
               } option rounded-md bg-blue-700 p-3 text-lg text-white`}
             >
-              {!prevClicked
-                ? currentQuestion.optionC
-                : previousQuestion.optionC}
-              {/* {currentQuestion.optionC} */}
+              {currentQuestion.optionC}
             </p>
             <p
               id="d"
@@ -455,14 +422,11 @@ function Play() {
                 "pointer-events-none bg-rose-400 line-through"
               } option rounded-md bg-blue-700 p-3 text-lg text-white`}
             >
-              {!prevClicked
-                ? currentQuestion.optionD
-                : previousQuestion.optionD}
-              {/* {currentQuestion.optionD} */}
+              {currentQuestion.optionD}
             </p>
           </div>
         </div>
-        <div className="quiz-direction flex justify-between">
+        <div className="quiz-direction flex justify-around">
           <div className="flex gap-x-4">
             {skippedRef.current.length > 0 && (
               <button
@@ -502,7 +466,14 @@ function Play() {
             {prevClicked && (
               <button
                 id="next-button"
-                onClick={handleButtonClick}
+                onClick={() =>
+                  handleButtonClick({
+                    event,
+                    state: {
+                      currentQuestionIndex: currentQuestionIndex,
+                    },
+                  })
+                }
                 className="direction-key rounded-sm bg-purple-700 p-3 text-sm text-white"
               >
                 Next
