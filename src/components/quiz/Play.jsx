@@ -15,7 +15,7 @@ function Play() {
   const [numberOfAnsweredQuestion, setNumberOfAnsweredQuestion] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
-  const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [correctAnswers, setCorrectAnswers] = useState(1);
   const [wrongAnswers, setWrongAnswers] = useState(0);
   const [time, setTime] = useState({});
   const [tries, setTries] = useState(0);
@@ -25,6 +25,9 @@ function Play() {
   const skippedRef = useRef([]);
   const takenRef = useRef([]);
   const [inactive, setInactive] = useState(false);
+  const [inactiveNext, setInactiveNext] = useState(false);
+  const [inactiveSkip, setInactiveSkip] = useState(false);
+  const [inactivePrev, setInactivePrev] = useState(false);
   const inactiveA = useRef(inactive);
   const inactiveB = useRef(inactive);
   const inactiveC = useRef(inactive);
@@ -37,15 +40,30 @@ function Play() {
   const navigate = useNavigate();
 
   const displayQuestions = () => {
-    console.log(previousQuestion, nextQuestion);
-
     setCurrentQuestion(questionsData[currentQuestionIndex]);
     setNextQuestion(questionsData[currentQuestionIndex + 1]);
     setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
     setAnswer(questionsData[currentQuestionIndex].answer);
 
     setAttempt(2);
+    if (takenRef.current.length === 14) {
+      endQuiz();
+    }
 
+    if (currentQuestionIndex < 14) {
+      setInactiveNext(false);
+
+      setInactiveSkip(false);
+    } else if (currentQuestionIndex === 14) {
+      setInactiveNext(true);
+      setInactiveSkip(true);
+    }
+
+    if (currentQuestionIndex === 0) {
+      setInactivePrev(true);
+    } else {
+      setInactivePrev(false);
+    }
     inactiveA.current = inactive;
     inactiveB.current = inactive;
     inactiveC.current = inactive;
@@ -72,12 +90,17 @@ function Play() {
     inactiveD.current = inactive;
 
     if (nextQuestion === undefined) {
-      if (skippedRef.current.length === 0) {
+      if (takenRef.current.length === 14) {
         endQuiz();
       } else {
         alert(
           `there are ${skippedRef.current.length} skipped questions, please go back`
         );
+        setCurrentQuestionIndex((prevState) => prevState - 1);
+        setCorrectAnswers((prevState) => prevState);
+        setWrongAnswers((prevState) => prevState);
+
+        displayQuestions();
       }
     } else {
       takenRef.current = [...takenRef.current, currentQuestionIndex];
@@ -97,6 +120,7 @@ function Play() {
     setNumberOfAnsweredQuestion((prevState) => prevState);
     setTries(0);
     setAttempt(0);
+    takenRef.current = [...takenRef.current, currentQuestionIndex];
 
     displayAnswer();
   };
@@ -105,10 +129,14 @@ function Play() {
     setModal(true);
 
     if (nextQuestion === undefined) {
-      if (skippedRef.current.length === 0) {
+      if (takenRef.current.length === 14) {
         endQuiz();
       } else {
         `there are ${skippedRef.current.length}skipped questions, please go back`;
+        setCurrentQuestionIndex((prevState) => prevState - 1);
+        setCorrectAnswers((prevState) => prevState);
+        setWrongAnswers((prevState) => prevState);
+        displayQuestions();
       }
     } else {
       displayQuestions();
@@ -134,7 +162,7 @@ function Play() {
 
   const handleNextButton = () => {
     setCurrentQuestionIndex((prevState) => prevState + 1);
-    if (previousQuestion !== undefined) {
+    if (nextQuestion !== undefined) {
       displayQuestions();
     }
   };
@@ -150,7 +178,7 @@ function Play() {
 
     skippedRef.current = [...skippedRef.current, currentQuestionIndex];
 
-    if (currentQuestionIndex === 15) {
+    if (currentQuestionIndex === 14) {
       alert("You are at the last question, Can't Skip!");
     } else {
       displayQuestions();
@@ -245,22 +273,34 @@ function Play() {
       wrongAnswers,
       name,
     };
-    setTimeout(() => {
-      navigate("/quiz-summary", { state: { stats: playerStats } });
-    }, 1000);
+    navigate("/quiz-summary", { state: { stats: playerStats } });
+
+    // setTimeout(() => {
+    //   navigate("/quiz-summary", { state: { stats: playerStats } });
+    // }, 1000);
   };
 
   useEffect(() => {
-    setAnswer(questionsData[currentQuestionIndex].answer);
-    setCurrentQuestionIndex((prevState) => prevState);
-    setCurrentQuestion(questionsData[currentQuestionIndex]);
+    try {
+      setAnswer(questionsData[currentQuestionIndex].answer);
+      setCurrentQuestionIndex((prevState) => prevState);
+      setCurrentQuestion(questionsData[currentQuestionIndex]);
 
-    setNextQuestion(questionsData[currentQuestionIndex + 1]);
-    setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
+      setNextQuestion(questionsData[currentQuestionIndex + 1]);
+      setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
+    } catch (error) {
+      console.log(error);
+    }
 
     displayQuestions();
     startTimer();
-  }, [currentQuestionIndex, previousQuestion, currentQuestion, answer]);
+  }, [
+    currentQuestionIndex,
+    previousQuestion,
+    currentQuestion,
+    nextQuestion,
+    answer,
+  ]);
 
   return (
     <div className="flex flex-col items-center">
@@ -297,7 +337,7 @@ function Play() {
           <div className="clock">
             <p>
               <span className="text-blue-800 px-3 text-lg">
-                {currentQuestionIndex} 0f 15
+                {currentQuestionIndex + 1} 0f 15
               </span>
             </p>
 
@@ -320,7 +360,7 @@ function Play() {
         </div>
         <h5 className="text-3xl my-8">
           {/* {!prevClicked ? currentQuestion.question : previousQuestion.question} */}
-          {currentQuestion.questions}
+          {currentQuestion.question}
         </h5>
         {/* <h5 className="text-3xl my-8">{currentQuestion.question}</h5> */}
         <div
@@ -439,29 +479,13 @@ function Play() {
                     },
                   })
                 }
-                className="direction-key rounded-sm bg-green-700 p-3 text-sm text-white"
+                className={`${
+                  inactivePrev && "pointer-events-none opacity-25"
+                } direction-key rounded-sm bg-orange-400 p-3 text-sm text-white`}
               >
                 Previous
               </button>
             )}
-
-            {/* <button
-              id="previous-button"
-              onClick={handleButtonClick}
-              className="direction-key rounded-sm bg-green-700 p-3 text-sm text-white"
-            >
-              Previous
-            </button> */}
-
-            {/* {skippedRef.current.length > 0 && (
-              <button
-                id="next-button"
-                onClick={handleButtonClick}
-                className="direction-key rounded-sm bg-green-700 p-3 text-sm text-white"
-              >
-                Next
-              </button>
-            )} */}
 
             {prevClicked && (
               <button
@@ -474,7 +498,9 @@ function Play() {
                     },
                   })
                 }
-                className="direction-key rounded-sm bg-purple-700 p-3 text-sm text-white"
+                className={`${
+                  inactiveNext && "pointer-events-none opacity-25"
+                } direction-key rounded-sm bg-purple-700 p-3 text-sm text-white`}
               >
                 Next
               </button>
@@ -490,7 +516,9 @@ function Play() {
                   },
                 })
               }
-              className="direction-key rounded-sm bg-orange-400 p-3 text-sm text-white"
+              className={`${
+                inactiveSkip && "pointer-events-none opacity-25"
+              } direction-key rounded-sm bg-orange-400 p-3 text-sm text-white`}
             >
               Skip
             </button>
