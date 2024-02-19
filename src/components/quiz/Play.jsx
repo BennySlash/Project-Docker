@@ -50,12 +50,16 @@ function Play() {
       endQuiz();
     }
 
-    if (currentQuestionIndex < 14) {
+    if (
+      takenRef.current.includes(currentQuestionIndex) ||
+      skippedRef.current.includes(currentQuestionIndex)
+    ) {
       setInactiveNext(false);
-
-      setInactiveSkip(false);
-    } else if (currentQuestionIndex === 14) {
+    } else {
       setInactiveNext(true);
+    }
+
+    if (currentQuestionIndex === 14) {
       setInactiveSkip(true);
     }
 
@@ -132,7 +136,9 @@ function Play() {
       if (takenRef.current.length === 14) {
         endQuiz();
       } else {
-        `there are ${skippedRef.current.length}skipped questions, please go back`;
+        alert(
+          `there are ${skippedRef.current.length}skipped questions, please go back`
+        );
         setCurrentQuestionIndex((prevState) => prevState - 1);
         setCorrectAnswers((prevState) => prevState);
         setWrongAnswers((prevState) => prevState);
@@ -300,11 +306,16 @@ function Play() {
     currentQuestion,
     nextQuestion,
     answer,
+    interval,
   ]);
 
   return (
     <div className="flex flex-col items-center">
-      <Indicator led={currentQuestionIndex} skip={skippedRef.current} />
+      <Indicator
+        led={currentQuestionIndex}
+        skip={skippedRef.current}
+        taken={takenRef.current}
+      />
       <div className="questions">
         {takenRef.current.includes(currentQuestionIndex) && (
           <div>

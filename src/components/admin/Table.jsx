@@ -1,6 +1,8 @@
+import { useRef } from "react";
+import { DownloadTableExcel } from "react-export-table-to-excel";
 const Table = (props) => {
+  const tableRef = useRef(null);
   const data = props.data;
-  // console.log(data);
   let tableRows = null;
   if (props.column === 0) {
     tableRows = data.map((userEmail, index) => {
@@ -42,10 +44,28 @@ const Table = (props) => {
       );
     });
   }
+
+  const exportToExcel = () => {};
   return (
     <>
+      <DownloadTableExcel
+        filename="table data"
+        sheet="sheet1"
+        currentTableRef={tableRef.current}
+        buttonText="Download as XLS"
+      >
+        <button
+          onClick={exportToExcel}
+          className="rounded-xl bg-green-700 p-3 text-lg text-white"
+        >
+          Export to excel
+        </button>
+      </DownloadTableExcel>
       <div className="relative overflow-x-auto p-5">
-        <table className="w-50 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <table
+          ref={tableRef}
+          className="w-50 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+        >
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">

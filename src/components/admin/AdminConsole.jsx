@@ -82,6 +82,7 @@ const AdminConsole = () => {
             Get All Employee Quiz Scores
           </button>
         </div>
+
         <div>
           <div className="relative">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"></div>
@@ -103,7 +104,18 @@ const AdminConsole = () => {
             </button>
           </div>
         </div>
+        <button
+          onClick={() => {
+            if (window.confirm("Are you sure you want to Quit?")) {
+              navigate("/");
+            }
+          }}
+          className="direction-key rounded-sm bg-red-700 p-3 text-sm text-white"
+        >
+          Quit
+        </button>
       </div>
+
       {displayEmployeeList && <Table data={users} column={0} />}
       {dislayScores && <Table data={employeeScore.data} column={1} />}
       {displayResults && <SearchResult list={results.data} />}
