@@ -46,7 +46,8 @@ function Play() {
     setAnswer(questionsData[currentQuestionIndex].answer);
 
     setAttempt(2);
-    if (takenRef.current.length === 14) {
+
+    if (takenRef.current.length === 15) {
       endQuiz();
     }
 
@@ -68,6 +69,8 @@ function Play() {
     } else {
       setInactivePrev(false);
     }
+
+    console.log(takenRef.current.length);
     inactiveA.current = inactive;
     inactiveB.current = inactive;
     inactiveC.current = inactive;
@@ -100,6 +103,8 @@ function Play() {
         alert(
           `there are ${skippedRef.current.length} skipped questions, please go back`
         );
+        takenRef.current = [...takenRef.current, currentQuestionIndex];
+
         setCurrentQuestionIndex((prevState) => prevState - 1);
         setCorrectAnswers((prevState) => prevState);
         setWrongAnswers((prevState) => prevState);
@@ -139,6 +144,8 @@ function Play() {
         alert(
           `there are ${skippedRef.current.length}skipped questions, please go back`
         );
+        takenRef.current = [...takenRef.current, currentQuestionIndex];
+
         setCurrentQuestionIndex((prevState) => prevState - 1);
         setCorrectAnswers((prevState) => prevState);
         setWrongAnswers((prevState) => prevState);
