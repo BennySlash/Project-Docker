@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-// const Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
 const employeeSchema = new mongoose.Schema(
   {
@@ -7,11 +7,10 @@ const employeeSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    score: {
-      type: Number,
+    email: {
+      type: String,
       require: true,
-      min: [0, "Score cannot be less than 0"],
-      max: [100, "Score cannot be more than 100"],
+      unique: true,
     },
     date: {
       type: Date,

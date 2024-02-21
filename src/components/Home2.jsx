@@ -5,9 +5,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Home2 = () => {
-  const navigate = useNavigate;
   const onsubmit = async (email, name) => {
-    await axios.post("http://localhost:4000/api/auth", { email });
+    await axios.post("http://localhost:4000/api/signup", { email, name });
   };
 
   return (
@@ -43,8 +42,8 @@ const Home2 = () => {
             onSuccess={(credentialResponse) => {
               const decode = jwtDecode(credentialResponse.credential);
               const { email, name } = decode;
-              console.log({ email });
               onsubmit(email, name);
+              // console.log(email, name);
             }}
             onError={() => {
               console.log("Login Failed");

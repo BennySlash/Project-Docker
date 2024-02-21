@@ -3,6 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const scoreRouter = require("./routes/score");
 const getScoreRouter = require("./routes/getScore");
+const auth = require("./routes/auth");
 const mongoose = require("mongoose");
 
 const MONGO_URI =
@@ -25,6 +26,7 @@ app.use(cors(corsOptions));
 
 app.use("/", scoreRouter);
 app.use("/", getScoreRouter);
+app.use("/", auth);
 
 const PORT = process.env.PORT || 4000;
 
