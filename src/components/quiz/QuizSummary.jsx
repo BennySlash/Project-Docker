@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { sendDataToServer } from "../../utils/api";
 import { sendDataToBackend } from "../admin/utils/api";
+import { useAuth } from "../../context/AuthContext";
 
 function QuizSummary() {
   const location = useLocation();
   const [displayCheck, setDisplayCheck] = useState(false);
   const [displayComparison, setDisplayComparison] = useState(false);
   const [comparison, setComparison] = useState("");
+  const { user } = useAuth();
 
   const [score, setScore] = useState(
     (location.state.stats.score / location.state.stats.numberOfQuestions) * 100
@@ -23,7 +25,8 @@ function QuizSummary() {
   const [wrongAnswers, setWrongAnswers] = useState(
     location.state.stats.wrongAnswers
   );
-  const [name, setName] = useState(location.state.stats.name);
+  // const [name, setName] = useState(location.state.stats.name);
+
   let stats;
   let remark;
   let reaction;
@@ -246,7 +249,7 @@ function QuizSummary() {
         {!displayCheck && (
           <button
             onClick={() =>
-              send({ fullName: name, scorePercentage: score.toFixed(0) })
+              send({ fullName: user, scorePercentage: score.toFixed(0) })
             }
             className="rounded-lg bg-blue-700 p-3 text-lg text-white font-sans text-xs font-bold uppercase text-white shadow-lg shadow-green-500/20 transition-all hover:shadow-lg hover:shadow-green-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
           >
@@ -277,7 +280,7 @@ function QuizSummary() {
             <li className="m-10">
               <Link
                 to="/play-quiz"
-                state={{ name: name }}
+                // state={{ name: name }}
                 className="rounded-lg bg-blue-700 p-3 text-lg text-white font-sans text-xs font-bold uppercase text-white shadow-lg shadow-green-500/20 transition-all hover:shadow-lg hover:shadow-green-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               >
                 Take Quiz Again

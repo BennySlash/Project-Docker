@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const users = require("../utils/users");
 const {
   getEmployeeScores,
   getEmployeeScoresPerUser,

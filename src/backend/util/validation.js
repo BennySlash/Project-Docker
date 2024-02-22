@@ -1,4 +1,4 @@
-const users = require("../utils/users");
+const users = require("./users");
 
 function isValidText(value, minLength = 1) {
   return value && value.trim().length >= minLength;

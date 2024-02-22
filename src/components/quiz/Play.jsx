@@ -35,7 +35,7 @@ function Play() {
   let interval = null;
 
   const location = useLocation();
-  const name = location.state.name;
+  // const name = location.state.name;
 
   const navigate = useNavigate();
 
@@ -70,7 +70,7 @@ function Play() {
       setInactivePrev(false);
     }
 
-    console.log(takenRef.current.length);
+    // console.log(takenRef.current.length);
     inactiveA.current = inactive;
     inactiveB.current = inactive;
     inactiveC.current = inactive;
@@ -284,7 +284,7 @@ function Play() {
       numberOfQuestions,
       correctAnswers,
       wrongAnswers,
-      name,
+      // name,
     };
     navigate("/quiz-summary", { state: { stats: playerStats } });
 

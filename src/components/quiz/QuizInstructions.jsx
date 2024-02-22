@@ -1,18 +1,15 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { useAuth } from "../../context/AuthContext";
 
 const QuizInstruction = () => {
-  const location = useLocation();
+  // const { user } = useAuth();
 
-  const [name, setName] = useState("");
+  // const [name, setName] = useState("");
 
-  // console.log(name);
-
-  useEffect(() => {
-    setName(location.state.fullName);
-  }, []);
+  // console.log({ user });
+  const { logout } = useAuth();
 
   return (
     <div>
@@ -40,14 +37,22 @@ const QuizInstruction = () => {
           However, your quiz will not be graded, if you skip a question or exit
           before responding to all the questions.
         </p>
-
-        <Link
-          className="option direction-key rounded-sm bg-blue-700 p-3 text-lg text-white "
-          to="/play-quiz"
-          state={{ name: name }}
-        >
-          Take Quiz
-        </Link>
+        <div className="flex justify-around">
+          <Link
+            className="w-1/12 text-center p-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            to="/play-quiz"
+            // state={{ name: name }}
+          >
+            Take Quiz
+          </Link>
+          <button
+            onClick={logout}
+            className="w-1/12 p-3 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Logout
+          </button>
+          ``
+        </div>
       </div>
     </div>
   );
