@@ -7,10 +7,10 @@ export default function Indicator(props) {
   const paginator = () => {
     return questionsData.map((questions, index) => {
       return (
-        <div className="flex flex-col gap-y-4" key={index}>
+        <div className="mt-10 flex flex-col gap-y-4" key={index}>
           <span
             className={`flex w-3 h-3 me-3 ${
-              index === props.led ? "bg-current" : "bg-slate-500"
+              index === props.led ? "bg-blue-700" : "bg-slate-500"
             } rounded-full`}
           ></span>
           <span
@@ -28,7 +28,13 @@ export default function Indicator(props) {
 
   return (
     <>
-      <div className="flex gap-x-3">{paginator()}</div>
+      <div className="flex gap-x-3 items-baseline">
+        <div className="mr-2 flex flex-col">
+          <p className="p-1 text-center bg-blue-500 rounded-t">#questions</p>
+          <p className="p-1 text-center bg-yellow-500 rounded-b">#skipped</p>
+        </div>
+        {paginator()}
+      </div>
     </>
   );
 }

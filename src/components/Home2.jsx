@@ -41,7 +41,7 @@ const Home2 = () => {
   };
 
   return (
-    <div className="flex bg-gray-900">
+    <div className="landing h-full w-full flex">
       <div className="min-w-max flex flex-col items-center min-h-full flex-col justify-center  px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
@@ -49,7 +49,7 @@ const Home2 = () => {
             src="./assets/img/gebeya_inc_logo.png"
             alt="gebeya logo"
           />
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">
             Login to QuizGebeya
           </h2>
         </div>
@@ -65,7 +65,7 @@ const Home2 = () => {
             ></input>
             <button
               type="submit"
-              className="w-6/12 mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className="w-6/12 mt-4 bg-gradient-to-tr from-purple-700 to-yellow-700  text-white font-bold py-2 px-4 rounded transition-all hover:shadow-lg hover:shadow-orange-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
             >
               Login
             </button>
@@ -85,7 +85,9 @@ const Home2 = () => {
           />
         </div>
       </div>
-      <div className="flex items-center text-white">
+      <div className="africa flex items-center text-white p-5">
+        {/* <p>Opening Africa to a World of</p>
+        <h1>Opportunity</h1> */}
         <p>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus
           explicabo alias repellendus corporis consequuntur, tenetur inventore

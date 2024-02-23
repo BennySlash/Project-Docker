@@ -91,3 +91,26 @@
     cursor: pointer;
   }
 }
+.landing {
+  background-color: #161324;
+
+  .africa {
+    background-image: url("../../../public/assets/img/gebeya-world.png");
+    background-position: center;
+    background-size: contain;
+    // background-size: 50%;
+    background-repeat: no-repeat;
+  }
+}
+@media (max-width: 780px) {
+  .landing {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .africa {
+      text-align: center;
+    }
+  }
+}

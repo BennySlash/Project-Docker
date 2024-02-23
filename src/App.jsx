@@ -15,7 +15,6 @@ function App() {
     <>
       {token ? (
         <Routes>
-          {/* <Route path="/" element={<Home />} /> */}
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/admin-console" element={<AdminConsole />} />
           <Route path="/instructions" element={<QuizInstruction />} />
