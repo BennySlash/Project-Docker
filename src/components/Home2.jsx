@@ -41,59 +41,61 @@ const Home2 = () => {
   };
 
   return (
-    <div className="landing h-full w-full flex">
-      <div className="min-w-max flex flex-col items-center min-h-full flex-col justify-center  px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
-            className="mx-auto h-40 w-auto"
-            src="./assets/img/gebeya_inc_logo.png"
-            alt="gebeya logo"
-          />
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">
-            Login to QuizGebeya
-          </h2>
-        </div>
-        <div className="m-8">
-          <form onSubmit={handleSubmit} className="flex flex-col items-center">
-            <input
-              type="email"
-              value={typed}
-              onChange={handleChange}
-              placeholder="Enter your Gebeya Email"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-center flex items-center"
-              size="30"
-            ></input>
-            <button
-              type="submit"
-              className="w-6/12 mt-4 bg-gradient-to-tr from-purple-700 to-yellow-700  text-white font-bold py-2 px-4 rounded transition-all hover:shadow-lg hover:shadow-orange-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+    <div className="landing h-full w-full">
+      <div className="landing h-full w-full flex justify-around">
+        <div className="min-w-max flex flex-col items-center min-h-full flex-col justify-center px-0 py-12 lg:px-8">
+          <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+            <img
+              className="mx-auto h-40 w-auto"
+              src="./assets/img/gebeya_inc_logo.png"
+              alt="gebeya logo"
+            />
+            <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">
+              Login to QuizGebeya
+            </h2>
+          </div>
+          <div className="m-8">
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col items-center"
             >
-              Login
-            </button>
-          </form>
+              <input
+                type="email"
+                value={typed}
+                onChange={handleChange}
+                placeholder="Enter your Gebeya Email"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-center flex items-center"
+                size="30"
+              ></input>
+              <button
+                type="submit"
+                className="w-6/12 mt-4 bg-gradient-to-tr from-purple-700 to-yellow-700  text-white font-bold py-2 px-4 rounded transition-all hover:shadow-lg hover:shadow-orange-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              >
+                Login
+              </button>
+            </form>
+          </div>
+          <div>
+            <GoogleLogin
+              onSuccess={(credentialResponse) => {
+                const decode = jwtDecode(credentialResponse.credential);
+                const { email, name } = decode;
+                onsubmit(email, name);
+              }}
+              onError={() => {
+                console.log("Login Failed");
+              }}
+            />
+          </div>
         </div>
-        <div>
-          <GoogleLogin
-            onSuccess={(credentialResponse) => {
-              const decode = jwtDecode(credentialResponse.credential);
-              const { email, name } = decode;
-              onsubmit(email, name);
-              // console.log(email, name);
-            }}
-            onError={() => {
-              console.log("Login Failed");
-            }}
-          />
+        <div className="africa w-3/5 flex text-white items-center justify-center">
+          <h1 className="h-fit self-start">
+            <span>
+              Welcome to Gebeya
+              <br /> Quiz App
+            </span>
+          </h1>
         </div>
-      </div>
-      <div className="africa flex items-center text-white p-5">
-        {/* <p>Opening Africa to a World of</p>
-        <h1>Opportunity</h1> */}
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus
-          explicabo alias repellendus corporis consequuntur, tenetur inventore
-          numquam expedita praesentium molestiae non? Qui pariatur tenetur in
-          fugit eligendi dolorum dolores temporibus.
-        </p>
       </div>
     </div>
   );

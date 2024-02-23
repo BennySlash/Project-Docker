@@ -91,15 +91,38 @@
     cursor: pointer;
   }
 }
+.nav {
+  background-color: #161324;
+  // position: fixed;
+  .links {
+    background-color: #161324;
+  }
+}
 .landing {
   background-color: #161324;
 
   .africa {
-    background-image: url("../../../public/assets/img/gebeya-world.png");
-    background-position: center;
+    text-align: center;
+    background-image: url("../../../public/assets/img/gebeya-world-removebg-preview.png");
+    background-position-y: bottom;
+    background-position-x: center;
     background-size: contain;
-    // background-size: 50%;
+    padding-inline: $xxlg;
     background-repeat: no-repeat;
+    border-width: 3px;
+    border-style: solid;
+    border-image: linear-gradient(
+        to bottom,
+        rgb(235, 46, 165),
+        rgb(244, 206, 41)
+      )
+      1 100%;
+    border-right: none;
+    h1 {
+      background: -webkit-linear-gradient(#eb2ea5, #f4ce29);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
   }
 }
 @media (max-width: 780px) {

@@ -4,6 +4,11 @@ import questionsData from "../../questions.json";
 export default function Indicator(props) {
   const [taken, setTaken] = useState(false);
 
+  const handleClick = (event) => {
+    // console.log(event.target.id);
+    props.pass(event.target.id);
+  };
+
   const paginator = () => {
     return questionsData.map((questions, index) => {
       return (
@@ -13,14 +18,24 @@ export default function Indicator(props) {
               index === props.led ? "bg-blue-700" : "bg-slate-500"
             } rounded-full`}
           ></span>
-          <span
+          {/* <span
             className={`flex w-3 h-3 me-3 ${
               props.skip.map((x) => x).includes(index) &&
               !props.taken.includes(index)
                 ? "bg-yellow-700"
                 : "bg-transparent"
             } rounded-full ${taken && "bg-slate-500"}`}
-          ></span>
+          ></span>  */}
+          <button
+            onClick={handleClick}
+            id={index}
+            className={`flex w-3 h-3 me-3 ${
+              props.skip.map((x) => x).includes(index) &&
+              !props.taken.includes(index)
+                ? "bg-yellow-700"
+                : "bg-transparent"
+            } rounded-full ${taken && "bg-slate-500"}`}
+          ></button>
         </div>
       );
     });

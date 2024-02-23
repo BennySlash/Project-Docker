@@ -28,6 +28,7 @@ function Play() {
   const [inactiveNext, setInactiveNext] = useState(false);
   const [inactiveSkip, setInactiveSkip] = useState(false);
   const [inactivePrev, setInactivePrev] = useState(false);
+  const [skipPageClicked, setSkipPageClicked] = useState(false);
   const inactiveA = useRef(inactive);
   const inactiveB = useRef(inactive);
   const inactiveC = useRef(inactive);
@@ -39,42 +40,57 @@ function Play() {
 
   const navigate = useNavigate();
 
-  const displayQuestions = () => {
-    setCurrentQuestion(questionsData[currentQuestionIndex]);
-    setNextQuestion(questionsData[currentQuestionIndex + 1]);
-    setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
-    setAnswer(questionsData[currentQuestionIndex].answer);
+  const page = (index) => {
+    setSkipPageClicked(true);
+    setCurrentQuestion(index);
+    displayQuestions(index);
+  };
 
-    setAttempt(2);
-
-    if (takenRef.current.length === 15) {
-      endQuiz();
-    }
-
-    if (
-      takenRef.current.includes(currentQuestionIndex) ||
-      skippedRef.current.includes(currentQuestionIndex)
-    ) {
-      setInactiveNext(false);
+  const displayQuestions = (index) => {
+    if (skipPageClicked) {
+      console.log(index);
+      // setCurrentQuestion(questionsData[index]);
+      // setNextQuestion(questionsData[index + 1]);
+      // setPreviousQuestion(questionsData[index - 1]);
+      // setAnswer(questionsData[index].answer);
     } else {
-      setInactiveNext(true);
-    }
+      setCurrentQuestion(questionsData[currentQuestionIndex]);
+      setNextQuestion(questionsData[currentQuestionIndex + 1]);
+      setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
+      setAnswer(questionsData[currentQuestionIndex].answer);
+      // console.log(index);
 
-    if (currentQuestionIndex === 14) {
-      setInactiveSkip(true);
-    }
+      setAttempt(2);
 
-    if (currentQuestionIndex === 0) {
-      setInactivePrev(true);
-    } else {
-      setInactivePrev(false);
-    }
+      if (takenRef.current.length === 15) {
+        endQuiz();
+      }
 
-    // console.log(takenRef.current.length);
-    inactiveA.current = inactive;
-    inactiveB.current = inactive;
-    inactiveC.current = inactive;
-    inactiveD.current = inactive;
+      if (
+        takenRef.current.includes(currentQuestionIndex) ||
+        skippedRef.current.includes(currentQuestionIndex)
+      ) {
+        setInactiveNext(false);
+      } else {
+        setInactiveNext(true);
+      }
+
+      if (currentQuestionIndex === 14) {
+        setInactiveSkip(true);
+      }
+
+      if (currentQuestionIndex === 0) {
+        setInactivePrev(true);
+      } else {
+        setInactivePrev(false);
+      }
+
+      // console.log(takenRef.current.length);
+      inactiveA.current = inactive;
+      inactiveB.current = inactive;
+      inactiveC.current = inactive;
+      inactiveD.current = inactive;
+    }
   };
 
   const correctAnswer = () => {
@@ -314,11 +330,13 @@ function Play() {
     nextQuestion,
     answer,
     interval,
+    skipPageClicked,
   ]);
 
   return (
     <div className="flex flex-col items-center">
       <Indicator
+        pass={page}
         led={currentQuestionIndex}
         skip={skippedRef.current}
         taken={takenRef.current}

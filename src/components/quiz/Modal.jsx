@@ -1,9 +1,9 @@
 import { useState } from "react";
 
 const Modal = (props) => {
-  const toggelModal = () => {
-    setModal((prevState) => !prevState);
-  };
+  // const toggelModal = () => {
+  //   setModal((prevState) => !prevState);
+  // };
   return (
     <>
       <div className="flex flex-col h-full bg-stone-950 text-white z-50 items-center justify-center items-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0  md:inset-0 h-[calc(100%-20rem)]">
