@@ -3,6 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const scoreRouter = require("./routes/score");
 const getScoreRouter = require("./routes/getScore");
+const pageRouter = require("./routes/page");
 const auth = require("./routes/auth");
 const mongoose = require("mongoose");
 
@@ -27,6 +28,7 @@ app.use(cors(corsOptions));
 app.use("/", scoreRouter);
 app.use("/", getScoreRouter);
 app.use("/", auth);
+app.use("/", pageRouter);
 
 const PORT = process.env.PORT || 4000;
 
