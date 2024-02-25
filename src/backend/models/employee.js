@@ -12,6 +12,27 @@ const employeeSchema = new mongoose.Schema(
       require: true,
       unique: true,
     },
+    currentQuestionIndex: {
+      type: Number,
+      require: true,
+    },
+    score: {
+      type: Number,
+      require: true,
+    },
+    currentQuestion: {
+      type: String,
+      require: true,
+    },
+    previousQuestion: {
+      type: String,
+      require: true,
+    },
+    prev: {
+      type: Number,
+      require: true,
+    },
+
     date: {
       type: Date,
       required: true,

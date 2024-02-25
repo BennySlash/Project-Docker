@@ -28,69 +28,62 @@ function Play() {
   const [inactiveNext, setInactiveNext] = useState(false);
   const [inactiveSkip, setInactiveSkip] = useState(false);
   const [inactivePrev, setInactivePrev] = useState(false);
-  const [skipPageClicked, setSkipPageClicked] = useState(false);
+  const pageRef = useRef();
   const inactiveA = useRef(inactive);
   const inactiveB = useRef(inactive);
   const inactiveC = useRef(inactive);
   const inactiveD = useRef(inactive);
   let interval = null;
 
-  const location = useLocation();
-  // const name = location.state.name;
-
   const navigate = useNavigate();
 
   const page = (index) => {
-    setSkipPageClicked(true);
-    setCurrentQuestion(index);
-    displayQuestions(index);
+    pageRef.current = index;
+    setCurrentQuestionIndex(Number(pageRef.current));
+    setCurrentQuestion(questionsData[Number(pageRef.current)]);
+    setNextQuestion(questionsData[Number(pageRef.current) + 1]);
+    setPreviousQuestion(questionsData[Number(pageRef.current) - 1]);
+    setAnswer(questionsData[Number(pageRef.current)].answer);
+    displayQuestions();
   };
 
-  const displayQuestions = (index) => {
-    if (skipPageClicked) {
-      console.log(index);
-      // setCurrentQuestion(questionsData[index]);
-      // setNextQuestion(questionsData[index + 1]);
-      // setPreviousQuestion(questionsData[index - 1]);
-      // setAnswer(questionsData[index].answer);
-    } else {
-      setCurrentQuestion(questionsData[currentQuestionIndex]);
-      setNextQuestion(questionsData[currentQuestionIndex + 1]);
-      setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
-      setAnswer(questionsData[currentQuestionIndex].answer);
-      // console.log(index);
+  const displayQuestions = () => {
+    setCurrentQuestion(questionsData[currentQuestionIndex]);
+    setNextQuestion(questionsData[currentQuestionIndex + 1]);
+    setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
+    setAnswer(questionsData[currentQuestionIndex].answer);
+    // console.log(index);
 
-      setAttempt(2);
+    setAttempt(2);
 
-      if (takenRef.current.length === 15) {
-        endQuiz();
-      }
-
-      if (
-        takenRef.current.includes(currentQuestionIndex) ||
-        skippedRef.current.includes(currentQuestionIndex)
-      ) {
-        setInactiveNext(false);
-      } else {
-        setInactiveNext(true);
-      }
-
-      if (currentQuestionIndex === 14) {
-        setInactiveSkip(true);
-      }
-
-      if (currentQuestionIndex === 0) {
-        setInactivePrev(true);
-      } else {
-        setInactivePrev(false);
-      }
-
-      // console.log(takenRef.current.length);
-      inactiveA.current = inactive;
-      inactiveB.current = inactive;
-      inactiveC.current = inactive;
-      inactiveD.current = inactive;
+    if (takenRef.current.length === 15) {
+      endQuiz();
     }
+
+    if (
+      takenRef.current.includes(currentQuestionIndex) ||
+      skippedRef.current.includes(currentQuestionIndex)
+    ) {
+      setInactiveNext(false);
+    } else {
+      setInactiveNext(true);
+    }
+
+    if (currentQuestionIndex === 14) {
+      setInactiveSkip(true);
+    }
+
+    if (currentQuestionIndex === 0) {
+      setInactivePrev(true);
+    } else {
+      setInactivePrev(false);
+    }
+
+    // console.log(takenRef.current.length);
+    inactiveA.current = inactive;
+    inactiveB.current = inactive;
+    inactiveC.current = inactive;
+    inactiveD.current = inactive;
   };
 
   const correctAnswer = () => {
@@ -321,6 +314,12 @@ function Play() {
       console.log(error);
     }
 
+    // if (skipPageClicked) {
+    //   page(null);
+    // } else {
+    //   displayQuestions();
+    // }
+
     displayQuestions();
     startTimer();
   }, [
@@ -329,8 +328,8 @@ function Play() {
     currentQuestion,
     nextQuestion,
     answer,
-    interval,
-    skipPageClicked,
+    // pageRef.current,
+    pageRef,
   ]);
 
   return (

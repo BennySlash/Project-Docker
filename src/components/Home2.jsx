@@ -27,7 +27,7 @@ const Home2 = () => {
     const res = await axios.post("http://localhost:4000/api/login", {
       typed,
     });
-    console.log(res);
+    // console.log(res);
     const fullName = res.data.user;
     login(res.data.token, res.data.user);
     M.toast({
