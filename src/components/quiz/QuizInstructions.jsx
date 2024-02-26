@@ -4,11 +4,8 @@ import { useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 
 const QuizInstruction = () => {
-  // const { user } = useAuth();
+  const { user } = useAuth();
 
-  // const [name, setName] = useState("");
-
-  // console.log({ user });
   const { logout } = useAuth();
 
   return (
@@ -41,7 +38,7 @@ const QuizInstruction = () => {
           <Link
             className="w-1/12 text-center p-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             to="/play-quiz"
-            // state={{ name: name }}
+            state={{ name: user }}
           >
             Take Quiz
           </Link>

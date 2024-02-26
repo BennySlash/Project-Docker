@@ -29,6 +29,12 @@ export function AuthProvider({ children }) {
   }, []);
 
   const logout = useCallback(() => {
+    if (window.confirm("Are you sure you want to Logout?")) {
+      // navigate("/");
+      setToken(null);
+      setUser(null);
+      localStorage.removeItem("gebeya_quiz");
+    }
     setToken(null);
     setUser(null);
     localStorage.removeItem("gebeya_quiz");

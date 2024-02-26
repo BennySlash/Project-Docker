@@ -4,6 +4,7 @@ import questionsData from "../../questions.json";
 import Modal from "./Modal";
 import Indicator from "./indicator";
 import M from "materialize-css";
+import axios from "axios";
 
 function Play() {
   const [questions, setQuestions] = useState();
@@ -28,6 +29,7 @@ function Play() {
   const [inactiveNext, setInactiveNext] = useState(false);
   const [inactiveSkip, setInactiveSkip] = useState(false);
   const [inactivePrev, setInactivePrev] = useState(false);
+  const [finished, setFinished] = useState(false);
   const pageRef = useRef();
   const inactiveA = useRef(inactive);
   const inactiveB = useRef(inactive);
@@ -36,6 +38,8 @@ function Play() {
   let interval = null;
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const user = location.state.name;
 
   const page = (index) => {
     pageRef.current = index;
@@ -47,7 +51,17 @@ function Play() {
     displayQuestions();
   };
 
-  const displayQuestions = () => {
+  const displayQuestions = async () => {
+    const res = await axios.post("http://localhost:4000/api/updatePage", {
+      currentQuestionIndex,
+      currentQuestion,
+      nextQuestion,
+      previousQuestion,
+      answer,
+      user,
+      finished,
+    });
+
     setCurrentQuestion(questionsData[currentQuestionIndex]);
     setNextQuestion(questionsData[currentQuestionIndex + 1]);
     setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
@@ -57,6 +71,7 @@ function Play() {
     setAttempt(2);
 
     if (takenRef.current.length === 15) {
+      setFinished(true);
       endQuiz();
     }
 

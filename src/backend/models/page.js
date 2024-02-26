@@ -4,24 +4,32 @@ const Schema = mongoose.Schema;
 const pageSchema = new mongoose.Schema(
   {
     currentQuestionIndex: {
-      type: String,
+      type: Number,
       required: true,
     },
     previousQuestion: {
-      type: String,
-      required: true,
+      type: Object,
+      required: false,
     },
 
     currentQuestion: {
-      type: String,
+      type: Object,
       required: true,
     },
     nextQuestion: {
-      type: String,
-      required: true,
+      type: Object,
+      required: false,
     },
     answer: {
       type: String,
+      required: false,
+    },
+    user: {
+      type: String,
+      required: false,
+    },
+    finished: {
+      type: Boolean,
       required: true,
     },
   },

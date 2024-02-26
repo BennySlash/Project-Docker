@@ -6,10 +6,8 @@ const { createJSONToken, isValidPassword } = require("../util/auth");
 
 // Create an employee with Email and Name => /api/signup
 exports.createEmployee = catchAsyncErrors(async (req, res, next) => {
-  console.log("here");
   const data = req.body;
   const existingEmail = await Employee.find({ email: req.body.email });
-  // console.log(existingEmail.length);
 
   if (!isValidEmail(data.email)) {
     console.log("invalid Email");
@@ -30,10 +28,6 @@ exports.createEmployee = catchAsyncErrors(async (req, res, next) => {
       name: req.body.name,
       email: req.body.email,
       date: new Date(),
-      // currentQuestion: "",
-      // previousQuestion: "",
-      // nextQuestion: "",
-      // currentQuestionIndex: 0,
     });
 
     res.status(201).json({
