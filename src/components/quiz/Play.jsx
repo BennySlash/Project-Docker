@@ -85,10 +85,15 @@ function Play() {
     // console.log(`score: ${score}`);
     // console.log(`finished: ${finished}`);
 
-    setCurrentQuestion(questionsData[currentQuestionIndex]);
-    setNextQuestion(questionsData[currentQuestionIndex + 1]);
-    setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
-    setAnswer(questionsData[currentQuestionIndex].answer);
+    setCurrentQuestionIndex(sessionRef.current.currentQuestionIndex);
+    // console.log(currentQuestionIndex);
+
+    setCurrentQuestion(questionsData[sessionRef.current.currentQuestionIndex]);
+    setNextQuestion(questionsData[sessionRef.current.currentQuestionIndex + 1]);
+    setPreviousQuestion(
+      questionsData[sessionRef.current.currentQuestionIndex - 1]
+    );
+    setAnswer(questionsData[sessionRef.current.currentQuestionIndex].answer);
 
     // console.log(index);
 
@@ -416,7 +421,7 @@ function Play() {
     if (sessionRef.current.finished === true) {
       console.log("true");
       setAnswer(questionsData[currentQuestionIndex].answer);
-      // setCurrentQuestionIndex((prevState) => prevState);
+      setCurrentQuestionIndex(0);
       setCurrentQuestion(questionsData[currentQuestionIndex]);
 
       setNextQuestion(questionsData[currentQuestionIndex + 1]);
@@ -426,6 +431,7 @@ function Play() {
 
       setAnswer(questionsData[sessionRef.current.currentQuestionIndex].answer);
       // setCurrentQuestionIndex(sessionRef.current.currentQuestionIndex);
+      setCurrentQuestionIndex(sessionRef.current.currentQuestionIndex);
       console.log(currentQuestionIndex);
       setCurrentQuestion(
         questionsData[sessionRef.current.currentQuestionIndex]
@@ -439,15 +445,14 @@ function Play() {
       );
     }
 
-    // setTimeout(() => {}, 1000);
     displayQuestions();
     startTimer();
   }, [
     currentQuestionIndex,
-    // previousQuestion,
-    // currentQuestion,
-    // nextQuestion,
-    // answer,
+    previousQuestion,
+    currentQuestion,
+    nextQuestion,
+    answer,
     pageRef,
   ]);
 
