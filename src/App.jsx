@@ -9,25 +9,29 @@ import AdminConsole from "./components/admin/AdminConsole";
 import { useAuth } from "./context/AuthContext";
 
 function App() {
-  const { token } = useAuth();
+  const { token, checked } = useAuth();
 
   return (
     <>
-      {token ? (
-        <Routes>
-          <Route path="/admin-login" element={<AdminLogin />} />
-          <Route path="/admin-console" element={<AdminConsole />} />
-          <Route path="/instructions" element={<QuizInstruction />} />
-          <Route path="/play-quiz" element={<Play />} />
-          <Route path="/quiz-summary" element={<QuizSummary />} />
-          <Route path="*" element={<Navigate to="/instructions" />} />
-        </Routes>
-      ) : (
-        <Routes>
-          {/* <Route path="/" element={<Home />} /> */}
-          <Route path="/" element={<Home2 />} />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
+      {checked && (
+        <>
+          {token ? (
+            <Routes>
+              <Route path="/admin-login" element={<AdminLogin />} />
+              <Route path="/admin-console" element={<AdminConsole />} />
+              <Route path="/instructions" element={<QuizInstruction />} />
+              <Route path="/play-quiz" element={<Play />} />
+              <Route path="/quiz-summary" element={<QuizSummary />} />
+              <Route path="*" element={<Navigate to="/instructions" />} />
+            </Routes>
+          ) : (
+            <Routes>
+              {/* <Route path="/" element={<Home />} /> */}
+              <Route path="/" element={<Home2 />} />
+              <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+          )}
+        </>
       )}
     </>
   );

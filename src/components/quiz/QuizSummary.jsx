@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { sendDataToServer } from "../../utils/api";
 import { sendDataToBackend } from "../admin/utils/api";
 import { useAuth } from "../../context/AuthContext";
+import axios from "axios";
 
 function QuizSummary() {
   const location = useLocation();
@@ -17,6 +18,7 @@ function QuizSummary() {
   const [numberOfQuestions, setNumberOfQuestions] = useState(
     location.state.stats.numberOfQuestions
   );
+  const [finished, setFinished] = useState(location.state.stats.finished);
 
   const [correctAnswers, setCorrectAnswers] = useState(
     location.state.stats.correctAnswers
@@ -30,6 +32,12 @@ function QuizSummary() {
   let stats;
   let remark;
   let reaction;
+
+  // const finishSession = async () => {
+  //   const res = await axios.post("http://localhost:4000/api/finishSession", {
+  //     finished,
+  //   });
+  // };
 
   const send = async (body) => {
     const res = await sendDataToServer(body);

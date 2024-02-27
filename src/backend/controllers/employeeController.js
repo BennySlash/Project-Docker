@@ -39,9 +39,9 @@ exports.createEmployee = catchAsyncErrors(async (req, res, next) => {
 
 exports.loginEmployee = catchAsyncErrors(async (req, res, next) => {
   const employeeisRegistered = await Employee.find({ email: req.body.typed });
-  console.log(employeeisRegistered);
+  // console.log({ employeeisRegistered });
   if (employeeisRegistered.length !== 0) {
-    const authToken = createJSONToken(employeeisRegistered.email);
+    const authToken = createJSONToken(req.body.typed);
     res.status(201).json({
       message: "User Logedin.",
       user: employeeisRegistered[0].name,

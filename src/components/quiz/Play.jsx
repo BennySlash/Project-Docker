@@ -5,6 +5,9 @@ import Modal from "./Modal";
 import Indicator from "./indicator";
 import M from "materialize-css";
 import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+// import URLSearchParams from "url-search-params";
 
 function Play() {
   const [questions, setQuestions] = useState();
@@ -30,6 +33,8 @@ function Play() {
   const [inactiveSkip, setInactiveSkip] = useState(false);
   const [inactivePrev, setInactivePrev] = useState(false);
   const [finished, setFinished] = useState(false);
+  // const [session, setSession] = useState("");
+  const sessionRef = useRef([]);
   const pageRef = useRef();
   const inactiveA = useRef(inactive);
   const inactiveB = useRef(inactive);
@@ -39,7 +44,14 @@ function Play() {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const user = location.state.name;
+  // const user = location.state.name;
+  const { token, user } = useAuth();
+
+  const headers = {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+    Authorization: `Bearer ${token}`,
+  };
 
   const page = (index) => {
     pageRef.current = index;
@@ -60,18 +72,28 @@ function Play() {
       answer,
       user,
       finished,
+      score,
     });
+    // console.log(sessionRef.current);
+    // console.log(`currentQuestionIndex: ${currentQuestionIndex}`);
+    // console.log(`currentQuestion: ${currentQuestion}`);
+    // console.log(`nextQuestoin: ${nextQuestion}`);
+    // console.log(`previousQuestion: ${previousQuestion}`);
+    // console.log(`answer: ${answer}`);
+    // console.log(`user: ${user}`);
+    // console.log(`score: ${score}`);
+    // console.log(`finished: ${finished}`);
 
     setCurrentQuestion(questionsData[currentQuestionIndex]);
     setNextQuestion(questionsData[currentQuestionIndex + 1]);
     setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
     setAnswer(questionsData[currentQuestionIndex].answer);
+
     // console.log(index);
 
     setAttempt(2);
 
     if (takenRef.current.length === 15) {
-      setFinished(true);
       endQuiz();
     }
 
@@ -129,7 +151,7 @@ function Play() {
         );
         takenRef.current = [...takenRef.current, currentQuestionIndex];
 
-        setCurrentQuestionIndex((prevState) => prevState - 1);
+        // setCurrentQuestionIndex((prevState) => prevState - 1);
         setCorrectAnswers((prevState) => prevState);
         setWrongAnswers((prevState) => prevState);
 
@@ -300,14 +322,26 @@ function Play() {
       }
     }, 1000);
   };
-  const endQuiz = () => {
+  const endQuiz = async () => {
     alert("Quiz has Ended.");
+    setFinished(true);
+    const res = await axios.post("http://localhost:4000/api/updatePage", {
+      currentQuestionIndex,
+      currentQuestion,
+      nextQuestion,
+      previousQuestion,
+      answer,
+      user,
+      finished,
+      score,
+    });
 
     const playerStats = {
       score,
       numberOfQuestions,
       correctAnswers,
       wrongAnswers,
+      finished,
       // name,
     };
     navigate("/quiz-summary", { state: { stats: playerStats } });
@@ -316,34 +350,101 @@ function Play() {
     //   navigate("/quiz-summary", { state: { stats: playerStats } });
     // }, 1000);
   };
+  // console.log({ token });
+  // const session = useQuery(
+  //   [
+  //     "session",
+  //     currentQuestionIndex,
+  //     previousQuestion,
+  //     currentQuestion,
+  //     nextQuestion,
+  //     answer,
+  //     pageRef,
+  //   ],
+  //   async () =>
+  //     await axios.get(`${import.meta.env.VITE_BACKEND_URL}checkSession`, {
+  //       headers,
+  //     }),
+  //   {
+  //     retry: 3,
+  //     enabled: !!token,
+  //     onSuccess: (res) => {
+  //       // console.log(res.data.liveSession[0]);
+  //       const live = res.data.liveSession[0];
+  //       console.log(res.data.liveSession);
+  //       if (res.data.liveSession === 0) {
+  //         // setAnswer(questionsData[currentQuestionIndex].answer);
+  //         // setCurrentQuestionIndex((prevState) => prevState);
+  //         // setCurrentQuestion(questionsData[currentQuestionIndex]);
+  //         // setNextQuestion(questionsData[currentQuestionIndex + 1]);
+  //         // setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
+  //       } else {
+  //         setAnswer(questionsData[live.currentQuestionIndex].answer);
+  //         setCurrentQuestionIndex(live.currentQuestionIndex);
+  //         setCurrentQuestion(questionsData[live.currentQuestionIndex]);
+
+  //         setNextQuestion(questionsData[live.currentQuestionIndex + 1]);
+  //         setPreviousQuestion(questionsData[live.currentQuestionIndex - 1]);
+  //       }
+  //       displayQuestions();
+  //       startTimer();
+  //     },
+  //   }
+  // );
+
+  // if (session.isFetching) {
+  //   return <>Loading...</>;
+  // }
 
   useEffect(() => {
-    try {
+    const getSesison = async () => {
+      const fetchSession = await axios.post(
+        "http://localhost:4000/api/checkSession",
+        {
+          user: user,
+        }
+      );
+      const fetchedSession = fetchSession.data.liveSession[0];
+      sessionRef.current = fetchedSession;
+    };
+    getSesison();
+    // console.log(sessionRef.current.finished);
+
+    if (sessionRef.current.finished === true) {
+      console.log("true");
       setAnswer(questionsData[currentQuestionIndex].answer);
       setCurrentQuestionIndex((prevState) => prevState);
       setCurrentQuestion(questionsData[currentQuestionIndex]);
 
       setNextQuestion(questionsData[currentQuestionIndex + 1]);
       setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
-    } catch (error) {
-      console.log(error);
+    } else if (sessionRef.current.finished === false) {
+      console.log(false);
+
+      setAnswer(questionsData[sessionRef.current.currentQuestionIndex].answer);
+      setCurrentQuestionIndex(sessionRef.current.currentQuestionIndex);
+      console.log(currentQuestionIndex);
+      setCurrentQuestion(
+        questionsData[sessionRef.current.currentQuestionIndex]
+      );
+
+      setNextQuestion(
+        questionsData[sessionRef.current.currentQuestionIndex + 1]
+      );
+      setPreviousQuestion(
+        questionsData[sessionRef.current.currentQuestionIndex - 1]
+      );
     }
 
-    // if (skipPageClicked) {
-    //   page(null);
-    // } else {
-    //   displayQuestions();
-    // }
-
+    // setTimeout(() => {}, 1000);
     displayQuestions();
     startTimer();
   }, [
     currentQuestionIndex,
-    previousQuestion,
-    currentQuestion,
-    nextQuestion,
-    answer,
-    // pageRef.current,
+    // previousQuestion,
+    // currentQuestion,
+    // nextQuestion,
+    // answer,
     pageRef,
   ]);
 
@@ -433,13 +534,6 @@ function Play() {
               onClick={() =>
                 handleOptionClick({
                   event: event,
-                  state: {
-                    index: currentQuestionIndex,
-                    score: score,
-                    correctAnswer: correctAnswer,
-                    wrongAnswer: wrongAnswer,
-                    tries: tries,
-                  },
                 })
               }
               className={`${
@@ -454,13 +548,6 @@ function Play() {
               onClick={() =>
                 handleOptionClick({
                   event: event,
-                  state: {
-                    index: currentQuestionIndex,
-                    score: score,
-                    correctAnswer: correctAnswer,
-                    wrongAnswer: wrongAnswer,
-                    tries: tries,
-                  },
                 })
               }
               className={`${
@@ -477,13 +564,6 @@ function Play() {
               onClick={() =>
                 handleOptionClick({
                   event: event,
-                  state: {
-                    index: currentQuestionIndex,
-                    score: score,
-                    correctAnswer: correctAnswer,
-                    wrongAnswer: wrongAnswer,
-                    tries: tries,
-                  },
                 })
               }
               className={`${
@@ -498,13 +578,6 @@ function Play() {
               onClick={() =>
                 handleOptionClick({
                   event: event,
-                  state: {
-                    index: currentQuestionIndex,
-                    score: score,
-                    correctAnswer: correctAnswer,
-                    wrongAnswer: wrongAnswer,
-                    tries: tries,
-                  },
                 })
               }
               className={`${

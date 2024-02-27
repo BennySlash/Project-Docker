@@ -6,31 +6,42 @@ const pageSchema = new mongoose.Schema(
     currentQuestionIndex: {
       type: Number,
       required: true,
+      default: "",
     },
     previousQuestion: {
       type: Object,
-      required: false,
+      required: true,
+      default: "",
     },
 
     currentQuestion: {
       type: Object,
       required: true,
+      default: "",
     },
     nextQuestion: {
       type: Object,
-      required: false,
+      required: true,
+      default: "",
     },
     answer: {
       type: String,
-      required: false,
+      required: true,
+      default: " ",
+    },
+    score: {
+      type: String,
+      required: true,
     },
     user: {
       type: String,
-      required: false,
+      required: true,
+      default: "",
     },
     finished: {
       type: Boolean,
       required: true,
+      default: "",
     },
   },
   {
