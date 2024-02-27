@@ -64,13 +64,14 @@ function Play() {
     displayQuestions();
   };
   const defaultSession = async () => {
+    // console.log(sessionRef.current);
     setCurrentQuestionIndex(0);
     setCurrentQuestion(questionsData[0]);
     setNextQuestion(questionsData[0 + 1]);
     setPreviousQuestion(questionsData[0 - 1]);
     setAnswer(questionsData[0].answer);
 
-    console.log(currentQuestionIndex);
+    // console.log(currentQuestionIndex);
     const res = await axios.post("http://localhost:4000/api/updatePage", {
       currentQuestionIndex,
       currentQuestion,
@@ -106,9 +107,10 @@ function Play() {
     // console.log(`score: ${score}`);
     // console.log(`finished: ${finished}`);
 
-    setCurrentQuestionIndex(currentQuestionIndex);
-    console.log(currentQuestionIndex);
+    // setCurrentQuestionIndex(currentQuestionIndex);
+    // console.log(currentQuestionIndex);
 
+    setCurrentQuestionIndex((prevState) => prevState);
     setCurrentQuestion(questionsData[currentQuestionIndex]);
     setNextQuestion(questionsData[currentQuestionIndex + 1]);
     setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
@@ -421,54 +423,65 @@ function Play() {
   // if (session.isFetching) {
   //   return <>Loading...</>;
   // }
+  const getSesison = async () => {
+    const fetchSession = await axios.post(
+      "http://localhost:4000/api/checkSession",
+      {
+        user: user,
+      }
+    );
+    const fetchedSession = fetchSession.data.liveSession;
+    // console.log(fetchedSession);
+    sessionRef.current = [...sessionRef.current, fetchedSession];
+    // console.log(sessionRef.current[0]);
 
-  useEffect(() => {
-    setIsLoading(true);
-    const getSesison = async () => {
-      const fetchSession = await axios.post(
-        "http://localhost:4000/api/checkSession",
-        {
-          user: user,
-        }
-      );
-      const fetchedSession = fetchSession.data.liveSession[0];
-      sessionRef.current = fetchedSession;
-    };
-    getSesison();
-    // console.log(sessionRef.current.finished);
-
-    if (sessionRef.current.length === 0) {
-      // console.log(true);
+    if (sessionRef.current[0].length === 0) {
+      console.log(true);
+      // console.log(sessionRef.current);
+      // setCurrentQuestionIndex(currentQuestionIndex);
+      // setCurrentQuestion(questionsData[currentQuestionIndex]);
+      // setNextQuestion(questionsData[currentQuestionIndex + 1]);
+      // setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
+      // setAnswer(questionsData[currentQuestionIndex].answer);
 
       defaultSession();
-    } else if (sessionRef.current.finished === false) {
+    } else {
       // console.log(false);
+      // console.log(sessionRef.current[0][0].currentQuestionIndex);
 
-      setAnswer(questionsData[sessionRef.current.currentQuestionIndex].answer);
-      setCurrentQuestionIndex(sessionRef.current.currentQuestionIndex);
-      setCurrentQuestionIndex(sessionRef.current.currentQuestionIndex);
+      setCurrentQuestionIndex(sessionRef.current[0][0].currentQuestionIndex);
+      setAnswer(
+        questionsData[sessionRef.current[0][0].currentQuestionIndex].answer
+      );
+      setCurrentQuestionIndex(sessionRef.current[0][0].currentQuestionIndex);
       console.log(currentQuestionIndex);
       setCurrentQuestion(
-        questionsData[sessionRef.current.currentQuestionIndex]
+        questionsData[sessionRef.current[0][0].currentQuestionIndex]
       );
 
       setNextQuestion(
-        questionsData[sessionRef.current.currentQuestionIndex + 1]
+        questionsData[sessionRef.current[0][0].currentQuestionIndex + 1]
       );
       setPreviousQuestion(
-        questionsData[sessionRef.current.currentQuestionIndex - 1]
+        questionsData[sessionRef.current[0][0].currentQuestionIndex - 1]
       );
       displayQuestions();
     }
+  };
+  useEffect(() => {
+    setIsLoading(true);
+
+    getSesison();
 
     // startTimer();
   }, [
     currentQuestionIndex,
+    answer,
     previousQuestion,
     currentQuestion,
     nextQuestion,
-    answer,
     pageRef,
+    sessionRef,
   ]);
 
   return (
