@@ -17,7 +17,7 @@ function Play() {
   const [answer, setAnswer] = useState("");
   const [numberOfQuestions, setNumberOfQuestions] = useState(15);
   const [numberOfAnsweredQuestion, setNumberOfAnsweredQuestion] = useState(0);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState();
   const [score, setScore] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(1);
   const [wrongAnswers, setWrongAnswers] = useState(0);
@@ -33,6 +33,7 @@ function Play() {
   const [inactiveSkip, setInactiveSkip] = useState(false);
   const [inactivePrev, setInactivePrev] = useState(false);
   const [finished, setFinished] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   // const [session, setSession] = useState("");
   const sessionRef = useRef([]);
   const pageRef = useRef();
@@ -121,6 +122,7 @@ function Play() {
     inactiveB.current = inactive;
     inactiveC.current = inactive;
     inactiveD.current = inactive;
+    setIsLoading(false);
   };
 
   const correctAnswer = () => {
@@ -397,6 +399,7 @@ function Play() {
   // }
 
   useEffect(() => {
+    setIsLoading(true);
     const getSesison = async () => {
       const fetchSession = await axios.post(
         "http://localhost:4000/api/checkSession",
@@ -413,7 +416,7 @@ function Play() {
     if (sessionRef.current.finished === true) {
       console.log("true");
       setAnswer(questionsData[currentQuestionIndex].answer);
-      setCurrentQuestionIndex((prevState) => prevState);
+      // setCurrentQuestionIndex((prevState) => prevState);
       setCurrentQuestion(questionsData[currentQuestionIndex]);
 
       setNextQuestion(questionsData[currentQuestionIndex + 1]);
@@ -422,7 +425,7 @@ function Play() {
       console.log(false);
 
       setAnswer(questionsData[sessionRef.current.currentQuestionIndex].answer);
-      setCurrentQuestionIndex(sessionRef.current.currentQuestionIndex);
+      // setCurrentQuestionIndex(sessionRef.current.currentQuestionIndex);
       console.log(currentQuestionIndex);
       setCurrentQuestion(
         questionsData[sessionRef.current.currentQuestionIndex]
@@ -449,151 +452,209 @@ function Play() {
   ]);
 
   return (
-    <div className="flex flex-col items-center">
-      <Indicator
-        pass={page}
-        led={currentQuestionIndex}
-        skip={skippedRef.current}
-        taken={takenRef.current}
-      />
-      <div className="questions">
-        {takenRef.current.includes(currentQuestionIndex) && (
-          <div>
-            <div className="rounded-full bg-green-200 p-2 w-max mx-auto">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-500 p-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="h-8 w-8 text-white"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M4.5 12.75l6 6 9-13.5"
-                  />
-                </svg>
-              </div>
-            </div>
-            <p className="text-xl mt-2 text-green-700">Question Completed!</p>
-          </div>
-        )}
-
-        <div className="lifeline-container">
-          <div className="lifeline">
-            <p className="text-yellow-700 text-lg p-2">Questions</p>
-          </div>
-          <div className="clock">
-            <p>
-              <span className="text-blue-800 px-3 text-lg">
-                {currentQuestionIndex + 1} 0f 15
-              </span>
-            </p>
-
-            {!takenRef.current.includes(currentQuestionIndex) && (
-              <div className="text-green-700 px-3 flex flex-col justify-center items-center font-bold">
-                {<p>tries left: {attempt}</p>}
-                <div>
-                  <span className="mdi mdi-lightbulb-on-outline mdi-24px"></span>
+    <>
+      {!isLoading ? (
+        <div className="flex flex-col items-center">
+          <Indicator
+            pass={page}
+            led={currentQuestionIndex}
+            skip={skippedRef.current}
+            taken={takenRef.current}
+          />
+          <div className="questions">
+            {takenRef.current.includes(currentQuestionIndex) && (
+              <div>
+                <div className="rounded-full bg-green-200 p-2 w-max mx-auto">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-500 p-4">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="h-8 w-8 text-white"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M4.5 12.75l6 6 9-13.5"
+                      />
+                    </svg>
+                  </div>
                 </div>
+                <p className="text-xl mt-2 text-green-700">
+                  Question Completed!
+                </p>
               </div>
             )}
 
-            <div className="px-2 flex items-center g-2">
-              <span className="text-green-800 text-xl font-bold">
-                {time.minutes}:{time.seconds}
-              </span>
-              <span className="mdi mdi-clock-outline mdi-24px text-orange-700"></span>
+            <div className="lifeline-container">
+              <div className="lifeline">
+                <p className="text-yellow-700 text-lg p-2">Questions</p>
+              </div>
+              <div className="clock">
+                <p>
+                  <span className="text-blue-800 px-3 text-lg">
+                    {currentQuestionIndex + 1} 0f 15
+                  </span>
+                </p>
+
+                {!takenRef.current.includes(currentQuestionIndex) && (
+                  <div className="text-green-700 px-3 flex flex-col justify-center items-center font-bold">
+                    {<p>tries left: {attempt}</p>}
+                    <div>
+                      <span className="mdi mdi-lightbulb-on-outline mdi-24px"></span>
+                    </div>
+                  </div>
+                )}
+
+                <div className="px-2 flex items-center g-2">
+                  <span className="text-green-800 text-xl font-bold">
+                    {time.minutes}:{time.seconds}
+                  </span>
+                  <span className="mdi mdi-clock-outline mdi-24px text-orange-700"></span>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <h5 className="text-3xl my-8">
-          {/* {!prevClicked ? currentQuestion.question : previousQuestion.question} */}
-          {currentQuestion.question}
-        </h5>
-        {/* <h5 className="text-3xl my-8">{currentQuestion.question}</h5> */}
-        <div
-          className={`option ${
-            takenRef.current.includes(currentQuestionIndex) &&
-            "pointer-events-none opacity-25"
-          }`}
-        >
-          {modal && (
-            <Modal
-              explanation={currentQuestion.answer}
-              toggle={() => {
-                setModal(false);
-              }}
-            />
-          )}
-          <div className="options-container">
-            <p
-              id="a"
-              onClick={() =>
-                handleOptionClick({
-                  event: event,
-                })
-              }
-              className={`${
-                inactiveA.current === true &&
-                "pointer-events-none bg-rose-400 line-through"
-              } option rounded-md bg-blue-700 p-3 text-lg text-white`}
+            <h5 className="text-3xl my-8">
+              {/* {!prevClicked ? currentQuestion.question : previousQuestion.question} */}
+              {currentQuestion.question}
+            </h5>
+            {/* <h5 className="text-3xl my-8">{currentQuestion.question}</h5> */}
+            <div
+              className={`option ${
+                takenRef.current.includes(currentQuestionIndex) &&
+                "pointer-events-none opacity-25"
+              }`}
             >
-              {currentQuestion.optionA}
-            </p>
-            <p
-              id="b"
-              onClick={() =>
-                handleOptionClick({
-                  event: event,
-                })
-              }
-              className={`${
-                inactiveB.current === true &&
-                "pointer-events-none bg-rose-400 line-through"
-              } option rounded-md bg-blue-700 p-3 text-lg text-white`}
-            >
-              {currentQuestion.optionB}
-            </p>
-          </div>
-          <div className="options-container">
-            <p
-              id="c"
-              onClick={() =>
-                handleOptionClick({
-                  event: event,
-                })
-              }
-              className={`${
-                inactiveC.current === true &&
-                "pointer-events-none bg-rose-400 line-through"
-              } option rounded-md bg-blue-700 p-3 text-lg text-white`}
-            >
-              {currentQuestion.optionC}
-            </p>
-            <p
-              id="d"
-              onClick={() =>
-                handleOptionClick({
-                  event: event,
-                })
-              }
-              className={`${
-                inactiveD.current === true &&
-                "pointer-events-none bg-rose-400 line-through"
-              } option rounded-md bg-blue-700 p-3 text-lg text-white`}
-            >
-              {currentQuestion.optionD}
-            </p>
-          </div>
-        </div>
-        <div className="quiz-direction flex justify-around">
-          <div className="flex gap-x-4">
-            {skippedRef.current.length > 0 && (
+              {modal && (
+                <Modal
+                  explanation={currentQuestion.answer}
+                  toggle={() => {
+                    setModal(false);
+                  }}
+                />
+              )}
+              <div className="options-container">
+                <p
+                  id="a"
+                  onClick={() =>
+                    handleOptionClick({
+                      event: event,
+                    })
+                  }
+                  className={`${
+                    inactiveA.current === true &&
+                    "pointer-events-none bg-rose-400 line-through"
+                  } option rounded-md bg-blue-700 p-3 text-lg text-white`}
+                >
+                  {currentQuestion.optionA}
+                </p>
+                <p
+                  id="b"
+                  onClick={() =>
+                    handleOptionClick({
+                      event: event,
+                    })
+                  }
+                  className={`${
+                    inactiveB.current === true &&
+                    "pointer-events-none bg-rose-400 line-through"
+                  } option rounded-md bg-blue-700 p-3 text-lg text-white`}
+                >
+                  {currentQuestion.optionB}
+                </p>
+              </div>
+              <div className="options-container">
+                <p
+                  id="c"
+                  onClick={() =>
+                    handleOptionClick({
+                      event: event,
+                    })
+                  }
+                  className={`${
+                    inactiveC.current === true &&
+                    "pointer-events-none bg-rose-400 line-through"
+                  } option rounded-md bg-blue-700 p-3 text-lg text-white`}
+                >
+                  {currentQuestion.optionC}
+                </p>
+                <p
+                  id="d"
+                  onClick={() =>
+                    handleOptionClick({
+                      event: event,
+                    })
+                  }
+                  className={`${
+                    inactiveD.current === true &&
+                    "pointer-events-none bg-rose-400 line-through"
+                  } option rounded-md bg-blue-700 p-3 text-lg text-white`}
+                >
+                  {currentQuestion.optionD}
+                </p>
+              </div>
+            </div>
+            <div className="quiz-direction flex justify-around">
+              <div className="flex gap-x-4">
+                {skippedRef.current.length > 0 && (
+                  <button
+                    id="previous-button"
+                    onClick={() =>
+                      handleButtonClick({
+                        event: event,
+                        state: {
+                          currentQuestionIndex: currentQuestionIndex,
+                        },
+                      })
+                    }
+                    className={`${
+                      inactivePrev && "pointer-events-none opacity-25"
+                    } direction-key rounded-sm bg-orange-400 p-3 text-sm text-white`}
+                  >
+                    Previous
+                  </button>
+                )}
+
+                {prevClicked && (
+                  <button
+                    id="next-button"
+                    onClick={() =>
+                      handleButtonClick({
+                        event,
+                        state: {
+                          currentQuestionIndex: currentQuestionIndex,
+                        },
+                      })
+                    }
+                    className={`${
+                      inactiveNext && "pointer-events-none opacity-25"
+                    } direction-key rounded-sm bg-purple-700 p-3 text-sm text-white`}
+                  >
+                    Next
+                  </button>
+                )}
+
+                <button
+                  id="skip-button"
+                  onClick={() =>
+                    handleButtonClick({
+                      event: event,
+                      state: {
+                        currentQuestionIndex: currentQuestionIndex,
+                      },
+                    })
+                  }
+                  className={`${
+                    inactiveSkip && "pointer-events-none opacity-25"
+                  } direction-key rounded-sm bg-orange-400 p-3 text-sm text-white`}
+                >
+                  Skip
+                </button>
+              </div>
               <button
-                id="previous-button"
+                id="quit-button"
                 onClick={() =>
                   handleButtonClick({
                     event: event,
@@ -602,67 +663,27 @@ function Play() {
                     },
                   })
                 }
-                className={`${
-                  inactivePrev && "pointer-events-none opacity-25"
-                } direction-key rounded-sm bg-orange-400 p-3 text-sm text-white`}
+                className="direction-key rounded-sm bg-red-700 p-3 text-sm text-white"
               >
-                Previous
+                Quit
               </button>
-            )}
-
-            {prevClicked && (
-              <button
-                id="next-button"
-                onClick={() =>
-                  handleButtonClick({
-                    event,
-                    state: {
-                      currentQuestionIndex: currentQuestionIndex,
-                    },
-                  })
-                }
-                className={`${
-                  inactiveNext && "pointer-events-none opacity-25"
-                } direction-key rounded-sm bg-purple-700 p-3 text-sm text-white`}
-              >
-                Next
-              </button>
-            )}
-
-            <button
-              id="skip-button"
-              onClick={() =>
-                handleButtonClick({
-                  event: event,
-                  state: {
-                    currentQuestionIndex: currentQuestionIndex,
-                  },
-                })
-              }
-              className={`${
-                inactiveSkip && "pointer-events-none opacity-25"
-              } direction-key rounded-sm bg-orange-400 p-3 text-sm text-white`}
-            >
-              Skip
-            </button>
+            </div>
           </div>
-          <button
-            id="quit-button"
-            onClick={() =>
-              handleButtonClick({
-                event: event,
-                state: {
-                  currentQuestionIndex: currentQuestionIndex,
-                },
-              })
-            }
-            className="direction-key rounded-sm bg-red-700 p-3 text-sm text-white"
-          >
-            Quit
-          </button>
         </div>
-      </div>
-    </div>
+      ) : (
+        <div className="flex flex-col items-center p-5 space-y-8 pt-64 px-48">
+          <div className="w-full h-16 animate-pulse bg-gray-400 " />
+          <div className="grid grid-cols-12 gap-x-10 gap-y-5">
+            {[1, 2, 3, 4].map((item, index) => (
+              <div
+                className="col-span-6 h-14 animate-pulse bg-gray-400"
+                key={index}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
