@@ -48,11 +48,11 @@ function Play() {
   // const user = location.state.name;
   const { token, user } = useAuth();
 
-  const headers = {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-    Authorization: `Bearer ${token}`,
-  };
+  // const headers = {
+  //   "Content-Type": "application/json",
+  //   Accept: "application/json",
+  //   Authorization: `Bearer ${token}`,
+  // };
 
   const page = (index) => {
     pageRef.current = index;
@@ -61,6 +61,27 @@ function Play() {
     setNextQuestion(questionsData[Number(pageRef.current) + 1]);
     setPreviousQuestion(questionsData[Number(pageRef.current) - 1]);
     setAnswer(questionsData[Number(pageRef.current)].answer);
+    displayQuestions();
+  };
+  const defaultSession = async () => {
+    setCurrentQuestionIndex(0);
+    setCurrentQuestion(questionsData[0]);
+    setNextQuestion(questionsData[0 + 1]);
+    setPreviousQuestion(questionsData[0 - 1]);
+    setAnswer(questionsData[0].answer);
+
+    console.log(currentQuestionIndex);
+    const res = await axios.post("http://localhost:4000/api/updatePage", {
+      currentQuestionIndex,
+      currentQuestion,
+      nextQuestion,
+      previousQuestion,
+      answer,
+      user,
+      finished,
+      score,
+    });
+
     displayQuestions();
   };
 
@@ -85,15 +106,13 @@ function Play() {
     // console.log(`score: ${score}`);
     // console.log(`finished: ${finished}`);
 
-    setCurrentQuestionIndex(sessionRef.current.currentQuestionIndex);
-    // console.log(currentQuestionIndex);
+    setCurrentQuestionIndex(currentQuestionIndex);
+    console.log(currentQuestionIndex);
 
-    setCurrentQuestion(questionsData[sessionRef.current.currentQuestionIndex]);
-    setNextQuestion(questionsData[sessionRef.current.currentQuestionIndex + 1]);
-    setPreviousQuestion(
-      questionsData[sessionRef.current.currentQuestionIndex - 1]
-    );
-    setAnswer(questionsData[sessionRef.current.currentQuestionIndex].answer);
+    setCurrentQuestion(questionsData[currentQuestionIndex]);
+    setNextQuestion(questionsData[currentQuestionIndex + 1]);
+    setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
+    setAnswer(questionsData[currentQuestionIndex].answer);
 
     // console.log(index);
 
@@ -418,19 +437,15 @@ function Play() {
     getSesison();
     // console.log(sessionRef.current.finished);
 
-    if (sessionRef.current.finished === true) {
-      console.log("true");
-      setAnswer(questionsData[currentQuestionIndex].answer);
-      setCurrentQuestionIndex(0);
-      setCurrentQuestion(questionsData[currentQuestionIndex]);
+    if (sessionRef.current.length === 0) {
+      // console.log(true);
 
-      setNextQuestion(questionsData[currentQuestionIndex + 1]);
-      setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
+      defaultSession();
     } else if (sessionRef.current.finished === false) {
-      console.log(false);
+      // console.log(false);
 
       setAnswer(questionsData[sessionRef.current.currentQuestionIndex].answer);
-      // setCurrentQuestionIndex(sessionRef.current.currentQuestionIndex);
+      setCurrentQuestionIndex(sessionRef.current.currentQuestionIndex);
       setCurrentQuestionIndex(sessionRef.current.currentQuestionIndex);
       console.log(currentQuestionIndex);
       setCurrentQuestion(
@@ -443,10 +458,10 @@ function Play() {
       setPreviousQuestion(
         questionsData[sessionRef.current.currentQuestionIndex - 1]
       );
+      displayQuestions();
     }
 
-    displayQuestions();
-    startTimer();
+    // startTimer();
   }, [
     currentQuestionIndex,
     previousQuestion,

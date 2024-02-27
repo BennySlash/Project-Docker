@@ -27,10 +27,10 @@ const pageSchema = new mongoose.Schema(
     answer: {
       type: String,
       required: true,
-      default: " ",
+      default: "",
     },
     score: {
-      type: String,
+      type: Number,
       required: true,
     },
     user: {
