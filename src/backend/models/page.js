@@ -30,14 +30,14 @@ const pageSchema = new mongoose.Schema(
     //   default: "",
     // },
     takenRef: {
-      type: Object,
+      type: Array,
       required: true,
-      default: {},
+      default: [],
     },
     skippedRef: {
       type: Object,
       required: true,
-      default: {},
+      default: [],
     },
     score: {
       type: Number,

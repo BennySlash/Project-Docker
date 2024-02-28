@@ -26,8 +26,8 @@ function Play() {
   const [modal, setModal] = useState(false);
   const [prevClicked, setPrevClicked] = useState(false);
   const [attempt, setAttempt] = useState(2);
-  const skippedRef = useRef([]);
-  const takenRef = useRef([]);
+  const skippedRef = useRef();
+  const takenRef = useRef();
   const [inactive, setInactive] = useState(false);
   const [inactiveNext, setInactiveNext] = useState(false);
   const [inactiveSkip, setInactiveSkip] = useState(false);
@@ -79,8 +79,8 @@ function Play() {
       user,
       finished,
       score,
-      takenRef,
-      skippedRef,
+      takenRef: takenRef.current,
+      skippedRef: skippedRef.current,
     });
 
     // console.log(sessionRef.current);
@@ -99,9 +99,10 @@ function Play() {
     setCurrentQuestion(questionsData[currentQuestionIndex]);
     setNextQuestion(questionsData[currentQuestionIndex + 1]);
     setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
+    console.log({ questionsData, currentQuestionIndex });
     setAnswer(questionsData[currentQuestionIndex].answer);
 
-    // console.log(takenRef);
+    // console.log(takenRef.current);
     // console.log(skippedRef);
 
     setAttempt(2);
@@ -165,7 +166,7 @@ function Play() {
         );
         takenRef.current = [...takenRef.current, currentQuestionIndex];
 
-        // setCurrentQuestionIndex((prevState) => prevState - 1);
+        setCurrentQuestionIndex((prevState) => prevState - 1);
         setCorrectAnswers((prevState) => prevState);
         setWrongAnswers((prevState) => prevState);
 
@@ -433,23 +434,27 @@ function Play() {
         currentQuestionIndex,
         finished,
         score,
-        takenRef,
-        skippedRef,
+        takenRef: takenRef.current,
+        skippedRef: skippedRef.current,
       });
-      console.log(res.data.updateSession.takenRef);
+      // console.log(res.data.updateSession.takenRef);
 
-      console.log(res.data.updateSession.takenRef.current);
+      // console.log(res.data.updateSession.takenRef.current[0]);
+      if (takenRef.length)
+        takenRef.current = [
+          ...takenRef.current,
+          ...res.data.updateSession.takenRef,
+        ];
+      else takenRef.current = [...res.data.updateSession.takenRef];
 
-      takenRef.current = [
-        ...takenRef.current,
-        res.data.updateSession.takenRef.current.length,
-      ];
-      skippedRef.current = [
-        ...skippedRef.current,
-        ,
-        res.data.updateSession.skippedRef.current.length,
-        ,
-      ];
+      if (skippedRef.length) {
+        skippedRef.current = [
+          ...skippedRef.current,
+          ...res.data.updateSession.skippedRef,
+        ];
+      } else {
+        skippedRef.current = [...res.data.updateSession.skippedRef];
+      }
       setScore(res.data.updateSession.score);
       setCurrentQuestionIndex(res.data.updateSession.currentQuestionIndex);
 
@@ -468,7 +473,7 @@ function Play() {
     // previousQuestion,
     // currentQuestion,
     // nextQuestion,
-    pageRef,
+    // pageRef,
     // sessionRef,
   ]);
 
