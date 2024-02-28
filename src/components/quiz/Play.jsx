@@ -65,22 +65,24 @@ function Play() {
   };
   const defaultSession = async () => {
     // console.log(sessionRef.current);
+    // console.log("create default session");
+
     setCurrentQuestionIndex(0);
-    setCurrentQuestion(questionsData[0]);
-    setNextQuestion(questionsData[0 + 1]);
-    setPreviousQuestion(questionsData[0 - 1]);
-    setAnswer(questionsData[0].answer);
+    // setCurrentQuestion(questionsData[currentQuestionIndex]);
+    // setNextQuestion(questionsData[currentQuestionIndex + 1]);
+    // setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
+    // setAnswer(questionsData[currentQuestionIndex].answer);
 
     // console.log(currentQuestionIndex);
     const res = await axios.post("http://localhost:4000/api/updatePage", {
       currentQuestionIndex,
-      currentQuestion,
-      nextQuestion,
-      previousQuestion,
-      answer,
-      user,
-      finished,
-      score,
+      // currentQuestion,
+      // nextQuestion,
+      // previousQuestion,
+      // answer,
+      // user,
+      // finished,
+      // score,
     });
 
     displayQuestions();
@@ -89,13 +91,13 @@ function Play() {
   const displayQuestions = async () => {
     const res = await axios.post("http://localhost:4000/api/updatePage", {
       currentQuestionIndex,
-      currentQuestion,
-      nextQuestion,
-      previousQuestion,
-      answer,
-      user,
-      finished,
-      score,
+      // currentQuestion,
+      // nextQuestion,
+      // previousQuestion,
+      // answer,
+      // user,
+      // finished,
+      // score,
     });
     // console.log(sessionRef.current);
     // console.log(`currentQuestionIndex: ${currentQuestionIndex}`);
@@ -107,7 +109,6 @@ function Play() {
     // console.log(`score: ${score}`);
     // console.log(`finished: ${finished}`);
 
-    // setCurrentQuestionIndex(currentQuestionIndex);
     // console.log(currentQuestionIndex);
 
     setCurrentQuestionIndex((prevState) => prevState);
@@ -443,28 +444,28 @@ function Play() {
       // setNextQuestion(questionsData[currentQuestionIndex + 1]);
       // setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
       // setAnswer(questionsData[currentQuestionIndex].answer);
+      // setCurrentQuestionIndex(0);
 
       defaultSession();
     } else {
-      // console.log(false);
+      console.log(false);
       // console.log(sessionRef.current[0][0].currentQuestionIndex);
 
       setCurrentQuestionIndex(sessionRef.current[0][0].currentQuestionIndex);
-      setAnswer(
-        questionsData[sessionRef.current[0][0].currentQuestionIndex].answer
-      );
-      setCurrentQuestionIndex(sessionRef.current[0][0].currentQuestionIndex);
-      console.log(currentQuestionIndex);
-      setCurrentQuestion(
-        questionsData[sessionRef.current[0][0].currentQuestionIndex]
-      );
+      // setAnswer(
+      //   questionsData[sessionRef.current[0][0].currentQuestionIndex].answer
+      // );
+      // console.log(currentQuestionIndex);
+      // setCurrentQuestion(
+      //   questionsData[sessionRef.current[0][0].currentQuestionIndex]
+      // );
 
-      setNextQuestion(
-        questionsData[sessionRef.current[0][0].currentQuestionIndex + 1]
-      );
-      setPreviousQuestion(
-        questionsData[sessionRef.current[0][0].currentQuestionIndex - 1]
-      );
+      // setNextQuestion(
+      //   questionsData[sessionRef.current[0][0].currentQuestionIndex + 1]
+      // );
+      // setPreviousQuestion(
+      //   questionsData[sessionRef.current[0][0].currentQuestionIndex - 1]
+      // );
       displayQuestions();
     }
   };

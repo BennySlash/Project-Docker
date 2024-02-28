@@ -8,41 +8,41 @@ const pageSchema = new mongoose.Schema(
       required: true,
       default: "",
     },
-    previousQuestion: {
-      type: Object,
-      required: true,
-      default: "",
-    },
+    // previousQuestion: {
+    //   type: Object,
+    //   required: true,
+    //   default: "",
+    // },
 
-    currentQuestion: {
-      type: Object,
-      required: true,
-      default: "",
-    },
-    nextQuestion: {
-      type: Object,
-      required: true,
-      default: "",
-    },
-    answer: {
-      type: String,
-      required: true,
-      default: "",
-    },
-    score: {
-      type: Number,
-      required: true,
-    },
-    user: {
-      type: String,
-      required: true,
-      default: "",
-    },
-    finished: {
-      type: Boolean,
-      required: true,
-      default: "",
-    },
+    // currentQuestion: {
+    //   type: Object,
+    //   required: true,
+    //   default: "",
+    // },
+    // nextQuestion: {
+    //   type: Object,
+    //   required: true,
+    //   default: "",
+    // },
+    // answer: {
+    //   type: String,
+    //   required: true,
+    //   default: "",
+    // },
+    // score: {
+    //   type: Number,
+    //   required: true,
+    // },
+    // user: {
+    //   type: String,
+    //   required: true,
+    //   default: "",
+    // },
+    // finished: {
+    //   type: Boolean,
+    //   required: true,
+    //   default: "",
+    // },
   },
   {
     timestamps: true,
