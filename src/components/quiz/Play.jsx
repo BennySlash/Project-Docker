@@ -18,7 +18,7 @@ function Play() {
   const [numberOfQuestions, setNumberOfQuestions] = useState(15);
   const [numberOfAnsweredQuestion, setNumberOfAnsweredQuestion] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState();
-  const [score, setScore] = useState(0);
+  const [score, setScore] = useState();
   const [correctAnswers, setCorrectAnswers] = useState(1);
   const [wrongAnswers, setWrongAnswers] = useState(0);
   const [time, setTime] = useState({});
@@ -64,26 +64,7 @@ function Play() {
     displayQuestions();
   };
   const defaultSession = async () => {
-    // console.log(sessionRef.current);
-    // console.log("create default session");
-
     setCurrentQuestionIndex(0);
-    // setCurrentQuestion(questionsData[currentQuestionIndex]);
-    // setNextQuestion(questionsData[currentQuestionIndex + 1]);
-    // setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
-    // setAnswer(questionsData[currentQuestionIndex].answer);
-
-    // console.log(currentQuestionIndex);
-    const res = await axios.post("http://localhost:4000/api/updatePage", {
-      currentQuestionIndex,
-      // currentQuestion,
-      // nextQuestion,
-      // previousQuestion,
-      // answer,
-      // user,
-      // finished,
-      // score,
-    });
 
     displayQuestions();
   };
@@ -95,10 +76,13 @@ function Play() {
       // nextQuestion,
       // previousQuestion,
       // answer,
-      // user,
-      // finished,
-      // score,
+      user,
+      finished,
+      score,
+      takenRef,
+      skippedRef,
     });
+
     // console.log(sessionRef.current);
     // console.log(`currentQuestionIndex: ${currentQuestionIndex}`);
     // console.log(`currentQuestion: ${currentQuestion}`);
@@ -109,15 +93,16 @@ function Play() {
     // console.log(`score: ${score}`);
     // console.log(`finished: ${finished}`);
 
+    // setCurrentQuestionIndex((prevState) => prevState);
     // console.log(currentQuestionIndex);
-
-    setCurrentQuestionIndex((prevState) => prevState);
+    // setScore((prevState) => prevState);
     setCurrentQuestion(questionsData[currentQuestionIndex]);
     setNextQuestion(questionsData[currentQuestionIndex + 1]);
     setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
     setAnswer(questionsData[currentQuestionIndex].answer);
 
-    // console.log(index);
+    // console.log(takenRef);
+    // console.log(skippedRef);
 
     setAttempt(2);
 
@@ -437,35 +422,37 @@ function Play() {
     // console.log(sessionRef.current[0]);
 
     if (sessionRef.current[0].length === 0) {
-      console.log(true);
-      // console.log(sessionRef.current);
-      // setCurrentQuestionIndex(currentQuestionIndex);
-      // setCurrentQuestion(questionsData[currentQuestionIndex]);
-      // setNextQuestion(questionsData[currentQuestionIndex + 1]);
-      // setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
-      // setAnswer(questionsData[currentQuestionIndex].answer);
-      // setCurrentQuestionIndex(0);
+      // console.log(true);
 
       defaultSession();
     } else {
-      console.log(false);
-      // console.log(sessionRef.current[0][0].currentQuestionIndex);
+      // console.log(false);
 
-      setCurrentQuestionIndex(sessionRef.current[0][0].currentQuestionIndex);
-      // setAnswer(
-      //   questionsData[sessionRef.current[0][0].currentQuestionIndex].answer
-      // );
-      // console.log(currentQuestionIndex);
-      // setCurrentQuestion(
-      //   questionsData[sessionRef.current[0][0].currentQuestionIndex]
-      // );
+      const res = await axios.post("http://localhost:4000/api/updatePage", {
+        user,
+        currentQuestionIndex,
+        finished,
+        score,
+        takenRef,
+        skippedRef,
+      });
+      console.log(res.data.updateSession.takenRef);
 
-      // setNextQuestion(
-      //   questionsData[sessionRef.current[0][0].currentQuestionIndex + 1]
-      // );
-      // setPreviousQuestion(
-      //   questionsData[sessionRef.current[0][0].currentQuestionIndex - 1]
-      // );
+      console.log(res.data.updateSession.takenRef.current);
+
+      takenRef.current = [
+        ...takenRef.current,
+        res.data.updateSession.takenRef.current.length,
+      ];
+      skippedRef.current = [
+        ...skippedRef.current,
+        ,
+        res.data.updateSession.skippedRef.current.length,
+        ,
+      ];
+      setScore(res.data.updateSession.score);
+      setCurrentQuestionIndex(res.data.updateSession.currentQuestionIndex);
+
       displayQuestions();
     }
   };
@@ -477,12 +464,12 @@ function Play() {
     // startTimer();
   }, [
     currentQuestionIndex,
-    answer,
-    previousQuestion,
-    currentQuestion,
-    nextQuestion,
+    // answer,
+    // previousQuestion,
+    // currentQuestion,
+    // nextQuestion,
     pageRef,
-    sessionRef,
+    // sessionRef,
   ]);
 
   return (

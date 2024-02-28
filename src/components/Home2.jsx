@@ -12,6 +12,7 @@ const Home2 = () => {
   const { login } = useAuth();
 
   const onsubmit = async (email, name) => {
+    // console.log(email);
     const res = await axios.post("http://localhost:4000/api/signup", {
       email,
       name,
@@ -24,20 +25,35 @@ const Home2 = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const res = await axios.post("http://localhost:4000/api/login", {
-      typed,
-    });
-    // console.log(res);
-    const fullName = res.data.user;
-    login(res.data.token, res.data.user);
-    M.toast({
-      html: `Welcome ${fullName}`,
-      classes: "toast-valid",
-      displayLength: "2600",
-      inDuration: "800",
-      outDuration: "800",
-    });
-    navigate("/instructions", { state: { fullName: fullName } });
+    const res = await axios
+      .post("http://localhost:4000/api/login", {
+        typed,
+      })
+      .then((res) => {
+        const fullName = res.data.user;
+        // console.log(res);
+
+        login(res.data.token, res.data.user);
+        M.toast({
+          html: `Welcome ${fullName}`,
+          classes: "toast-valid",
+          displayLength: "2600",
+          inDuration: "800",
+          outDuration: "800",
+        });
+        navigate("/instructions", { state: { fullName: fullName } });
+      })
+      .catch((error) => {
+        // console.log(error);
+        M.toast({
+          html: `Please Register First`,
+          classes: "toast-invalid",
+          displayLength: "2600",
+          inDuration: "800",
+          outDuration: "800",
+        });
+      });
+    // console.log(registerFirst);
   };
 
   return (
@@ -60,6 +76,7 @@ const Home2 = () => {
               className="flex flex-col items-center"
             >
               <input
+                name="email"
                 type="email"
                 value={typed}
                 onChange={handleChange}
@@ -76,6 +93,10 @@ const Home2 = () => {
             </form>
           </div>
           <div>
+            <h4 className="text-center text-white mb-10x">
+              Register First <br />
+              <span className="text-base">using Gebeya Email</span>
+            </h4>
             <GoogleLogin
               onSuccess={(credentialResponse) => {
                 const decode = jwtDecode(credentialResponse.credential);

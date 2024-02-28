@@ -4,7 +4,7 @@ const { query } = require("express");
 
 exports.updatePage = catchAsyncErrors(async (req, res, next) => {
   const data = req.body;
-  // console.log(data);
+  console.log(data);
 
   const existingSession = await Page.find({ user: data.user });
   // console.log(existingSession);
@@ -16,12 +16,14 @@ exports.updatePage = catchAsyncErrors(async (req, res, next) => {
     $set: {
       user: data.user,
       currentQuestionIndex: data.currentQuestionIndex,
-      nextQuestion: data.nextQuestion,
-      previousQuestion: data.previousQuestion,
-      currentQuestion: data.currentQuestion,
-      answer: data.answer,
+      // nextQuestion: data.nextQuestion,
+      // previousQuestion: data.previousQuestion,
+      // currentQuestion: data.currentQuestion,
+      // answer: data.answer,
       finished: data.finished,
       score: data.score,
+      takenRef: data.takenRef,
+      skippedRef: data.skippedRef,
     },
   };
   const options = { returnOriginal: false };
@@ -45,12 +47,14 @@ exports.updatePage = catchAsyncErrors(async (req, res, next) => {
     const page = await Page.create({
       user: data.user,
       currentQuestionIndex: data.currentQuestionIndex,
-      nextQuestion: data.nextQuestion,
-      previousQuestion: data.previousQuestion,
-      currentQuestion: data.currentQuestion,
-      answer: data.answer,
+      // nextQuestion: data.nextQuestion,
+      // previousQuestion: data.previousQuestion,
+      // currentQuestion: data.currentQuestion,
+      // answer: data.answer,
       finished: data.finished,
       score: data.score,
+      takenRef: data.takenRef,
+      skippedRef: data.skippedRef,
     });
     res.status(201).json({
       message: "created",
@@ -59,14 +63,9 @@ exports.updatePage = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
-// exports.finishSessison = catchAsyncErrors(async (req, res, next) => {
-//   const data = req.body;
-//   console.log(data);
-// });
-
 exports.checkSession = catchAsyncErrors(async (req, res, next) => {
   const data = req.body;
-  // console.log(data);
+  // console.log(data.user);
   const liveSession = await Page.find({ user: data.user });
   // console.log(liveSession);
   res.status(201).json({

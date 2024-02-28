@@ -4,6 +4,7 @@ import { FaSearch } from "react-icons/fa";
 import axios from "axios";
 import SearchResult from "./SearchResult";
 import { useNavigate } from "react-router-dom";
+// import { Navbar } from "../Navbar";
 
 const AdminConsole = () => {
   const [users, setUsers] = useState("");

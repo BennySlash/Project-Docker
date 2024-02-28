@@ -4,4 +4,5 @@ let adminEmails = [
   "kaleab.girma@gebeya.com",
 ];
 
-export default adminEmails;
+let admins = ["Biniyam Ayele", "Kaleab Girma", "Teka Chernet"];
+export default admins;
