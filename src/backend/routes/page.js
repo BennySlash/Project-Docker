@@ -1,7 +1,6 @@
 const express = require("express");
 const {
   updatePage,
-  finishSessison,
   checkSession,
   endSession,
 } = require("../controllers/pageController");

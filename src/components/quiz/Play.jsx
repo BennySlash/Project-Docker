@@ -66,6 +66,8 @@ function Play() {
   const defaultSession = async () => {
     setCurrentQuestionIndex(0);
 
+    navigate(0);
+
     displayQuestions();
   };
 
@@ -96,10 +98,11 @@ function Play() {
     // setCurrentQuestionIndex((prevState) => prevState);
     // console.log(currentQuestionIndex);
     // setScore((prevState) => prevState);
+
     setCurrentQuestion(questionsData[currentQuestionIndex]);
     setNextQuestion(questionsData[currentQuestionIndex + 1]);
     setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
-    console.log({ questionsData, currentQuestionIndex });
+    // console.log({ questionsData, currentQuestionIndex });
     setAnswer(questionsData[currentQuestionIndex].answer);
 
     // console.log(takenRef.current);
@@ -158,8 +161,8 @@ function Play() {
     inactiveD.current = inactive;
 
     if (nextQuestion === undefined) {
-      if (takenRef.current.length === 14) {
-        endQuiz();
+      if (takenRef.current.length === 15) {
+        displayQuestions();
       } else {
         alert(
           `there are ${skippedRef.current.length} skipped questions, please go back`
@@ -199,7 +202,7 @@ function Play() {
     setModal(true);
 
     if (nextQuestion === undefined) {
-      if (takenRef.current.length === 14) {
+      if (takenRef.current.length === 15) {
         endQuiz();
       } else {
         alert(

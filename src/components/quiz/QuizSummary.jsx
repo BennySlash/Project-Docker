@@ -11,6 +11,7 @@ function QuizSummary() {
   const [displayComparison, setDisplayComparison] = useState(false);
   const [comparison, setComparison] = useState("");
   const { user } = useAuth();
+  // console.log(user);
 
   const [score, setScore] = useState(
     (location.state.stats.score / location.state.stats.numberOfQuestions) * 100
@@ -225,21 +226,21 @@ function QuizSummary() {
     );
   }
 
-  useEffect(() => {
-    const endSession = async () => {
-      await axios
-        .post("http://localhost:4000/api/endSession", {
-          user: user,
-        })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-    endSession();
-  });
+  // useEffect(() => {
+  //   const endSession = async () => {
+  //     await axios
+  //       .post("http://localhost:4000/api/endSession", {
+  //         user: user,
+  //       })
+  //       .then((res) => {
+  //         console.log(res);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   };
+  //   endSession();
+  // });
   return (
     <>
       <div className="flex flex-col items-center bg-slate-800 text-white sm:py-16 summary ">
@@ -275,14 +276,14 @@ function QuizSummary() {
           </button>
         )}
 
-        {displayCheck && (
+        {/* {displayCheck && (
           <button
             onClick={() => post({ fullName: user })}
             className="rounded-lg bg-blue-700 p-3 mt-5 text-lg text-white font-sans text-xs font-bold uppercase text-white shadow-lg shadow-green-500/20 transition-all hover:shadow-lg hover:shadow-green-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
           >
             Check Your Progress
           </button>
-        )}
+        )} */}
         <section>
           {displayComparison && comparison}
           <ul className="m-10 flex">
@@ -296,13 +297,13 @@ function QuizSummary() {
             </li>
 
             <li className="m-10">
-              <Link
+              {/* <Link
                 to="/play-quiz"
                 // state={{ name: name }}
                 className="rounded-lg bg-blue-700 p-3 text-lg text-white font-sans text-xs font-bold uppercase text-white shadow-lg shadow-green-500/20 transition-all hover:shadow-lg hover:shadow-green-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               >
                 Take Quiz Again
-              </Link>
+              </Link> */}
             </li>
           </ul>
         </section>
