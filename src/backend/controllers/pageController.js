@@ -1,10 +1,9 @@
 const Page = require("../models/page");
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
-const { query } = require("express");
 
 exports.updatePage = catchAsyncErrors(async (req, res, next) => {
   const data = req.body;
-  console.log(data);
+  // console.log(data);
 
   const existingSession = await Page.find({ user: data.user });
   // console.log(existingSession);
@@ -72,4 +71,15 @@ exports.checkSession = catchAsyncErrors(async (req, res, next) => {
     message: "fetched",
     liveSession,
   });
+});
+
+exports.endSession = catchAsyncErrors(async (req, res, next) => {
+  const data = req.body;
+  console.log(res);
+  // const liveSession = await Page.find({ user: data.user });
+  // liveSession.drop();
+  // res.status(201).json({
+  //   message: "collection dropped",
+  //   liveSession,
+  // });
 });

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { sendDataToServer } from "../../utils/api";
 import { sendDataToBackend } from "../admin/utils/api";
@@ -32,12 +32,6 @@ function QuizSummary() {
   let stats;
   let remark;
   let reaction;
-
-  // const finishSession = async () => {
-  //   const res = await axios.post("http://localhost:4000/api/finishSession", {
-  //     finished,
-  //   });
-  // };
 
   const send = async (body) => {
     const res = await sendDataToServer(body);
@@ -230,6 +224,22 @@ function QuizSummary() {
       </div>
     );
   }
+
+  useEffect(() => {
+    const endSession = async () => {
+      await axios
+        .post("http://localhost:4000/api/endSession", {
+          user: user,
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    endSession();
+  });
   return (
     <>
       <div className="flex flex-col items-center bg-slate-800 text-white sm:py-16 summary ">
@@ -267,7 +277,7 @@ function QuizSummary() {
 
         {displayCheck && (
           <button
-            onClick={() => post({ fullName: name })}
+            onClick={() => post({ fullName: user })}
             className="rounded-lg bg-blue-700 p-3 mt-5 text-lg text-white font-sans text-xs font-bold uppercase text-white shadow-lg shadow-green-500/20 transition-all hover:shadow-lg hover:shadow-green-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
           >
             Check Your Progress
