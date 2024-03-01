@@ -5,6 +5,7 @@ const scoreRouter = require("./routes/score");
 const getScoreRouter = require("./routes/getScore");
 const pageRouter = require("./routes/page");
 const auth = require("./routes/auth");
+const completedRouter = require("./routes/completed");
 const mongoose = require("mongoose");
 
 const MONGO_URI =
@@ -29,6 +30,7 @@ app.use("/", scoreRouter);
 app.use("/", getScoreRouter);
 app.use("/", auth);
 app.use("/", pageRouter);
+app.use("/", completedRouter);
 
 const PORT = process.env.PORT || 4000;
 

@@ -76,10 +76,9 @@ exports.checkSession = catchAsyncErrors(async (req, res, next) => {
 exports.endSession = catchAsyncErrors(async (req, res, next) => {
   const data = req.body;
   // console.log(data);
-  const liveSession = await Page.findOne({ user: data.user });
-  const removeSession = await liveSession.remove();
-  res.status(201).json({
-    message: "collection dropped",
-    liveSession,
-  });
+  const query = { user: data.user };
+  const options = {
+    justOne: true,
+  };
+  const liveSession = await Page.findOneAndDelete({ user: data.user });
 });

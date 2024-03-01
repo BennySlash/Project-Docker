@@ -226,21 +226,48 @@ function QuizSummary() {
     );
   }
 
-  // useEffect(() => {
-  //   const endSession = async () => {
-  //     await axios
-  //       .post("http://localhost:4000/api/endSession", {
-  //         user: user,
-  //       })
-  //       .then((res) => {
-  //         console.log(res);
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   };
-  //   endSession();
-  // });
+  useEffect(() => {
+    const endSession = async () => {
+      await axios
+        .post("http://localhost:4000/api/endSession", {
+          user: user,
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    const saveScore = async () => {
+      await axios
+        .post("http://localhost:4000/api/score", {
+          fullName: user,
+          scorePercentage: score.toFixed(0),
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    const registedCompletedUser = async () => {
+      await axios
+        .post("http://localhost:4000/api/completed", {
+          user: user,
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    endSession();
+    saveScore();
+    registedCompletedUser();
+  }, [score]);
   return (
     <>
       <div className="flex flex-col items-center bg-slate-800 text-white sm:py-16 summary ">

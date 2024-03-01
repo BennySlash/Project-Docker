@@ -3,6 +3,7 @@ const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 
 // Create an employee score => /api/employees
 exports.createScore = catchAsyncErrors(async (req, res, next) => {
+  console.log(req);
   const score = await Score.create({
     name: req.body.fullName,
     score: req.body.scorePercentage,
