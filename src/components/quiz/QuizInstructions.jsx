@@ -1,16 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import Navbar from "../Navbar";
 import admins from "../../utils/admin";
 
 const QuizInstruction = () => {
+  const [quizActive, setQuizActive] = useState(true);
   const { user } = useAuth();
   const { logout } = useAuth();
 
   const [isAdmin, setIsAdmin] = useState(false);
   const admin = admins.includes(user);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      await axios
+        .post("http://localhost:4000/api/checkUser", {
+          user: user,
+        })
+        .then((res) => {
+          console.log(res.data.user[0].name);
+          const activeUser = res.data.user[0].name;
+          if (user === activeUser) {
+            setQuizActive(false);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    checkUser();
+  }, []);
 
   return (
     <div className="relative flex justify-center">
@@ -168,13 +189,17 @@ const QuizInstruction = () => {
           laboriosam repudiandae!
         </p>
         <div className="mt-10 flex justify-center gap-x-80">
+          (
           <Link
-            className="w-1/12 text-center p-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className={`${
+              !quizActive && "pointer-events-none opacity-50"
+            } w-1/12 text-center p-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
             to="/play-quiz"
             state={{ name: user }}
           >
             Take Quiz
           </Link>
+          )
           <button
             onClick={logout}
             className="w-1/12 text-center p-3 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"

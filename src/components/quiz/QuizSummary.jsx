@@ -34,10 +34,10 @@ function QuizSummary() {
   let remark;
   let reaction;
 
-  const send = async (body) => {
-    const res = await sendDataToServer(body);
-    setDisplayCheck(true);
-  };
+  // const send = async (body) => {
+  //   const res = await sendDataToServer(body);
+  //   setDisplayCheck(true);
+  // };
   const post = async (body) => {
     const res = await sendDataToBackend(body);
     const check = res.checkEmployeeScoreName;
@@ -292,7 +292,7 @@ function QuizSummary() {
             <span className=" mx-5  stat left">{wrongAnswers}</span>
           </div>
         </>
-        {!displayCheck && (
+        {/* {!displayCheck && (
           <button
             onClick={() =>
               send({ fullName: user, scorePercentage: score.toFixed(0) })
@@ -301,7 +301,7 @@ function QuizSummary() {
           >
             Save Score
           </button>
-        )}
+        )} */}
 
         {/* {displayCheck && (
           <button
