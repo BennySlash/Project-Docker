@@ -1,6 +1,28 @@
+import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import admins from "../utils/admin";
+
 const Navbar = () => {
+  const { user } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const admin = admins.includes(user);
+  // console.log(admin);
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate("/admin-console");
+  };
+
   return (
-    <div>
+    <div className="flex flex-row-reverse gap-x-20">
+      {admin && (
+        <button
+          onClick={handleClick}
+          className="h-auto text-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md mt-5"
+        >
+          AdminConsole
+        </button>
+      )}
       <nav className="nav flex rounded-lg mt-5 px-3 ">
         <div className="max-w-screen-xl flex flex-wrap justify-start content-center items-center justify-between mx-auto p-4">
           <div className="hidden w-full md:block md:w-auto" id="navbar-default">

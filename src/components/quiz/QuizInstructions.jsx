@@ -10,9 +10,6 @@ const QuizInstruction = () => {
   const { user } = useAuth();
   const { logout } = useAuth();
 
-  const [isAdmin, setIsAdmin] = useState(false);
-  const admin = admins.includes(user);
-
   useEffect(() => {
     const checkUser = async () => {
       await axios
@@ -20,7 +17,7 @@ const QuizInstruction = () => {
           user: user,
         })
         .then((res) => {
-          console.log(res.data.user[0].name);
+          // console.log(res.data.user[0].name);
           const activeUser = res.data.user[0].name;
           if (user === activeUser) {
             setQuizActive(false);
@@ -35,7 +32,7 @@ const QuizInstruction = () => {
 
   return (
     <div className="relative flex justify-center">
-      <div className="fixed">{admin && <Navbar />}</div>
+      <div className="fixed">{<Navbar />}</div>
       <div className="px-20 bg-white rounded-lg mt-16 pb-24 leading-7">
         <h1 className="text-center">Quiz Instructions</h1>
         <p className="pb-10">
@@ -192,7 +189,7 @@ const QuizInstruction = () => {
           (
           <Link
             className={`${
-              !quizActive && "pointer-events-none opacity-50"
+              !quizActive && "pointer-events-none opacity-50 "
             } w-1/12 text-center p-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
             to="/play-quiz"
             state={{ name: user }}
