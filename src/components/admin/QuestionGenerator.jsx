@@ -1,18 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 const QuestionGenerator = () => {
   const location = useLocation();
   //   console.log(location.state);
   const numberOfQuestions = location.state.examQuestions;
-  const fullQuestion = {
-    question: "",
-    optionA: "",
-    optionB: "",
-    optionC: "",
-    optionD: "",
-    answer: "",
-  };
+  //   const fullQuestion = {
+  //     question: "",
+  //     optionA: "",
+  //     optionB: "",
+  //     optionC: "",
+  //     optionD: "",
+  //     answer: "",
+  //   };
   const formsArray = Array.from(
     { length: numberOfQuestions },
     (_, index) => index + 1
@@ -25,10 +25,13 @@ const QuestionGenerator = () => {
   const [optionC, setOptionC] = useState("");
   const [optionD, setOptionD] = useState("");
   const [answer, setAnswer] = useState("");
-  //   console.log({ question, optionA, optionB, optionC, optionD });
+  const [inactive, setInactive] = useState("");
 
   const hadleSubmit = (event) => {
     event.preventDefault();
+    console.log(event.target.id);
+    setInactive(event.target.id);
+    console.log(inactive);
 
     setQuestionsArray((prevState) => [
       ...prevState,
@@ -42,11 +45,11 @@ const QuestionGenerator = () => {
       },
     ]);
   };
-  console.log(questionsArray);
+  //   console.log(questionsArray);
 
   const handleChange = (e) => {
     const firstPart = e.target.id.split("-")[0];
-    console.log(firstPart);
+    // console.log(firstPart);x
     switch (firstPart) {
       case "input":
         setQuestion(e.target.value);
@@ -82,8 +85,21 @@ const QuestionGenerator = () => {
     <div>
       {formsArray.map((item) => {
         return (
-          <div className="mx-auto max-w-xl mt-20 border p-5" key={item}>
-            <form onSubmit={hadleSubmit}>
+          <div
+            className={`${
+              inactive === item && "opacity-50 pointer-events-none"
+            } mx-auto max-w-xl mt-20 border p-5`}
+            key={item}
+          >
+            <form
+              onSubmit={hadleSubmit}
+              id={`${item}`}
+              className={`${
+                inactive === item && "opacity-0 pointer-events-none"
+              }`}
+            >
+              <h1>{item}</h1>
+              <h1>{inactive}</h1>
               <label
                 className="block mb-2 text-xl font-medium text-gray-900 dark:text-black"
                 htmlFor={`input-${item}`}
