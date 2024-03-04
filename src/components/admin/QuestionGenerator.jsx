@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
 const QuestionGenerator = () => {
@@ -25,13 +25,12 @@ const QuestionGenerator = () => {
   const [optionC, setOptionC] = useState("");
   const [optionD, setOptionD] = useState("");
   const [answer, setAnswer] = useState("");
-  const [inactive, setInactive] = useState("");
+  const activeRef = useRef([]);
 
-  const hadleSubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(event.target.id);
-    setInactive(event.target.id);
-    console.log(inactive);
+    activeRef.current = [...activeRef.current, Number(event.target.id)];
+    // console.log(activeRef.current);
 
     setQuestionsArray((prevState) => [
       ...prevState,
@@ -85,21 +84,38 @@ const QuestionGenerator = () => {
     <div>
       {formsArray.map((item) => {
         return (
-          <div
-            className={`${
-              inactive === item && "opacity-50 pointer-events-none"
-            } mx-auto max-w-xl mt-20 border p-5`}
-            key={item}
-          >
+          <div className={`mx-auto max-w-xl mt-20 border p-5`} key={item}>
+            {activeRef.current.includes(item) && (
+              <div className="mx-auto flex flex-col text-white gap-y-5 items-center h-12 w-12 rounded-full bg-green-500 p-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="5"
+                  stroke="currentColor"
+                  className="h-8 w-8 text-white font-bold"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4.5 12.75l6 6 9-13.5"
+                  />
+                </svg>
+              </div>
+            )}
+            {activeRef.current.includes(item) && (
+              <h5 className="mb-10 text-green-400 font-bold text-center">
+                Submitted
+              </h5>
+            )}
             <form
-              onSubmit={hadleSubmit}
-              id={`${item}`}
               className={`${
-                inactive === item && "opacity-0 pointer-events-none"
+                activeRef.current.includes(item) &&
+                "opacity-50 pointer-events-none"
               }`}
+              onSubmit={handleSubmit}
+              id={`${item}`}
             >
-              <h1>{item}</h1>
-              <h1>{inactive}</h1>
               <label
                 className="block mb-2 text-xl font-medium text-gray-900 dark:text-black"
                 htmlFor={`input-${item}`}
@@ -186,7 +202,7 @@ const QuestionGenerator = () => {
                 submit
               </button>
             </form>
-            <div className="flex justify-center">{`-${item}-`}</div>
+            <div className="flex justify-center font-bold ">{`-${item}-`}</div>
           </div>
         );
       })}

@@ -6,8 +6,6 @@ import Indicator from "./indicator";
 import M from "materialize-css";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
-import { useQuery } from "@tanstack/react-query";
-// import URLSearchParams from "url-search-params";
 
 function Play() {
   const [questions, setQuestions] = useState();
