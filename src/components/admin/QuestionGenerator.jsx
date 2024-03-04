@@ -1,5 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
+import axios from "axios";
+import { error } from "update/lib/utils";
 
 const QuestionGenerator = () => {
   const location = useLocation();
@@ -26,6 +28,19 @@ const QuestionGenerator = () => {
   const [optionD, setOptionD] = useState("");
   const [answer, setAnswer] = useState("");
   const activeRef = useRef([]);
+
+  const finishExam = async () => {
+    await axios
+      .post("http://localhost:4000/api/finish-exam", {
+        questionsArray: questionsArray,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -209,7 +224,17 @@ const QuestionGenerator = () => {
     </div>
   );
 
-  return <div>{displayQuestions}</div>;
+  return (
+    <div className="py-10 mb-20">
+      {displayQuestions}
+      <button
+        onClick={finishExam}
+        className="flex mx-auto mt-10 font-extrabold focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900"
+      >
+        Finish Exam
+      </button>
+    </div>
+  );
 };
 
 export default QuestionGenerator;
