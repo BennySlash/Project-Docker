@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import Table from "./Table";
 import { FaSearch } from "react-icons/fa";
 import axios from "axios";
 import SearchResult from "./SearchResult";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import Table from "./Table";
+import ExamsTable from "./ExamsTable";
 
 const AdminConsole = () => {
   const [users, setUsers] = useState("");
@@ -15,6 +16,7 @@ const AdminConsole = () => {
   const [results, setResults] = useState("");
   const [getExamsArray, setGetExamsArray] = useState([]);
   const [displayResults, setDisplayResults] = useState(false);
+  const [displayExamsTable, setDisplayExamsTable] = useState(false);
   const navigate = useNavigate();
   const { logout } = useAuth();
 
@@ -30,6 +32,7 @@ const AdminConsole = () => {
   };
 
   const getExams = async () => {
+    setDisplayExamsTable(true);
     await axios
       .get("http://localhost:4000/api/get-exams")
       .then((res) => {
@@ -41,7 +44,7 @@ const AdminConsole = () => {
         examsArray.map((x) => {
           setGetExamsArray((prevState) => {
             // console.log(res.data.exam[x - 1].questionsArray);
-            return [...prevState, res.data.exam[x - 1].questionsArray];
+            return [...prevState, res.data.exam[x - 1]];
           });
         });
       })
@@ -233,12 +236,12 @@ const AdminConsole = () => {
                 <span className="flex-1 ms-3 whitespace-nowrap">Users</span>
               </button>
             </li>
-            <li>
+            <li className={`${displayExamsTable && "pointer-events-none"}`}>
               <button
                 onClick={getExams}
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
               >
-                <svg
+                {/* <svg
                   className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
@@ -247,7 +250,7 @@ const AdminConsole = () => {
                 >
                   <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
                   <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
-                </svg>
+                </svg> */}
                 <span className="ms-3">Get Exams</span>
               </button>
             </li>
@@ -270,29 +273,7 @@ const AdminConsole = () => {
                 </span>
               </Link>
             </li>
-            {/* <li>
-              <a
-                href="#"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <svg
-                  className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 18 16"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"
-                  />
-                </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap">Sign In</span>
-              </a>
-            </li> */}
+
             <li>
               <button
                 onClick={logout}
@@ -572,6 +553,7 @@ const AdminConsole = () => {
             </div>
           </div>
         </div> */}
+        {displayExamsTable && <ExamsTable exams={getExamsArray} />}
         {displayEmployeeList && <Table data={users} column={0} />}
         {dislayScores && <Table data={employeeScore.data} column={1} />}
         {displayResults && <SearchResult list={results.data} />}
