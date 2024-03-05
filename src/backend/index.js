@@ -6,6 +6,7 @@ const getScoreRouter = require("./routes/getScore");
 const pageRouter = require("./routes/page");
 const auth = require("./routes/auth");
 const completedRouter = require("./routes/completed");
+const questionsRoute = require("./routes/questions");
 const mongoose = require("mongoose");
 
 const MONGO_URI =
@@ -31,6 +32,7 @@ app.use("/", getScoreRouter);
 app.use("/", auth);
 app.use("/", pageRouter);
 app.use("/", completedRouter);
+app.use("/", questionsRoute);
 
 const PORT = process.env.PORT || 4000;
 

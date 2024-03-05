@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import { error } from "update/lib/utils";
 
 const QuestionGenerator = () => {
   const location = useLocation();
@@ -31,8 +30,9 @@ const QuestionGenerator = () => {
 
   const finishExam = async () => {
     await axios
-      .post("http://localhost:4000/api/finish-exam", {
+      .post("http://localhost:4000/api/submit-exam", {
         questionsArray: questionsArray,
+        title: location.state.examName,
       })
       .then((res) => {
         console.log(res);
@@ -210,12 +210,22 @@ const QuestionGenerator = () => {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
 
-              <button
-                type="submit"
-                className="mt-5 font-extrabold focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
-              >
-                submit
-              </button>
+              <div className="flex justify-between">
+                <button
+                  type="submit"
+                  className="mt-5 font-extrabold focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
+                >
+                  submit
+                </button>
+                {activeRef.current.includes(item) && (
+                  <button
+                    type="submit"
+                    className="mt-5 font-extrabold focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
+                  >
+                    Edit
+                  </button>
+                )}
+              </div>
             </form>
             <div className="flex justify-center font-bold ">{`-${item}-`}</div>
           </div>
@@ -229,7 +239,7 @@ const QuestionGenerator = () => {
       {displayQuestions}
       <button
         onClick={finishExam}
-        className="flex mx-auto mt-10 font-extrabold focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900"
+        className="flex text-xl mx-auto mt-10 font-extrabold focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-4 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900"
       >
         Finish Exam
       </button>
