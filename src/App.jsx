@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import Home from "./components/Home";
+// import Home from "./components/Home";
 import Home2 from "./components/Home2";
 import QuizInstruction from "./components/quiz/QuizInstructions";
 import Play from "./components/quiz/Play";
