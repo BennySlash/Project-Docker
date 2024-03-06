@@ -110,27 +110,6 @@ const AdminConsole = () => {
     //       </button>
     //     </div>
 
-    //     <div>
-    //       <div className="relative">
-    //         <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"></div>
-    //         <input
-    //           onClick={handleInputClick}
-    //           onChange={handleChange}
-    //           type="search"
-    //           id="default-search"
-    //           className="block w-full font-serif p-4 ps-10 text-sm text-black border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black  dark:focus:ring-blue-500 dark:focus:border-blue-500"
-    //           placeholder="search here..."
-    //           required
-    //         />
-    //         <button
-    //           onClick={getQuizScores}
-    //           className="flex items-center gap-x-2  text-white absolute end-2.5 bottom-2.5 bg-gradient-to-tr from-orange-600 to-orange-400 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800"
-    //         >
-    //           <FaSearch className="text-xs" />
-    //           Search
-    //         </button>
-    //       </div>
-    //     </div>
     //     <button
     //       onClick={() => {
     //         if (window.confirm("Are you sure you want to Quit?")) {
@@ -213,6 +192,30 @@ const AdminConsole = () => {
               >
                 <span className="flex-1 ms-3 whitespace-nowrap">Logout</span>
               </button>
+            </li>
+            <li>
+              <div>
+                <div className="relative">
+                  <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"></div>
+                  <input
+                    onClick={handleInputClick}
+                    onChange={handleChange}
+                    type="search"
+                    id="default-search"
+                    className="block w-full font-serif p-4 ps-10 text-sm text-white-400 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black  dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="search here..."
+                    required
+                  />
+                  <button
+                    onClick={getQuizScores}
+                    className="flex items-center gap-x-2  text-white absolute end-2.5 bottom-2.5 bg-gradient-to-tr from-orange-600 to-orange-400 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800"
+                  >
+                    <FaSearch className="text-xs" />
+                    Search
+                  </button>
+                  {displayResults && <SearchResult list={results.data} />}
+                </div>
+              </div>
             </li>
           </ul>
         </div>
@@ -477,7 +480,6 @@ const AdminConsole = () => {
         {displayExamsTable && <ExamsTable exams={getExamsArray} />}
         {displayEmployeeList && <Table data={users} column={0} />}
         {dislayScores && <Table data={employeeScore.data} column={1} />}
-        {displayResults && <SearchResult list={results.data} />}
       </div>
     </>
   );
