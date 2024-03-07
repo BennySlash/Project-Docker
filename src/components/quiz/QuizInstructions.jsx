@@ -4,11 +4,17 @@ import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import Navbar from "../Navbar";
 import admins from "../../utils/admin";
+import Select from "react-select";
+import { c } from "vite/dist/node/types.d-AKzkD8vd";
 
 const QuizInstruction = () => {
   const [quizActive, setQuizActive] = useState(true);
+  const [examLength, setExamLength] = useState();
+  const [examsArray, setExamsArray] = useState([]);
+  const [linkOptionsArray, setLinkOptionsArray] = useState([]);
   const { user } = useAuth();
   const { logout } = useAuth();
+  const linksArray = Array.from({ length: examLength }, (_, index) => index);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -27,12 +33,39 @@ const QuizInstruction = () => {
           console.log(err);
         });
     };
+
+    const getExam = async () => {
+      await axios
+        .get("http://localhost:4000/api/get-exams")
+        .then((res) => {
+          console.log(res.data.exam);
+          setExamLength(res.data.exam.length);
+          setExamsArray((prevState) => {
+            [...prevState, res.data.exam];
+            const linkOptions = linksArray.map((x) => {
+              return {
+                label: examsArray[x].title,
+                value: examsArray[x].title,
+              };
+            });
+
+            console.log(linkOptions);
+            // setLinkOptionsArray((prevState) => {
+            //   [...prevState, linkOptions];
+            // });
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
     checkUser();
+    getExam();
   }, []);
 
   return (
     <div className="relative flex justify-center">
-      <div className="fixed">{<Navbar />}</div>
+      <div className="fixed">{<Navbar />} </div>
       <div className="px-20 bg-white rounded-lg mt-16 pb-24 leading-7">
         <h1 className="text-center">Quiz Instructions</h1>
         <p className="pb-10">
@@ -185,8 +218,30 @@ const QuizInstruction = () => {
           repellat nemo ut doloribus facilis, explicabo adipisci nam voluptatum
           laboriosam repudiandae!
         </p>
+
         <div className="mt-10 flex justify-center gap-x-80">
-          <Link
+          <div className="w-60">
+            <Select
+              isClearable
+              // components={{ Control: ControlComponent }}
+              isSearchable
+              name="color"
+              onChange={(res) => {
+                console.log(res);
+              }}
+              options={[
+                {
+                  label: "one",
+                  value: 1,
+                },
+                {
+                  label: "Two",
+                  value: 2,
+                },
+              ]}
+            />
+          </div>
+          {/* <Link
             className={`${
               !quizActive && "pointer-events-none opacity-50 "
             } w-1/12 text-center p-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
@@ -194,7 +249,7 @@ const QuizInstruction = () => {
             state={{ name: user, exam: "IT" }}
           >
             Take Quiz
-          </Link>
+          </Link> */}
 
           <button
             onClick={logout}
