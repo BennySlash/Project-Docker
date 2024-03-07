@@ -5,7 +5,6 @@ import { useAuth } from "../../context/AuthContext";
 import Navbar from "../Navbar";
 import admins from "../../utils/admin";
 import Select from "react-select";
-import { c } from "vite/dist/node/types.d-AKzkD8vd";
 
 const QuizInstruction = () => {
   const [quizActive, setQuizActive] = useState(true);
@@ -38,26 +37,24 @@ const QuizInstruction = () => {
       await axios
         .get("http://localhost:4000/api/get-exams")
         .then((res) => {
-          console.log(res.data.exam);
+          // console.log(res.data.exam);
           setExamLength(res.data.exam.length);
           setExamsArray((prevState) => {
-            [...prevState, res.data.exam];
-            const linkOptions = linksArray.map((x) => {
-              return {
-                label: examsArray[x].title,
-                value: examsArray[x].title,
-              };
+            linksArray.map((x) => {
+              [...prevState, res.data.exam[x]];
             });
-
-            console.log(linkOptions);
-            // setLinkOptionsArray((prevState) => {
-            //   [...prevState, linkOptions];
-            // });
           });
+          // const linkOptions = linksArray.map((x) => {
+          //   return {
+          //     label: examsArray[x].title,
+          //     value: examsArray[x].title,
+          //   };
+          // });
         })
         .catch((err) => {
           console.log(err);
         });
+      console.log(examsArray);
     };
     checkUser();
     getExam();
@@ -241,7 +238,7 @@ const QuizInstruction = () => {
               ]}
             />
           </div>
-          {/* <Link
+          <Link
             className={`${
               !quizActive && "pointer-events-none opacity-50 "
             } w-1/12 text-center p-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
@@ -249,7 +246,7 @@ const QuizInstruction = () => {
             state={{ name: user, exam: "IT" }}
           >
             Take Quiz
-          </Link> */}
+          </Link>
 
           <button
             onClick={logout}
