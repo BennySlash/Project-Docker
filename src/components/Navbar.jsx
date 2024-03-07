@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import admins from "../utils/admin";
 
 const Navbar = () => {
   const { user } = useAuth();
-  const [isAdmin, setIsAdmin] = useState(false);
   const admin = admins.includes(user);
   // console.log(admin);
   const navigate = useNavigate();
@@ -61,12 +60,13 @@ const Navbar = () => {
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/history"
                   className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                  state={{ name: user }}
                 >
-                  Contact
-                </a>
+                  History
+                </Link>
               </li>
             </ul>
           </div>

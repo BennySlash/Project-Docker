@@ -186,17 +186,16 @@ const QuizInstruction = () => {
           laboriosam repudiandae!
         </p>
         <div className="mt-10 flex justify-center gap-x-80">
-          (
           <Link
             className={`${
               !quizActive && "pointer-events-none opacity-50 "
             } w-1/12 text-center p-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
             to="/play-quiz"
-            state={{ name: user }}
+            state={{ name: user, exam: "IT" }}
           >
             Take Quiz
           </Link>
-          )
+
           <button
             onClick={logout}
             className="w-1/12 text-center p-3 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"

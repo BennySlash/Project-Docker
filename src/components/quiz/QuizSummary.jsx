@@ -11,6 +11,7 @@ function QuizSummary() {
   const [displayComparison, setDisplayComparison] = useState(false);
   const [comparison, setComparison] = useState("");
   const { user } = useAuth();
+  const { logout } = useAuth();
   // console.log(user);
 
   const [score, setScore] = useState(

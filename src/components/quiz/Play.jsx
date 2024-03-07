@@ -193,7 +193,26 @@ function Play() {
     setAttempt(0);
     takenRef.current = [...takenRef.current, currentQuestionIndex];
 
-    displayAnswer();
+    // displayAnswer();
+    if (nextQuestion === undefined) {
+      if (takenRef.current.length === 15) {
+        endQuiz();
+      } else {
+        alert(
+          `there are ${skippedRef.current.length}skipped questions, please go back`
+        );
+        takenRef.current = [...takenRef.current, currentQuestionIndex];
+
+        setCurrentQuestionIndex((prevState) => prevState - 1);
+        setCorrectAnswers((prevState) => prevState);
+        setWrongAnswers((prevState) => prevState);
+        displayQuestions();
+      }
+    } else {
+      setTimeout(() => {
+        displayQuestions();
+      }, 1000);
+    }
   };
 
   const displayAnswer = () => {

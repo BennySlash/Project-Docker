@@ -9,6 +9,7 @@ import AdminConsole from "./components/admin/AdminConsole";
 import { useAuth } from "./context/AuthContext";
 import Questions from "./components/admin/Questions";
 import QuestionGenerator from "./components/admin/QuestionGenerator";
+import History from "./components/History";
 
 function App() {
   const { token, checked } = useAuth();
@@ -29,6 +30,8 @@ function App() {
               <Route path="/instructions" element={<QuizInstruction />} />
               <Route path="/play-quiz" element={<Play />} />
               <Route path="/quiz-summary" element={<QuizSummary />} />
+              <Route path="/history" element={<History />} />
+
               <Route path="*" element={<Navigate to="/instructions" />} />
             </Routes>
           ) : (
