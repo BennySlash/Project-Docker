@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import questionsData from "../../questions.json";
+// import questionsData from "../../questions.json";
 import Modal from "./Modal";
 import Indicator from "./indicator";
 import M from "materialize-css";
@@ -8,7 +8,7 @@ import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 
 function Play() {
-  const [questions, setQuestions] = useState();
+  const [questionsData, setQuestionsData] = useState();
   const [currentQuestion, setCurrentQuestion] = useState({});
   const [previousQuestion, setPreviousQuestion] = useState({});
   const [nextQuestion, setNextQuestion] = useState({});
@@ -32,6 +32,7 @@ function Play() {
   const [inactivePrev, setInactivePrev] = useState(false);
   const [finished, setFinished] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [displayExam, setDisplayExam] = useState([]);
   // const [session, setSession] = useState("");
   const sessionRef = useRef([]);
   const pageRef = useRef();
@@ -44,6 +45,7 @@ function Play() {
   const navigate = useNavigate();
   const location = useLocation();
   // const user = location.state.name;
+  // console.log(location.state);
   const { token, user } = useAuth();
 
   // const headers = {
@@ -482,8 +484,21 @@ function Play() {
     }
   };
   useEffect(() => {
+    const getExam = async () => {
+      await axios
+        .get("http://localhost:4000/api/get-exams")
+        .then((res) => {
+          const exams = res.data.exam;
+          const exam = exams.find((obj) => obj.title === location.state.exam);
+          setDisplayExam(exam.questionsArray);
+          setQuestionsData(exam.questionsArray);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    getExam();
     setIsLoading(true);
-
     getSesison();
 
     // startTimer();

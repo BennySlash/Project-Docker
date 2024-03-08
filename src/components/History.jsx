@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import Select from "react-select";
 import axios from "axios";
 
 const History = () => {
@@ -7,12 +8,16 @@ const History = () => {
   const [examLength, setExamLength] = useState();
   const [examPage, setExamPage] = useState();
   const [display, setDisplay] = useState(false);
+  const [title, setTitle] = useState("");
   const location = useLocation();
   const user = location.state.name;
-  const title = "Safeguarding";
-  const historyArray = Array.from({ length: examLength }, (_, index) => index);
 
+  // const title = "Safeguarding";
+  const historyArray = Array.from({ length: examLength }, (_, index) => index);
+  console.log(displayExam);
+  // console.log(location.state);
   const handleClick = () => {
+    // console.log(title);
     setDisplay(true);
 
     setExamPage(
@@ -23,7 +28,7 @@ const History = () => {
               <div>
                 <h2 className="flex gap-x-10 py-2.5 px-5 me-2 mb-2 text-xl font-medium text-gray-900 bg-slate-700 rounded-lg border border-gray-200">
                   <span>{`#${x + 1}`}</span>
-                  {displayExam[x].questionsArray[x].question}
+                  {displayExam[0].questionsArray[x].question}
                 </h2>
               </div>
               <div className="flex flex-col">
@@ -33,7 +38,7 @@ const History = () => {
                       A
                     </h6>
                     <h4 className="w-full rounded-sm bg-blue-700 p-3 text-sm text-white text-center">
-                      {displayExam[x].questionsArray[x].optionA}
+                      {displayExam[0].questionsArray[x].optionA}
                     </h4>
                   </div>
                   <div className="flex gap-x-5 justify-start items-center">
@@ -41,7 +46,7 @@ const History = () => {
                       B
                     </h6>
                     <h4 className="w-full rounded-sm bg-blue-700 p-3 text-sm text-white text-center">
-                      {displayExam[x].questionsArray[x].optionB}
+                      {displayExam[0].questionsArray[x].optionB}
                     </h4>
                   </div>
                   <div className="flex gap-x-5 justify-start items-center">
@@ -49,7 +54,7 @@ const History = () => {
                       C
                     </h6>
                     <h4 className="w-full rounded-sm bg-blue-700 p-3 text-sm text-white text-center">
-                      {displayExam[x].questionsArray[x].optionC}
+                      {displayExam[0].questionsArray[x].optionC}
                     </h4>
                   </div>
                   <div className="flex gap-x-5 justify-start items-center">
@@ -57,7 +62,7 @@ const History = () => {
                       D
                     </h6>
                     <h4 className="w-full rounded-sm bg-blue-700 p-3 text-sm text-white text-center">
-                      {displayExam[x].questionsArray[x].optionD}
+                      {displayExam[0].questionsArray[x].optionD}
                     </h4>
                   </div>
                 </div>
@@ -65,7 +70,7 @@ const History = () => {
                   <h6>Answer</h6>
 
                   <h4 className="rounded-sm bg-green-700 p-3 text-sm text-white text-center">
-                    {displayExam[x].questionsArray[x].answer}
+                    {displayExam[0].questionsArray[x].answer}
                   </h4>
                 </div>
               </div>
@@ -83,11 +88,10 @@ const History = () => {
         .then((res) => {
           //   console.log(res.data.exam);
           const exams = res.data.exam;
+          // console.log(title);
           const exam = exams.find((obj) => obj.title === title);
           //   console.log(exam);
-          setDisplayExam((prevState) => {
-            return [...prevState, exam];
-          });
+          setDisplayExam([exam]);
           setExamLength(exam.questionsArray.length);
         })
         .catch((err) => {
@@ -95,17 +99,30 @@ const History = () => {
         });
     };
     getExam();
-  }, [displayExam]);
+  }, [title]);
   return (
-    <div className="p-10">
-      <button
-        onClick={handleClick}
-        type="button"
-        className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-      >
-        getExams
-      </button>
-      {display && examPage}
+    <div className="flex p-10 h-full gap-x-20">
+      <div className="flex  flex-col gap-y-10 w-max h-min">
+        <button
+          onClick={handleClick}
+          type="button"
+          className="py-2.5 px-5 me-2 h-auto mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+        >
+          getExams
+        </button>
+        <Select
+          isClearable
+          // components={{ Control: ControlComponent }}
+          isSearchable
+          name="color"
+          onChange={(res) => {
+            setTitle(res.label);
+            // console.log(res.label);
+          }}
+          options={location.state.linkOptionsArray}
+        />
+      </div>
+      <div className="w-70">{display && examPage}</div>
     </div>
   );
 };

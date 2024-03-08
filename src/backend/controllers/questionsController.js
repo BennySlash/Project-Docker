@@ -20,3 +20,7 @@ exports.getExam = catchAsyncErrors(async (req, res, next) => {
     exam,
   });
 });
+
+exports.fileExam = catchAsyncErrors(async (req, res, next) => {
+  console.log(req.body.blob);
+});

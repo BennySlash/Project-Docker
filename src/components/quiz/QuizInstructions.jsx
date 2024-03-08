@@ -11,6 +11,7 @@ const QuizInstruction = () => {
   const [examLength, setExamLength] = useState();
   const [examsArray, setExamsArray] = useState([]);
   const [linkOptionsArray, setLinkOptionsArray] = useState([]);
+  const [label, setLabel] = useState("");
   const { user } = useAuth();
   const { logout } = useAuth();
   const linksArray = Array.from({ length: examLength }, (_, index) => index);
@@ -37,21 +38,22 @@ const QuizInstruction = () => {
       await axios
         .get("http://localhost:4000/api/get-exams")
         .then((res) => {
-          // console.log(res.data.exam);
+          // console.log(res.data.exam)
           setExamLength(res.data.exam.length);
           setExamsArray(res.data.exam);
 
-          // const linkOptions = linksArray.map((x) => {
-          //   return {
-          //     label: examsArray[x].title,
-          //     value: examsArray[x].title,
-          //   };
-          // });
+          const linkOptions = linksArray.map((x) => {
+            return {
+              label: examsArray[x].title,
+              value: examsArray[x].title,
+            };
+          });
+          setLinkOptionsArray(linkOptions);
+          // console.log(linkOptions);
         })
         .catch((err) => {
           console.log(err);
         });
-      // console.log(examsArray);
     };
     checkUser();
     getExam();
@@ -59,7 +61,7 @@ const QuizInstruction = () => {
 
   return (
     <div className="relative flex justify-center">
-      <div className="fixed">{<Navbar />} </div>
+      <div className="fixed">{<Navbar linksArray={linkOptionsArray} />} </div>
       <div className="px-20 bg-white rounded-lg mt-16 pb-24 leading-7">
         <h1 className="text-center">Quiz Instructions</h1>
         <p className="pb-10">
@@ -221,18 +223,10 @@ const QuizInstruction = () => {
               isSearchable
               name="color"
               onChange={(res) => {
-                console.log(res);
+                setLabel(res.label);
+                // console.log(res.label);
               }}
-              options={[
-                {
-                  label: "one",
-                  value: 1,
-                },
-                {
-                  label: "Two",
-                  value: 2,
-                },
-              ]}
+              options={linkOptionsArray}
             />
           </div>
           <Link
@@ -240,7 +234,7 @@ const QuizInstruction = () => {
               !quizActive && "pointer-events-none opacity-50 "
             } w-1/12 text-center p-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
             to="/play-quiz"
-            state={{ name: user, exam: "IT" }}
+            state={{ name: user, exam: label }}
           >
             Take Quiz
           </Link>

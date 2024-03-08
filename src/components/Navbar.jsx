@@ -3,10 +3,10 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import admins from "../utils/admin";
 
-const Navbar = () => {
+const Navbar = ({ linksArray }) => {
   const { user } = useAuth();
   const admin = admins.includes(user);
-  // console.log(admin);
+  // console.log(linksArray);
   const navigate = useNavigate();
   const handleClick = () => {
     navigate("/admin-console");
@@ -63,7 +63,7 @@ const Navbar = () => {
                 <Link
                   to="/history"
                   className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                  state={{ name: user }}
+                  state={{ name: user, linkOptionsArray: linksArray }}
                 >
                   History
                 </Link>
