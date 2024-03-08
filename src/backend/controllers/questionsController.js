@@ -9,6 +9,10 @@ exports.createExams = catchAsyncErrors(async (req, res, next) => {
     title: data.title,
     questionsArray: data.questionsArray,
   });
+  res.status(201).json({
+    message: "exam Created",
+    exam,
+  });
 });
 
 exports.getExam = catchAsyncErrors(async (req, res, next) => {
@@ -16,7 +20,7 @@ exports.getExam = catchAsyncErrors(async (req, res, next) => {
 
   const exam = await Question.find({});
   res.status(201).json({
-    message: "questio title retrieved",
+    message: "question title retrieved",
     exam,
   });
 });
