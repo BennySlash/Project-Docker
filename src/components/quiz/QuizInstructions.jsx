@@ -39,11 +39,8 @@ const QuizInstruction = () => {
         .then((res) => {
           // console.log(res.data.exam);
           setExamLength(res.data.exam.length);
-          setExamsArray((prevState) => {
-            linksArray.map((x) => {
-              [...prevState, res.data.exam[x]];
-            });
-          });
+          setExamsArray(res.data.exam);
+
           // const linkOptions = linksArray.map((x) => {
           //   return {
           //     label: examsArray[x].title,
@@ -54,11 +51,11 @@ const QuizInstruction = () => {
         .catch((err) => {
           console.log(err);
         });
-      console.log(examsArray);
+      // console.log(examsArray);
     };
     checkUser();
     getExam();
-  }, []);
+  }, [examLength]);
 
   return (
     <div className="relative flex justify-center">
