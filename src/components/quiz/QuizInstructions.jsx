@@ -23,7 +23,6 @@ const QuizInstruction = () => {
           user: user,
         })
         .then((res) => {
-          // console.log(res.data.user);
           const userCheckAray = Array.from(
             { length: res.data.user.length },
             (_, index) => index
@@ -32,7 +31,10 @@ const QuizInstruction = () => {
             const activeUser = res.data.user[x].name;
             const activeExams = res.data.user[x].exam;
             if (user === activeUser && activeExams === label) {
+              console.log(label);
               setQuizActive(false);
+            } else {
+              setQuizActive(true);
             }
           });
         })
@@ -231,7 +233,7 @@ const QuizInstruction = () => {
               name="color"
               onChange={(res) => {
                 setLabel(res.label);
-                // console.log(res.label);
+                console.log(res.label);
               }}
               options={linkOptionsArray}
             />

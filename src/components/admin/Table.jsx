@@ -47,7 +47,7 @@ const Table = (props) => {
 
   const exportToExcel = () => {};
   return (
-    <>
+    <div className="mt-10">
       <DownloadTableExcel
         filename="table data"
         sheet="sheet1"
@@ -96,7 +96,7 @@ const Table = (props) => {
           <tbody>{tableRows}</tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 };
 

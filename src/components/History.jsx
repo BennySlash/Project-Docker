@@ -7,18 +7,17 @@ const History = () => {
   const [displayExam, setDisplayExam] = useState([]);
   const [examLength, setExamLength] = useState();
   const [examPage, setExamPage] = useState();
+  const [completedLength, setCompletedLength] = useState();
   const [display, setDisplay] = useState(false);
   const [title, setTitle] = useState("");
+  const [linkOptionsArray, setLinkOptionsArray] = useState([]);
   const location = useLocation();
   const user = location.state.name;
 
-  // const title = "Safeguarding";
   const historyArray = Array.from({ length: examLength }, (_, index) => index);
-  console.log(displayExam);
-  // console.log(location.state);
   const handleClick = () => {
-    // console.log(title);
     setDisplay(true);
+    // console.log(displayExam);
 
     setExamPage(
       <div className="flex flex-col items-center justify-center border">
@@ -81,16 +80,38 @@ const History = () => {
     );
   };
 
+  const getExamTitle = async () => {
+    await axios
+      .post("http://localhost:4000/api/checkUser", { user: user })
+      .then((res) => {
+        // console.log(completedLength);
+        setCompletedLength(res.data.user.length);
+        const linksArray = Array.from(
+          { length: completedLength },
+          (_, index) => index
+        );
+
+        const linksOption = linksArray.map((x) => {
+          return {
+            label: res.data.user[x].exam,
+            value: res.data.user[x].exam,
+          };
+        });
+        setLinkOptionsArray(linksOption);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
     const getExam = async () => {
       await axios
         .get("http://localhost:4000/api/get-exams")
         .then((res) => {
-          //   console.log(res.data.exam);
           const exams = res.data.exam;
-          // console.log(title);
           const exam = exams.find((obj) => obj.title === title);
-          //   console.log(exam);
+          // console.log(exams);
           setDisplayExam([exam]);
           setExamLength(exam.questionsArray.length);
         })
@@ -99,7 +120,8 @@ const History = () => {
         });
     };
     getExam();
-  }, [title]);
+    getExamTitle();
+  }, [title, linkOptionsArray]);
   return (
     <div className="flex p-10 h-full gap-x-20">
       <div className="flex  flex-col gap-y-10 w-max h-min">
@@ -117,9 +139,8 @@ const History = () => {
           name="color"
           onChange={(res) => {
             setTitle(res.label);
-            // console.log(res.label);
           }}
-          options={location.state.linkOptionsArray}
+          options={linkOptionsArray}
         />
       </div>
       <div className="w-70">{display && examPage}</div>

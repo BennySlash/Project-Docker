@@ -1,23 +1,29 @@
 import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import axios from "axios";
+import Select from "react-select";
+
 import SearchResult from "./SearchResult";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import Table from "./Table";
-import ExamsTable from "./ExamsTable";
 
 const AdminConsole = () => {
   const [users, setUsers] = useState("");
   const [employeeScore, setEmployeeScore] = useState("");
+  const [examArray, setExamArray] = useState();
+  const [linkOptionsArray, setLinkOptionsArray] = useState([]);
+  const [title, setTitle] = useState("");
+  const [examLength, setExamLength] = useState();
+  const [questionLength, setQuestionLength] = useState();
+  const [examPage, setExamPage] = useState();
+  const [examDisplay, setDisplayExam] = useState(false);
   const [displayEmployeeList, setDisplayEmployeeList] = useState(false);
   const [dislayScores, setDisplayScores] = useState(false);
   const [input, setInput] = useState("");
   const [results, setResults] = useState("");
-  const [getExamsArray, setGetExamsArray] = useState([]);
   const [displayResults, setDisplayResults] = useState(false);
   const [displayExamsTable, setDisplayExamsTable] = useState(false);
-  const navigate = useNavigate();
   const { logout } = useAuth();
 
   const retrieveEmailList = async () => {
@@ -33,28 +39,108 @@ const AdminConsole = () => {
 
   const getExams = async () => {
     setDisplayExamsTable(true);
+
     await axios
       .get("http://localhost:4000/api/get-exams")
       .then((res) => {
-        // console.log(res.data.exam[0]);
-        const examsArray = Array.from(
+        // console.log(res.data.exam.length);
+        setExamLength(res.data.exam.length);
+        console.log(res.data.exam);
+        const linksArray = Array.from(
           { length: res.data.exam.length },
-          (_, index) => index + 1
+          (_, index) => index
         );
-        examsArray.map((x) => {
-          setGetExamsArray((prevState) => {
-            // console.log(res.data.exam[x - 1].questionsArray);
-            return [...prevState, res.data.exam[x - 1]];
-          });
+        const linkOptions = linksArray.map((x) => {
+          return {
+            label: res.data.exam[x].title,
+            value: res.data.exam[x].title,
+          };
         });
+        setLinkOptionsArray(linkOptions);
+        const exams = res.data.exam;
+        const exam = exams.find((obj) => obj.title === title);
+        setExamArray([exam]);
+        setQuestionLength(exam.questionsArray.length);
       })
       .catch((err) => {
         console.log(err);
       });
   };
+  const handleClick = () => {
+    setDisplayEmployeeList(false);
+    setDisplayExam(true);
+    const examsArray = Array.from(
+      { length: questionLength },
+      (_, index) => index
+    );
 
-  useEffect(() => {}, [retrieveEmailList()]);
+    setExamPage(
+      <div className="flex flex-col items-center justify-center border">
+        {examsArray.map((x) => {
+          return (
+            <div key={x}>
+              <div>
+                <h2 className="flex gap-x-10 py-2.5 px-5 me-2 mb-2 text-xl font-medium text-gray-900 bg-slate-700 rounded-lg border border-gray-200">
+                  <span>{`#${x + 1}`}</span>
+                  {examArray[0].questionsArray[x].question}
+                </h2>
+              </div>
+              <div className="flex flex-col">
+                <div className="border px-1">
+                  <div className="flex gap-x-5 justify-start items-center">
+                    <h6 className="rounded-full bg-blue-700 p-2.5 text-white">
+                      A
+                    </h6>
+                    <h4 className="w-full rounded-sm bg-blue-700 p-3 text-sm text-white text-center">
+                      {examArray[0].questionsArray[x].optionA}
+                    </h4>
+                  </div>
+                  <div className="flex gap-x-5 justify-start items-center">
+                    <h6 className="rounded-full bg-blue-700 p-2.5 text-white">
+                      B
+                    </h6>
+                    <h4 className="w-full rounded-sm bg-blue-700 p-3 text-sm text-white text-center">
+                      {examArray[0].questionsArray[x].optionB}
+                    </h4>
+                  </div>
+                  <div className="flex gap-x-5 justify-start items-center">
+                    <h6 className="rounded-full bg-blue-700 p-2.5 text-white">
+                      C
+                    </h6>
+                    <h4 className="w-full rounded-sm bg-blue-700 p-3 text-sm text-white text-center">
+                      {examArray[0].questionsArray[x].optionC}
+                    </h4>
+                  </div>
+                  <div className="flex gap-x-5 justify-start items-center">
+                    <h6 className="rounded-full bg-blue-700 p-2.5 text-white">
+                      D
+                    </h6>
+                    <h4 className="w-full rounded-sm bg-blue-700 p-3 text-sm text-white text-center">
+                      {examArray[0].questionsArray[x].optionD}
+                    </h4>
+                  </div>
+                </div>
+                <div className="flex gap-x-5 justify-start items-center">
+                  <h6>Answer</h6>
+
+                  <h4 className="rounded-sm bg-green-700 p-3 text-sm text-white text-center">
+                    {examArray[0].questionsArray[x].answer}
+                  </h4>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  useEffect(() => {
+    retrieveEmailList();
+    getExams();
+  }, [title]);
   const getEmployeeList = () => {
+    setDisplayExam(false);
     setDisplayEmployeeList(true);
   };
 
@@ -158,20 +244,20 @@ const AdminConsole = () => {
       >
         <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
           <ul className="space-y-2 font-medium">
-            <li>
-              <button
-                onClick={getEmployeeList}
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <span className="flex-1 ms-3 whitespace-nowrap">Users</span>
-              </button>
-            </li>
             <li className={`${displayExamsTable && "pointer-events-none"}`}>
               <button
                 onClick={getExams}
                 className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
               >
                 <span className="ms-3">Get Exams</span>
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={getEmployeeList}
+                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+              >
+                <span className="flex-1 ms-3 whitespace-nowrap">Users</span>
               </button>
             </li>
             <li>
@@ -477,7 +563,30 @@ const AdminConsole = () => {
             </div>
           </div>
         </div> */}
-        {displayExamsTable && <ExamsTable exams={getExamsArray} />}
+        {displayExamsTable && (
+          <div className="flex flex-col">
+            <div className="w-60 flex">
+              <Select
+                isClearable
+                // components={{ Control: ControlComponent }}
+                isSearchable
+                name="color"
+                onChange={(res) => {
+                  setTitle(res.label);
+                }}
+                options={linkOptionsArray}
+              />
+              <button
+                onClick={handleClick}
+                type="button"
+                className="py-2.5 px-5 me-2 h-auto mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+              >
+                getExams
+              </button>
+            </div>
+            {examDisplay && examPage}
+          </div>
+        )}
         {displayEmployeeList && <Table data={users} column={0} />}
         {dislayScores && <Table data={employeeScore.data} column={1} />}
       </div>
