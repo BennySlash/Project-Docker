@@ -12,14 +12,16 @@ function QuizSummary() {
   const [comparison, setComparison] = useState("");
   const { user } = useAuth();
   const { logout } = useAuth();
-  // console.log(user);
+
+  const exam = location.state.stats.exam;
+  const [numberOfQuestions, setNumberOfQuestions] = useState(
+    location.state.stats.numberOfQuestions
+  );
 
   const [score, setScore] = useState(
     (location.state.stats.score / location.state.stats.numberOfQuestions) * 100
   );
-  const [numberOfQuestions, setNumberOfQuestions] = useState(
-    location.state.stats.numberOfQuestions
-  );
+  // console.log(score);
   const [finished, setFinished] = useState(location.state.stats.finished);
 
   const [correctAnswers, setCorrectAnswers] = useState(
@@ -29,7 +31,6 @@ function QuizSummary() {
   const [wrongAnswers, setWrongAnswers] = useState(
     location.state.stats.wrongAnswers
   );
-  // const [name, setName] = useState(location.state.stats.name);
 
   let stats;
   let remark;
@@ -232,6 +233,7 @@ function QuizSummary() {
       await axios
         .post("http://localhost:4000/api/endSession", {
           user: user,
+          exam: exam,
         })
         .then((res) => {
           console.log(res);
@@ -244,6 +246,7 @@ function QuizSummary() {
       await axios
         .post("http://localhost:4000/api/score", {
           fullName: user,
+          exam: exam,
           scorePercentage: score.toFixed(0),
         })
         .then((res) => {
@@ -257,6 +260,7 @@ function QuizSummary() {
       await axios
         .post("http://localhost:4000/api/completed", {
           user: user,
+          exam: exam,
         })
         .then((res) => {
           console.log(res);

@@ -7,6 +7,7 @@ exports.completedUser = catchAsyncErrors(async (req, res, next) => {
 
   const user = await Completed.create({
     name: data.user,
+    exam: data.exam,
   });
   res.status(201).json({
     message: "created",

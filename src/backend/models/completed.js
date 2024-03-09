@@ -8,6 +8,11 @@ const completedSchema = new mongoose.Schema(
       required: true,
       default: "",
     },
+    exam: {
+      type: String,
+      required: true,
+      default: "",
+    },
   },
   {
     timestamps: true,

@@ -23,11 +23,18 @@ const QuizInstruction = () => {
           user: user,
         })
         .then((res) => {
-          // console.log(res.data.user[0].name);
-          const activeUser = res.data.user[0].name;
-          if (user === activeUser) {
-            setQuizActive(false);
-          }
+          // console.log(res.data.user);
+          const userCheckAray = Array.from(
+            { length: res.data.user.length },
+            (_, index) => index
+          );
+          userCheckAray.map((x) => {
+            const activeUser = res.data.user[x].name;
+            const activeExams = res.data.user[x].exam;
+            if (user === activeUser && activeExams === label) {
+              setQuizActive(false);
+            }
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -57,7 +64,7 @@ const QuizInstruction = () => {
     };
     checkUser();
     getExam();
-  }, [examLength]);
+  }, [examLength, label]);
 
   return (
     <div className="relative flex justify-center">

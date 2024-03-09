@@ -7,6 +7,10 @@ const scoreSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    exam: {
+      type: String,
+      required: true,
+    },
     score: {
       type: Number,
       require: true,

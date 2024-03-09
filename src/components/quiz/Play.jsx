@@ -13,7 +13,7 @@ function Play() {
   const [previousQuestion, setPreviousQuestion] = useState({});
   const [nextQuestion, setNextQuestion] = useState({});
   const [answer, setAnswer] = useState("");
-  const [numberOfQuestions, setNumberOfQuestions] = useState(15);
+  const [numberOfQuestions, setNumberOfQuestions] = useState();
   const [numberOfAnsweredQuestion, setNumberOfAnsweredQuestion] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState();
   const [score, setScore] = useState();
@@ -45,7 +45,8 @@ function Play() {
   const navigate = useNavigate();
   const location = useLocation();
   // const user = location.state.name;
-  // console.log(location.state);
+  const exam = location.state.exam;
+  // console.log(exam);
   const { token, user } = useAuth();
 
   // const headers = {
@@ -74,10 +75,6 @@ function Play() {
   const displayQuestions = async () => {
     const res = await axios.post("http://localhost:4000/api/updatePage", {
       currentQuestionIndex,
-      // currentQuestion,
-      // nextQuestion,
-      // previousQuestion,
-      // answer,
       user,
       finished,
       score,
@@ -95,24 +92,19 @@ function Play() {
     // console.log(`score: ${score}`);
     // console.log(`finished: ${finished}`);
 
-    // setCurrentQuestionIndex((prevState) => prevState);
-    // console.log(currentQuestionIndex);
-    // setScore((prevState) => prevState);
-
     setCurrentQuestion(questionsData[currentQuestionIndex]);
     setNextQuestion(questionsData[currentQuestionIndex + 1]);
     setPreviousQuestion(questionsData[currentQuestionIndex - 1]);
     // console.log({ questionsData, currentQuestionIndex });
     setAnswer(questionsData[currentQuestionIndex].answer);
 
-    // console.log(takenRef.current);
-    // console.log(skippedRef);
-
     setAttempt(2);
 
-    if (takenRef.current.length === 15) {
+    if (takenRef.current.length === questionsData.length) {
       endQuiz();
     }
+    // console.log(takenRef.current);
+    // console.log(questionsData.length);
 
     if (
       takenRef.current.includes(currentQuestionIndex) ||
@@ -123,7 +115,7 @@ function Play() {
       setInactiveNext(true);
     }
 
-    if (currentQuestionIndex === 14) {
+    if (currentQuestionIndex === questionsData.length - 1) {
       setInactiveSkip(true);
     }
 
@@ -149,10 +141,10 @@ function Play() {
     });
 
     setScore((prevState) => prevState + 1);
-
     setCorrectAnswers((prevState) => prevState + 1);
     setCurrentQuestionIndex((prevState) => prevState + 1);
     setNumberOfAnsweredQuestion((prevState) => prevState + 1);
+
     setTries(0);
     setAttempt(2);
     inactiveA.current = inactive;
@@ -161,18 +153,23 @@ function Play() {
     inactiveD.current = inactive;
 
     if (nextQuestion === undefined) {
-      if (takenRef.current.length === 15) {
-        displayQuestions();
+      if (
+        takenRef.current.length === questionsData.length &&
+        skippedRef.current.length === 0
+      ) {
+        endQuiz();
       } else {
         alert(
-          `there are ${skippedRef.current.length} skipped questions, please go back`
+          `there ${skippedRef.current.length === 1 ? "is" : "are"} ${
+            skippedRef.current.length
+          } skipped questions`
         );
         takenRef.current = [...takenRef.current, currentQuestionIndex];
 
         setCurrentQuestionIndex((prevState) => prevState - 1);
         setCorrectAnswers((prevState) => prevState);
         setWrongAnswers((prevState) => prevState);
-
+        setScore((prevState) => prevState + 1);
         displayQuestions();
       }
     } else {
@@ -193,51 +190,59 @@ function Play() {
     setNumberOfAnsweredQuestion((prevState) => prevState);
     setTries(0);
     setAttempt(0);
-    takenRef.current = [...takenRef.current, currentQuestionIndex];
+    // takenRef.current = [...takenRef.current, currentQuestionIndex];
 
     // displayAnswer();
     if (nextQuestion === undefined) {
-      if (takenRef.current.length === 15) {
+      if (
+        takenRef.current.length === questionsData.length &&
+        skippedRef.current.length === 0
+      ) {
         endQuiz();
       } else {
         alert(
-          `there are ${skippedRef.current.length}skipped questions, please go back`
+          `there ${skippedRef.current.length === 1 ? "is" : "are"} ${
+            skippedRef.current.length
+          } skipped questions`
         );
         takenRef.current = [...takenRef.current, currentQuestionIndex];
 
         setCurrentQuestionIndex((prevState) => prevState - 1);
         setCorrectAnswers((prevState) => prevState);
         setWrongAnswers((prevState) => prevState);
+        setScore((prevState) => prevState);
         displayQuestions();
       }
     } else {
+      takenRef.current = [...takenRef.current, currentQuestionIndex];
+
       setTimeout(() => {
         displayQuestions();
       }, 1000);
     }
   };
 
-  const displayAnswer = () => {
-    setModal(true);
+  // const displayAnswer = () => {
+  //   setModal(true);
 
-    if (nextQuestion === undefined) {
-      if (takenRef.current.length === 15) {
-        endQuiz();
-      } else {
-        alert(
-          `there are ${skippedRef.current.length}skipped questions, please go back`
-        );
-        takenRef.current = [...takenRef.current, currentQuestionIndex];
+  //   if (nextQuestion === undefined) {
+  //     if (takenRef.current.length === questionsData.length + 1) {
+  //       endQuiz();
+  //     } else {
+  //       alert(
+  //         `there are ${skippedRef.current.length}skipped questions, please go back`
+  //       );
+  //       takenRef.current = [...takenRef.current, currentQuestionIndex];
 
-        setCurrentQuestionIndex((prevState) => prevState - 1);
-        setCorrectAnswers((prevState) => prevState);
-        setWrongAnswers((prevState) => prevState);
-        displayQuestions();
-      }
-    } else {
-      displayQuestions();
-    }
-  };
+  //       setCurrentQuestionIndex((prevState) => prevState - 1);
+  //       setCorrectAnswers((prevState) => prevState);
+  //       setWrongAnswers((prevState) => prevState);
+  //       displayQuestions();
+  //     }
+  //   } else {
+  //     displayQuestions();
+  //   }
+  // };
   const secondChance = (body) => {
     setAttempt(1);
     M.toast({
@@ -274,7 +279,7 @@ function Play() {
 
     skippedRef.current = [...skippedRef.current, currentQuestionIndex];
 
-    if (currentQuestionIndex === 14) {
+    if (currentQuestionIndex === questionsData.length) {
       alert("You are at the last question, Can't Skip!");
     } else {
       displayQuestions();
@@ -375,11 +380,11 @@ function Play() {
 
     const playerStats = {
       score,
-      numberOfQuestions,
+      numberOfQuestions: questionsData.length,
       correctAnswers,
       wrongAnswers,
       finished,
-      // name,
+      exam,
     };
     navigate("/quiz-summary", { state: { stats: playerStats } });
 
@@ -517,6 +522,7 @@ function Play() {
       {!isLoading ? (
         <div className="flex flex-col items-center">
           <Indicator
+            length={questionsData.length}
             pass={page}
             led={currentQuestionIndex}
             skip={skippedRef.current}
@@ -556,7 +562,7 @@ function Play() {
               <div className="clock">
                 <p>
                   <span className="text-blue-800 px-3 text-lg">
-                    {currentQuestionIndex + 1} 0f 15
+                    {currentQuestionIndex + 1} 0f {questionsData.length}
                   </span>
                 </p>
 

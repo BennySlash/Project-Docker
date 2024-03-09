@@ -4,13 +4,18 @@ import questionsData from "../../questions.json";
 export default function Indicator(props) {
   const [taken, setTaken] = useState(false);
 
+  const indicatorArray = Array.from(
+    { length: props.length },
+    (_, index) => index
+  );
+
   const handleClick = (event) => {
     // console.log(event.target.id);
     props.pass(event.target.id);
   };
 
   const paginator = () => {
-    return questionsData.map((questions, index) => {
+    return indicatorArray.map((questions, index) => {
       return (
         <div className="mt-10 flex flex-col gap-y-4" key={index}>
           <span
