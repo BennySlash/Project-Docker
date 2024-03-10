@@ -8,27 +8,6 @@ const pageSchema = new mongoose.Schema(
       required: true,
       default: 0,
     },
-    // previousQuestion: {
-    //   type: Object,
-    //   required: true,
-    //   default: "",
-    // },
-
-    // currentQuestion: {
-    //   type: Object,
-    //   required: true,
-    //   default: "",
-    // },
-    // nextQuestion: {
-    //   type: Object,
-    //   required: true,
-    //   default: "",
-    // },
-    // answer: {
-    //   type: String,
-    //   required: true,
-    //   default: "",
-    // },
     takenRef: {
       type: Array,
       required: true,

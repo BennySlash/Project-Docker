@@ -14,6 +14,7 @@ function QuizSummary() {
   const { logout } = useAuth();
 
   const exam = location.state.stats.exam;
+  console.log(exam);
   const [numberOfQuestions, setNumberOfQuestions] = useState(
     location.state.stats.numberOfQuestions
   );
@@ -297,25 +298,6 @@ function QuizSummary() {
             <span className=" mx-5  stat left">{wrongAnswers}</span>
           </div>
         </>
-        {/* {!displayCheck && (
-          <button
-            onClick={() =>
-              send({ fullName: user, scorePercentage: score.toFixed(0) })
-            }
-            className="rounded-lg bg-blue-700 p-3 text-lg text-white font-sans text-xs font-bold uppercase text-white shadow-lg shadow-green-500/20 transition-all hover:shadow-lg hover:shadow-green-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-          >
-            Save Score
-          </button>
-        )} */}
-
-        {/* {displayCheck && (
-          <button
-            onClick={() => post({ fullName: user })}
-            className="rounded-lg bg-blue-700 p-3 mt-5 text-lg text-white font-sans text-xs font-bold uppercase text-white shadow-lg shadow-green-500/20 transition-all hover:shadow-lg hover:shadow-green-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-          >
-            Check Your Progress
-          </button>
-        )} */}
         <section>
           {displayComparison && comparison}
           <ul className="m-10 flex">
@@ -326,16 +308,6 @@ function QuizSummary() {
               >
                 Back to Home
               </Link>
-            </li>
-
-            <li className="m-10">
-              {/* <Link
-                to="/play-quiz"
-                // state={{ name: name }}
-                className="rounded-lg bg-blue-700 p-3 text-lg text-white font-sans text-xs font-bold uppercase text-white shadow-lg shadow-green-500/20 transition-all hover:shadow-lg hover:shadow-green-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-              >
-                Take Quiz Again
-              </Link> */}
             </li>
           </ul>
         </section>

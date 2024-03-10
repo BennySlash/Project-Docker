@@ -7,6 +7,7 @@ exports.createScore = catchAsyncErrors(async (req, res, next) => {
   const score = await Score.create({
     name: req.body.fullName,
     score: req.body.scorePercentage,
+    exam: req.body.exam,
     date: new Date(),
   });
 
