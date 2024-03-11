@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import Navbar from "../Navbar";
-import admins from "../../utils/admin";
 import Select from "react-select";
 
 const QuizInstruction = () => {
@@ -12,6 +11,9 @@ const QuizInstruction = () => {
   const [examsArray, setExamsArray] = useState([]);
   const [linkOptionsArray, setLinkOptionsArray] = useState([]);
   const [label, setLabel] = useState("");
+  const activeUserRef = useRef([]);
+  const activeExamRef = useRef([]);
+  const labelRef = useRef("");
   const { user } = useAuth();
   const { logout } = useAuth();
   const linksArray = Array.from({ length: examLength }, (_, index) => index);
@@ -23,15 +25,26 @@ const QuizInstruction = () => {
           user: user,
         })
         .then((res) => {
+          console.log(res);
           const userCheckAray = Array.from(
             { length: res.data.user.length },
             (_, index) => index
           );
           userCheckAray.map((x) => {
-            const activeUser = res.data.user[x].name;
-            const activeExams = res.data.user[x].exam;
-            if (user === activeUser && activeExams === label) {
-              console.log(label);
+            activeUserRef.current = [
+              ...activeUserRef.current,
+              res.data.user[x].name,
+            ];
+            activeExamRef.current = [
+              ...activeExamRef.current,
+              res.data.user[x].exam,
+            ];
+
+            if (
+              activeUserRef.current.includes(user) &&
+              activeExamRef.current.includes(labelRef.current)
+            ) {
+              // console.log(label);
               setQuizActive(false);
             } else {
               setQuizActive(true);
@@ -126,7 +139,8 @@ const QuizInstruction = () => {
                 name="color"
                 onChange={(res) => {
                   setLabel(res.label);
-                  console.log(label);
+                  labelRef.current = res.label;
+                  // console.log(labelRef.current);
                 }}
                 options={linkOptionsArray}
               />
@@ -136,7 +150,7 @@ const QuizInstruction = () => {
                 !quizActive && "pointer-events-none opacity-50 "
               } text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-5 px-4 rounded`}
               to="/play-quiz"
-              state={{ name: user, exam: label }}
+              state={{ name: user, exam: labelRef.current }}
             >
               Take Quiz
             </Link>
