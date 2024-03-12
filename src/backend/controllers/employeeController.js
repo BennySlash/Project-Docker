@@ -25,7 +25,8 @@ exports.createEmployee = catchAsyncErrors(async (req, res, next) => {
     // });
   } else {
     const employee = await Employee.create({
-      name: req.body.name,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
       email: req.body.email,
       date: new Date(),
     });

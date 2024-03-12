@@ -18,9 +18,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
       <BrowserRouter>
-        <GoogleOAuthProvider clientId="553781817618-7a5bc7unoq1esukv9174385n2bep9jui.apps.googleusercontent.com">
-          <App />
-        </GoogleOAuthProvider>
+        {/* <GoogleOAuthProvider clientId="553781817618-7a5bc7unoq1esukv9174385n2bep9jui.apps.googleusercontent.com"> */}
+        <App />
+        {/* </GoogleOAuthProvider> */}
       </BrowserRouter>
     </AuthProvider>
     <ReactQueryDevtools initialIsOpen={false} />
