@@ -106,25 +106,25 @@ const History = () => {
       });
   };
 
+  const getExam = async () => {
+    await axios
+      .get("http://localhost:4000/api/get-exams")
+      .then((res) => {
+        // console.log(res);
+        const exams = res.data.exam;
+        const exam = exams.find((obj) => obj.title === title);
+        // console.log(exams);
+        setDisplayExam([exam]);
+        setExamLength(exam.questionsArray.length);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   useEffect(() => {
-    const getExam = async () => {
-      await axios
-        .get("http://localhost:4000/api/get-exams")
-        .then((res) => {
-          // console.log(res);
-          const exams = res.data.exam;
-          const exam = exams.find((obj) => obj.title === title);
-          // console.log(exams);
-          setDisplayExam([exam]);
-          setExamLength(exam.questionsArray.length);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
     getExam();
     getExamTitle();
-  }, [title, linkOptionsArray]);
+  }, [title, completedLength]);
   return (
     <div className="flex p-10 h-full gap-x-20">
       <div className="flex  flex-col gap-y-10 w-max h-min">
