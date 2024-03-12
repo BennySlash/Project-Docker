@@ -10,7 +10,7 @@ const questionsRoute = require("./routes/questions");
 const mongoose = require("mongoose");
 
 const MONGO_URI =
-  "mongodb+srv://biniyamayele:Testing1234@cluster0.xl8ulig.mongodb.net/";
+  "mongodb+srv://biniyamayele:Testing1234@cluster0.xl8ulig.mongodb.net/Gebeya";
 
 // const dotenv = require("dotenv");
 const app = express();

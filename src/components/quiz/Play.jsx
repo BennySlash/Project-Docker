@@ -33,7 +33,6 @@ function Play() {
   const [finished, setFinished] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [displayExam, setDisplayExam] = useState([]);
-  // const [session, setSession] = useState("");
   const sessionRef = useRef([]);
   const pageRef = useRef();
   const inactiveA = useRef(inactive);
@@ -506,7 +505,7 @@ function Play() {
     setIsLoading(true);
     getSesison();
 
-    // startTimer();
+    startTimer();
   }, [
     currentQuestionIndex,
     // answer,

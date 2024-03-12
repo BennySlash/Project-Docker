@@ -13,11 +13,6 @@ const completedSchema = new mongoose.Schema(
       required: true,
       default: "",
     },
-    email: {
-      type: String,
-      required: false,
-      default: "",
-    },
   },
   {
     timestamps: true,

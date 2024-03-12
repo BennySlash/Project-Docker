@@ -75,10 +75,10 @@ exports.checkSession = catchAsyncErrors(async (req, res, next) => {
 
 exports.endSession = catchAsyncErrors(async (req, res, next) => {
   const data = req.body;
-  // console.log(data);
   const query = { user: data.user };
   const options = {
     justOne: true,
   };
+  console.log({ data });
   const liveSession = await Page.findOneAndDelete({ user: data.user });
 });
