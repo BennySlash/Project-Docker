@@ -74,7 +74,7 @@ function Play() {
   const displayQuestions = async () => {
     const res = await axios.post("http://localhost:4000/api/updatePage", {
       currentQuestionIndex,
-      user,
+      user: user.user,
       finished,
       score,
       takenRef: takenRef.current,
@@ -372,7 +372,7 @@ function Play() {
       nextQuestion,
       previousQuestion,
       answer,
-      user,
+      user: user.user,
       finished,
       score,
     });
@@ -440,7 +440,7 @@ function Play() {
     const fetchSession = await axios.post(
       "http://localhost:4000/api/checkSession",
       {
-        user: user,
+        user: user.user,
       }
     );
     const fetchedSession = fetchSession.data.liveSession;
@@ -456,7 +456,7 @@ function Play() {
       // console.log(false);
 
       const res = await axios.post("http://localhost:4000/api/updatePage", {
-        user,
+        user: user.user,
         currentQuestionIndex,
         finished,
         score,

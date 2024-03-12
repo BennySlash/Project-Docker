@@ -22,10 +22,9 @@ const QuizInstruction = () => {
     const checkUser = async () => {
       await axios
         .post("http://localhost:4000/api/checkUser", {
-          user: user,
+          user: user.user,
         })
         .then((res) => {
-          console.log(res);
           const userCheckAray = Array.from(
             { length: res.data.user.length },
             (_, index) => index
@@ -41,7 +40,7 @@ const QuizInstruction = () => {
             ];
 
             if (
-              activeUserRef.current.includes(user) &&
+              activeUserRef.current.includes(user.user) &&
               activeExamRef.current.includes(labelRef.current)
             ) {
               // console.log(label);
@@ -150,7 +149,7 @@ const QuizInstruction = () => {
                 !quizActive && "pointer-events-none opacity-50 "
               } text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-5 px-4 rounded`}
               to="/play-quiz"
-              state={{ name: user, exam: labelRef.current }}
+              state={{ name: user.user, exam: labelRef.current }}
             >
               Take Quiz
             </Link>

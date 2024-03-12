@@ -233,7 +233,7 @@ function QuizSummary() {
     const endSession = async () => {
       await axios
         .post("http://localhost:4000/api/endSession", {
-          user: user,
+          user: user.user,
           exam: exam,
         })
         .then((res) => {
@@ -246,7 +246,7 @@ function QuizSummary() {
     const saveScore = async () => {
       await axios
         .post("http://localhost:4000/api/score", {
-          fullName: user,
+          fullName: user.user,
           exam: exam,
           scorePercentage: score.toFixed(0),
         })
@@ -260,7 +260,7 @@ function QuizSummary() {
     const registedCompletedUser = async () => {
       await axios
         .post("http://localhost:4000/api/completed", {
-          user: user,
+          user: user.user,
           exam: exam,
         })
         .then((res) => {

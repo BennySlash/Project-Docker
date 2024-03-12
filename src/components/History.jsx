@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Select from "react-select";
 import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 
 const History = () => {
   const [displayExam, setDisplayExam] = useState([]);
@@ -12,7 +13,8 @@ const History = () => {
   const [title, setTitle] = useState("");
   const [linkOptionsArray, setLinkOptionsArray] = useState([]);
   const location = useLocation();
-  const user = location.state.name;
+  const { user } = useAuth();
+  // const user = location.state.name;
 
   const historyArray = Array.from({ length: examLength }, (_, index) => index);
   const handleClick = () => {
@@ -82,7 +84,7 @@ const History = () => {
 
   const getExamTitle = async () => {
     await axios
-      .post("http://localhost:4000/api/checkUser", { user: user })
+      .post("http://localhost:4000/api/checkUser", { user: user.user })
       .then((res) => {
         // console.log(completedLength);
         setCompletedLength(res.data.user.length);
@@ -109,6 +111,7 @@ const History = () => {
       await axios
         .get("http://localhost:4000/api/get-exams")
         .then((res) => {
+          // console.log(res);
           const exams = res.data.exam;
           const exam = exams.find((obj) => obj.title === title);
           // console.log(exams);

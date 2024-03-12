@@ -39,22 +39,23 @@ exports.createEmployee = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.loginEmployee = catchAsyncErrors(async (req, res, next) => {
-  const employeeisRegistered = await Employee.find({ email: req.body.typed });
-  // console.log({ employeeisRegistered });
-  if (employeeisRegistered.length !== 0) {
-    const authToken = createJSONToken(req.body.typed);
-    res.status(201).json({
-      message: "User Logedin.",
-      user: employeeisRegistered[0].name,
-      token: authToken,
-      // currentQuestion: employeeisRegistered[0].currentQuestion,
-      // previousQuestion: employeeisRegistered[0].previousQuestion,
-      // nextQuestion: employeeisRegistered[0].nextQuestion,
-      // currentQuestionIndex: employeeisRegistered[0].currentQuestionIndex,
-    });
-  } else {
-    res.status(401).json({
-      message: "please register first",
-    });
-  }
+  console.log(req);
+  const activeEmployee = await Employee.find({ email: req.body.email });
+  console.log(activeEmployee);
+  res.status(201).json({
+    success: true,
+    activeEmployee,
+  });
+  // if (employeeisRegistered.length !== 0) {
+  //   const authToken = createJSONToken(req.body.typed);
+  //   res.status(201).json({
+  //     message: "User Logedin.",
+  //     user: employeeisRegistered[0].name,
+  //     token: authToken,
+  //   });
+  // } else {
+  //   res.status(401).json({
+  //     message: "please register first",
+  //   });
+  // }
 });
