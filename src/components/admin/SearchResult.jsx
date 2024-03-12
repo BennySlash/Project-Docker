@@ -24,7 +24,7 @@ const SearchResult = (props) => {
   const body = uniqueList.map((item) => {
     return (
       <div
-        key={item._id}
+        key={item}
         onClick={() => send(item)}
         className="key={index} bg-slate-500  rounded-lg shadow dark:border dark:bg-white-800 dark:border-white-700 mb-2 px-3 py-1 cursor-pointer transition-all hover:shadow-xl hover:shadow-orange-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
       >

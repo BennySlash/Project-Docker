@@ -1,20 +1,37 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
-import admins from "../utils/admin";
+import axios from "axios";
 
 const Navbar = ({ linksArray }) => {
   const { user } = useAuth();
-  const admin = admins.includes(user);
-  // console.log(linksArray);
+
+  const [displayAdminConsole, setDisplayAdminConsole] = useState(false);
   const navigate = useNavigate();
   const handleClick = () => {
     navigate("/admin-console");
   };
 
+  (async function () {
+    await axios
+      .post("http://localhost:4000/api/login", {
+        email: user.email,
+      })
+      .then((res) => {
+        if (res.data.activeEmployee[0].admin === true) {
+          setDisplayAdminConsole(true);
+        } else {
+          setDisplayAdminConsole(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  })();
+
   return (
     <div className="flex flex-row-reverse gap-x-20">
-      {admin && (
+      {displayAdminConsole && (
         <button
           onClick={handleClick}
           className="h-auto text-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md mt-5"
