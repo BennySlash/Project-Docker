@@ -25,6 +25,6 @@ exports.getExam = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-exports.fileExam = catchAsyncErrors(async (req, res, next) => {
-  console.log(req);
-});
+// exports.fileExam = catchAsyncErrors(async (req, res, next) => {
+//   console.log(req);
+// });

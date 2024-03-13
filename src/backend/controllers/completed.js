@@ -3,7 +3,7 @@ const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 
 exports.completedUser = catchAsyncErrors(async (req, res, next) => {
   const data = req.body;
-  console.log(req.body);
+  // console.log(req.body);
 
   const user = await Completed.create({
     name: data.user,

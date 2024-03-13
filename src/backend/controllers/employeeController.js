@@ -39,9 +39,9 @@ exports.createEmployee = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.loginEmployee = catchAsyncErrors(async (req, res, next) => {
-  console.log(req);
+  // console.log(req);
   const activeEmployee = await Employee.find({ email: req.body.email });
-  console.log(activeEmployee);
+  // console.log(activeEmployee);
   res.status(201).json({
     success: true,
     activeEmployee,

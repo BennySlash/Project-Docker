@@ -11,8 +11,7 @@ import { signInWithPopup } from "firebase/auth";
 const Home2 = () => {
   // const [typed, setTyped] = useState("");
   const navigate = useNavigate();
-  const [fullName, setFullName] = useState();
-  const [email, setEmail] = useState();
+
   const { login } = useAuth();
 
   // const onsubmit = async (email, name) => {
@@ -63,12 +62,11 @@ const Home2 = () => {
   const getAuthData = async () => {
     await signInWithPopup(auth, provider)
       .then((result) => {
+        console.log(result.user.displayName);
         const user = {
           user: result?.user?.displayName,
           email: result?.user?.email,
         };
-        setFullName(result.user.displayName);
-        setEmail(result.user.email);
 
         (async function () {
           await axios
@@ -76,7 +74,7 @@ const Home2 = () => {
               email: result.user.email,
             })
             .then((res) => {
-              console.log(res);
+              console.log(res.data.activeEmployee[0].firstName);
               if (res.data.activeEmployee.length === 0) {
                 M.toast({
                   html: "please Sign In using your Gebeya Email",
@@ -89,7 +87,7 @@ const Home2 = () => {
                 const token = result?._tokenResponse?.oauthAccessToken;
                 login(token, user);
                 M.toast({
-                  html: `Welcome ${fullName}`,
+                  html: `Welcome ${res.data.activeEmployee[0].firstName} ${res.data.activeEmployee[0].lastName}`,
                   classes: "toast-valid",
                   displayLength: "2600",
                   inDuration: "800",
@@ -106,8 +104,8 @@ const Home2 = () => {
   };
 
   return (
-    <div className="landing h-full w-full">
-      <div className="landing h-full w-full flex justify-around">
+    <div className="landing h-full w-full px-10">
+      <div className="welcome h-full w-full flex justify-around">
         <div className="min-w-max flex flex-col items-center min-h-full flex-col justify-center px-0 py-12 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
             <img
@@ -123,11 +121,11 @@ const Home2 = () => {
             </h4>
           </div>
           <div className="m-8">
-            <form
+            {/* <form
               // onSubmit={handleSubmit}
               className="flex flex-col items-center"
-            >
-              {/* <input
+            > */}
+            {/* <input
                 name="email"
                 type="email"
                 value={typed}
@@ -136,7 +134,7 @@ const Home2 = () => {
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-center flex items-center"
                 size="30"
               ></input> */}
-            </form>
+            {/* </form> */}
             <div>
               <button
                 onClick={getAuthData}
@@ -165,7 +163,7 @@ const Home2 = () => {
           </div> */}
         </div>
         <div className="africa w-3/5 flex flex-col gap-y-10 text-white items-center justify-center">
-          <div className="">
+          <div>
             <h1 className="h-fit self-start">
               <span>
                 Welcome to Gebeya
@@ -174,7 +172,7 @@ const Home2 = () => {
             </h1>
           </div>
 
-          <div className="px-5 leading-10 text-lg">
+          <div className="welcome px-5 leading-8 text-lg">
             "Welcome to our Educational Quiz Web App! Expand your knowledge and
             have fun while learning with our engaging quizzes. Whether you're a
             student looking to test your understanding or a curious individual
