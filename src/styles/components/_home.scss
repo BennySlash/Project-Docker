@@ -128,9 +128,6 @@
 }
 @media (max-width: 780px) {
   .landing {
-    height: 100vh;
-    width: 100vw;
-    // display: flex;
     flex-direction: column-reverse;
     justify-content: center;
     align-items: center;

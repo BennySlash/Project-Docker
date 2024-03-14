@@ -106,7 +106,7 @@ const Home2 = () => {
   return (
     <div className="landing h-full w-full px-10">
       <div className="welcome h-full w-full flex justify-around">
-        <div className="min-w-max flex flex-col items-center min-h-full flex-col justify-center px-0 py-12 lg:px-8">
+        <div className="min-w-max flex flex-col items-center min-h-full flex-col justify-center">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
             <img
               className="mx-auto h-40 w-auto"
