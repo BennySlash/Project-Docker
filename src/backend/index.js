@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const fs = require("fs").promises;
 const bodyParser = require("body-parser");
 const scoreRouter = require("./routes/score");
 const getScoreRouter = require("./routes/getScore");
@@ -33,6 +34,26 @@ app.use("/", auth);
 app.use("/", pageRouter);
 app.use("/", completedRouter);
 app.use("/", questionsRoute);
+
+async function readFile() {
+  try {
+    const privateKey = await fs.readFile("../../certs/cert.key");
+    const privateKey = await fs.readFile("../../certs/cert.crt");
+  
+} catch (err) {
+console.log(err)
+}
+
+const cert = {
+  key: "",
+  cert: "",
+};
+
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer(cert, app);
+
+httpServer.listen(8080);
+httpsServer.listen(8443);
 
 const PORT = process.env.PORT || 4000;
 
