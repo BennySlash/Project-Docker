@@ -251,9 +251,9 @@ const AdminConsole = () => {
 
       <div className="p-4 sm:ml-64">
         {displayExamsTable && (
-          <div className="flex flex-col p-10">
-            <div className="flex justify-between mb-10">
-              <div className="w-80 flex gap-x-10">
+          <div className="flex flex-col p-10 md:px-5">
+            <div className="flex justify-between mb-10 gap-x-10">
+              <div className="w-80 flex gap-x-10 flex-col-reverse md:flex-row">
                 <Select
                   isClearable
                   // components={{ Control: ControlComponent }}
@@ -286,10 +286,9 @@ const AdminConsole = () => {
                   />
                   <button
                     onClick={getQuizScores}
-                    className="flex items-center gap-x-2  text-white absolute end-2.5 bottom-2.5 bg-gradient-to-tr from-orange-600 to-orange-400 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800"
+                    className="flex items-center text-white absolute end-2.5 bottom-2.5 bg-gradient-to-tr from-orange-600 to-orange-400 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800"
                   >
                     <FaSearch className="text-xs" />
-                    Search
                   </button>
                 </div>
               </div>
