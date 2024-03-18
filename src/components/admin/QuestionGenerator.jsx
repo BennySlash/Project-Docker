@@ -30,7 +30,7 @@ const QuestionGenerator = () => {
 
   const finishExam = async () => {
     await axios
-      .post("http://localhost:4000/api/submit-exam", {
+      .post("https://192.168.5.61:4000/api/submit-exam", {
         questionsArray: questionsArray,
         title: location.state.examName,
       })
@@ -103,7 +103,7 @@ const QuestionGenerator = () => {
             {activeRef.current.includes(item) && (
               <div className="mx-auto flex flex-col text-white gap-y-5 items-center h-12 w-12 rounded-full bg-green-500 p-4">
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns="https://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth="5"

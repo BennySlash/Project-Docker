@@ -74,7 +74,7 @@ function QuizSummary() {
         <div className="rounded-full bg-green-200 p-6">
           <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-500 p-4">
             <svg
-              xmlns="http://www.w3.org/2000/svg"
+              xmlns="https://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth="1.5"
@@ -91,7 +91,7 @@ function QuizSummary() {
         </div>
         <div className="flex justify-evenly items-center w-96 lg:w-1/3 p-3 m-3 border border-gray-300 rounded">
           <svg
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="https://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth="1.5"
@@ -118,7 +118,7 @@ function QuizSummary() {
         <div className="rounded-full bg-green-200 p-6">
           <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-500 p-4">
             <svg
-              xmlns="http://www.w3.org/2000/svg"
+              xmlns="https://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth="1.5"
@@ -135,7 +135,7 @@ function QuizSummary() {
         </div>
         <div className="flex justify-evenly items-center w-96 lg:w-1/3 p-3 m-3 border border-gray-300 rounded">
           <svg
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="https://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth="1.5"
@@ -160,7 +160,7 @@ function QuizSummary() {
     reaction = (
       <div className="flex justify-evenly items-center w-96 lg:w-1/3 p-3 m-3 border border-gray-300 rounded">
         <svg
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth="1.5"
@@ -184,7 +184,7 @@ function QuizSummary() {
     reaction = (
       <div className="flex justify-evenly items-center w-96 lg:w-1/3 p-3 m-3 border border-gray-300 rounded">
         <svg
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth="1.5"
@@ -208,7 +208,7 @@ function QuizSummary() {
     reaction = (
       <div className="flex justify-evenly items-center w-96 lg:w-1/3 p-3 m-3 border border-gray-300 rounded">
         <svg
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth="1.5"
@@ -232,7 +232,7 @@ function QuizSummary() {
   useEffect(() => {
     const endSession = async () => {
       await axios
-        .post("http://localhost:4000/api/endSession", {
+        .post("https://192.168.5.61:4000/api/endSession", {
           user: user.user,
           exam: exam,
         })
@@ -245,7 +245,7 @@ function QuizSummary() {
     };
     const saveScore = async () => {
       await axios
-        .post("http://localhost:4000/api/score", {
+        .post("https://192.168.5.61:4000/api/score", {
           fullName: user.user,
           exam: exam,
           scorePercentage: score.toFixed(0),
@@ -259,7 +259,7 @@ function QuizSummary() {
     };
     const registedCompletedUser = async () => {
       await axios
-        .post("http://localhost:4000/api/completed", {
+        .post("https://192.168.5.61:4000/api/completed", {
           user: user.user,
           exam: exam,
         })

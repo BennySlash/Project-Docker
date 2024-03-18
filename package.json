@@ -9,7 +9,7 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
-  "proxy": "http://localhost:4000",
+  "proxy": "https://192.168.5.61:4000",
   "dependencies": {
     "@iconify/react": "^4.1.1",
     "@mdi/font": "^7.3.67",

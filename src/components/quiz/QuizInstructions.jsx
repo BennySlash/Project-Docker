@@ -21,7 +21,7 @@ const QuizInstruction = () => {
   useEffect(() => {
     const checkUser = async () => {
       await axios
-        .post("http://localhost:4000/api/checkUser", {
+        .post("https://192.168.5.61:4000/api/checkUser", {
           user: user.user,
         })
         .then((res) => {
@@ -57,7 +57,7 @@ const QuizInstruction = () => {
 
     const getExam = async () => {
       await axios
-        .get("http://localhost:4000/api/get-exams")
+        .get("https://192.168.5.61:4000/api/get-exams")
         .then((res) => {
           // console.log(res.data.exam)
           setExamLength(res.data.exam.length);

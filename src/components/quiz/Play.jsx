@@ -17,6 +17,7 @@ function Play() {
   const [numberOfAnsweredQuestion, setNumberOfAnsweredQuestion] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState();
   const [score, setScore] = useState();
+  const scoreRef = useRef(0);
   const [correctAnswers, setCorrectAnswers] = useState(1);
   const [wrongAnswers, setWrongAnswers] = useState(0);
   const [time, setTime] = useState({});
@@ -72,15 +73,16 @@ function Play() {
   };
 
   const displayQuestions = async () => {
-    const res = await axios.post("http://localhost:4000/api/updatePage", {
+    const res = await axios.post("https://192.168.5.61:4000/api/updatePage", {
       currentQuestionIndex,
       user: user.user,
       finished,
-      score,
+      score: scoreRef.current,
       takenRef: takenRef.current,
       skippedRef: skippedRef.current,
     });
 
+    console.log(scoreRef);
     // console.log(sessionRef.current);
     // console.log(`currentQuestionIndex: ${currentQuestionIndex}`);
     // console.log(`currentQuestion: ${currentQuestion}`);
@@ -140,6 +142,7 @@ function Play() {
     });
 
     setScore((prevState) => prevState + 1);
+    scoreRef.current = scoreRef.current + 1;
     setCorrectAnswers((prevState) => prevState + 1);
     setCurrentQuestionIndex((prevState) => prevState + 1);
     setNumberOfAnsweredQuestion((prevState) => prevState + 1);
@@ -168,7 +171,9 @@ function Play() {
         setCurrentQuestionIndex((prevState) => prevState - 1);
         setCorrectAnswers((prevState) => prevState);
         setWrongAnswers((prevState) => prevState);
-        setScore((prevState) => prevState + 1);
+        // setScore((prevState) => prevState + 1);
+        // scoreRef.current = scoreRef.current + 1;
+
         displayQuestions();
       }
     } else {
@@ -210,6 +215,8 @@ function Play() {
         setCorrectAnswers((prevState) => prevState);
         setWrongAnswers((prevState) => prevState);
         setScore((prevState) => prevState);
+        scoreRef.current = scoreRef.current;
+
         displayQuestions();
       }
     } else {
@@ -366,7 +373,7 @@ function Play() {
   const endQuiz = async () => {
     alert("Quiz has Ended.");
     setFinished(true);
-    const res = await axios.post("http://localhost:4000/api/updatePage", {
+    const res = await axios.post("https://192.168.5.61:4000/api/updatePage", {
       currentQuestionIndex,
       currentQuestion,
       nextQuestion,
@@ -378,7 +385,7 @@ function Play() {
     });
 
     const playerStats = {
-      score,
+      score: scoreRef.current,
       numberOfQuestions: questionsData.length,
       correctAnswers,
       wrongAnswers,
@@ -438,7 +445,7 @@ function Play() {
   // }
   const getSesison = async () => {
     const fetchSession = await axios.post(
-      "http://localhost:4000/api/checkSession",
+      "https://192.168.5.61:4000/api/checkSession",
       {
         user: user.user,
       }
@@ -455,7 +462,7 @@ function Play() {
     } else {
       // console.log(false);
 
-      const res = await axios.post("http://localhost:4000/api/updatePage", {
+      const res = await axios.post("https://192.168.5.61:4000/api/updatePage", {
         user: user.user,
         currentQuestionIndex,
         finished,
@@ -490,7 +497,7 @@ function Play() {
   useEffect(() => {
     const getExam = async () => {
       await axios
-        .get("http://localhost:4000/api/get-exams")
+        .get("https://192.168.5.61:4000/api/get-exams")
         .then((res) => {
           const exams = res.data.exam;
           const exam = exams.find((obj) => obj.title === location.state.exam);
@@ -533,7 +540,7 @@ function Play() {
                 <div className="rounded-full bg-green-200 p-2 w-max mx-auto">
                   <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-500 p-4">
                     <svg
-                      xmlns="http://www.w3.org/2000/svg"
+                      xmlns="https://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
                       strokeWidth="1.5"

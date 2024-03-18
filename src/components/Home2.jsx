@@ -16,7 +16,7 @@ const Home2 = () => {
 
   // const onsubmit = async (email, name) => {
   //   // console.log(email);
-  //   const res = await axios.post("http://localhost:4000/api/signup", {
+  //   const res = await axios.post("httpss://192.168.5.61 :4000/api/signup", {
   //     email,
   //     name,
   //   });
@@ -29,7 +29,7 @@ const Home2 = () => {
   // const handleSubmit = async (event) => {
   //   event.preventDefault();
   //   const res = await axios
-  //     .post("http://localhost:4000/api/login", {
+  //     .post("httpss://192.168.5.61:4000/api/login", {
   //       typed,
   //     })
   //     .then((res) => {
@@ -62,7 +62,7 @@ const Home2 = () => {
   const getAuthData = async () => {
     await signInWithPopup(auth, provider)
       .then((result) => {
-        console.log(result.user.displayName);
+        // console.log(result.user.displayName);
         const user = {
           user: result?.user?.displayName,
           email: result?.user?.email,
@@ -70,11 +70,11 @@ const Home2 = () => {
 
         (async function () {
           await axios
-            .post("http://localhost:4000/api/login", {
+            .post("https://192.168.5.61:4000/api/login", {
               email: result.user.email,
             })
             .then((res) => {
-              console.log(res.data.activeEmployee[0].firstName);
+              // console.log(res.data.activeEmployee[0].firstName);
               if (res.data.activeEmployee.length === 0) {
                 M.toast({
                   html: "please Sign In using your Gebeya Email",

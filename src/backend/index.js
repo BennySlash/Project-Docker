@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const fs = require("fs").promises;
+const fs = require("fs");
 const bodyParser = require("body-parser");
 const scoreRouter = require("./routes/score");
 const getScoreRouter = require("./routes/getScore");
@@ -9,6 +9,7 @@ const auth = require("./routes/auth");
 const completedRouter = require("./routes/completed");
 const questionsRoute = require("./routes/questions");
 const mongoose = require("mongoose");
+const https = require("https");
 
 const MONGO_URI =
   "mongodb+srv://biniyamayele:Testing1234@cluster0.xl8ulig.mongodb.net/Gebeya";
@@ -35,25 +36,18 @@ app.use("/", pageRouter);
 app.use("/", completedRouter);
 app.use("/", questionsRoute);
 
-async function readFile() {
-  try {
-    const privateKey = await fs.readFile("../../certs/cert.key");
-    const privateKey = await fs.readFile("../../certs/cert.crt");
-  
-} catch (err) {
-console.log(err)
-}
-
+const privateKey = fs.readFileSync("../../certs/cert.key");
+const privateCert = fs.readFileSync("../../certs/cert.crt");
 const cert = {
-  key: "",
-  cert: "",
+  key: privateKey,
+  cert: privateCert,
 };
-
-const httpServer = http.createServer(app);
+//
+// const httpServer = http.createServer(app);
 const httpsServer = https.createServer(cert, app);
 
-httpServer.listen(8080);
-httpsServer.listen(8443);
+// httpServer.listen(4000);
+// httpsServer.listen(4000);
 
 const PORT = process.env.PORT || 4000;
 
@@ -69,6 +63,10 @@ mongoose
     console.error("Error connecting to MongoDB:", error);
   });
 
-app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
+// app.listen(PORT, () => {
+//   console.log(`Server is listening on port ${PORT}`);
+// });
+
+httpsServer.listen(PORT, () => {
+  console.log("server running");
 });

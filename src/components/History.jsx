@@ -84,7 +84,7 @@ const History = () => {
 
   const getExamTitle = async () => {
     await axios
-      .post("http://localhost:4000/api/checkUser", { user: user.user })
+      .post("https://192.168.5.61:4000/api/checkUser", { user: user.user })
       .then((res) => {
         // console.log(completedLength);
         setCompletedLength(res.data.user.length);
@@ -108,7 +108,7 @@ const History = () => {
 
   const getExam = async () => {
     await axios
-      .get("http://localhost:4000/api/get-exams")
+      .get("https://192.168.5.61:4000/api/get-exams")
       .then((res) => {
         // console.log(res);
         const exams = res.data.exam;

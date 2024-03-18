@@ -8,14 +8,15 @@
   }
 
   .buttons {
-    width: 50%;
-    min-height: auto;
-    font-size: 14px;
-    row-gap: 5px !important;
     align-items: center;
     flex-direction: column;
     align-items: center;
 
+    div {
+      width: 100%;
+      // display: flex;
+      height: fit-content;
+    }
     button {
       align-self: flex-end;
       margin-block-start: 20px;
