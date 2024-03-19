@@ -130,13 +130,14 @@ const QuizInstruction = () => {
         </p>
 
         <div className="px-10 mt-10 flex justify-center">
-          <div className="buttons justify-center flex gap-x-20">
-            <div className="w-80 flex gap-x-10 h-fit">
+          <div className="buttons justify-center flex gap-x-20 mb-10">
+            <div className="w-80 flex gap-x-10 h-fit mb-10">
               <Select
                 isClearable
                 // components={{ Control: ControlComponent }}
                 isSearchable
                 name="color"
+                maxMenuHeight={150}
                 onChange={(res) => {
                   setLabel(res.label);
                   labelRef.current = res.label;

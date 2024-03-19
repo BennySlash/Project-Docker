@@ -140,6 +140,7 @@ const History = () => {
           // components={{ Control: ControlComponent }}
           isSearchable
           name="color"
+          maxMenuHeight={150}
           onChange={(res) => {
             setTitle(res.label);
           }}
