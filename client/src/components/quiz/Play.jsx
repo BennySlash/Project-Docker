@@ -73,7 +73,7 @@ function Play() {
   };
 
   const displayQuestions = async () => {
-    const res = await axios.post("https://192.168.5.61:4000/api/updatePage", {
+    const res = await axios.post("api/updatePage", {
       currentQuestionIndex,
       user: user.user,
       finished,
@@ -373,7 +373,7 @@ function Play() {
   const endQuiz = async () => {
     alert("Quiz has Ended.");
     setFinished(true);
-    const res = await axios.post("https://192.168.5.61:4000/api/updatePage", {
+    const res = await axios.post("api/updatePage", {
       currentQuestionIndex,
       currentQuestion,
       nextQuestion,
@@ -444,12 +444,9 @@ function Play() {
   //   return <>Loading...</>;
   // }
   const getSesison = async () => {
-    const fetchSession = await axios.post(
-      "https://192.168.5.61:4000/api/checkSession",
-      {
-        user: user.user,
-      }
-    );
+    const fetchSession = await axios.post("api/checkSession", {
+      user: user.user,
+    });
     const fetchedSession = fetchSession.data.liveSession;
     // console.log(fetchedSession);
     sessionRef.current = [...sessionRef.current, fetchedSession];
@@ -462,7 +459,7 @@ function Play() {
     } else {
       // console.log(false);
 
-      const res = await axios.post("https://192.168.5.61:4000/api/updatePage", {
+      const res = await axios.post("api/updatePage", {
         user: user.user,
         currentQuestionIndex,
         finished,
@@ -497,7 +494,7 @@ function Play() {
   useEffect(() => {
     const getExam = async () => {
       await axios
-        .get("https://192.168.5.61:4000/api/get-exams")
+        .get("api/get-exams")
         .then((res) => {
           const exams = res.data.exam;
           const exam = exams.find((obj) => obj.title === location.state.exam);
@@ -540,7 +537,7 @@ function Play() {
                 <div className="rounded-full bg-green-200 p-2 w-max mx-auto">
                   <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-500 p-4">
                     <svg
-                      xmlns="https://www.w3.org/2000/svg"
+                      xmlns="g"
                       fill="none"
                       viewBox="0 0 24 24"
                       strokeWidth="1.5"

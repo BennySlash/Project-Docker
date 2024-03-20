@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "https://192.168.5.61:4000/api";
+const BASE_URL = "api";
 
 export async function sendDataToServer(body) {
   try {

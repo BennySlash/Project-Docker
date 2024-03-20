@@ -28,7 +28,7 @@ const AdminConsole = () => {
 
   const retrieveEmailList = async () => {
     await axios
-      .get("https://192.168.5.61:4000/api/users")
+      .get("api/users")
       .then((res) => {
         setUsers(res.data);
       })
@@ -41,7 +41,7 @@ const AdminConsole = () => {
     setDisplayExamsTable(true);
 
     await axios
-      .get("https://192.168.5.61:4000/api/get-exams")
+      .get("api/get-exams")
       .then((res) => {
         setExamLength(res.data.exam.length);
         const linksArray = Array.from(
@@ -145,7 +145,7 @@ const AdminConsole = () => {
 
   const getQuizScores = async () => {
     await axios
-      .get("https://192.168.5.61:4000/employee-score")
+      .get("employee-score")
       .then((res) => {
         setEmployeeScore(res.data);
 
@@ -159,7 +159,7 @@ const AdminConsole = () => {
 
   const fetchData = async () => {
     await axios
-      .get("https://192.168.5.61:4000/employee-score")
+      .get("employee-score")
       .then((res) => {
         setResults(res.data);
       })
@@ -193,7 +193,7 @@ const AdminConsole = () => {
           aria-hidden="true"
           fill="currentColor"
           viewBox="0 0 20 20"
-          xmlns="https://www.w3.org/2000/svg"
+          xmlns="g"
         >
           <path
             clipRule="evenodd"

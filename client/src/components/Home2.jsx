@@ -16,7 +16,7 @@ const Home2 = () => {
 
   // const onsubmit = async (email, name) => {
   //   // console.log(email);
-  //   const res = await axios.post("httpss://192.168.5.61 :4000/api/signup", {
+  //   const res = await axios.post(00/api/signup", {
   //     email,
   //     name,
   //   });
@@ -29,7 +29,7 @@ const Home2 = () => {
   // const handleSubmit = async (event) => {
   //   event.preventDefault();
   //   const res = await axios
-  //     .post("httpss://192.168.5.61:4000/api/login", {
+  //     .post(0/api/login", {
   //       typed,
   //     })
   //     .then((res) => {
@@ -70,7 +70,7 @@ const Home2 = () => {
 
         (async function () {
           await axios
-            .post("https://192.168.5.61:4000/api/login", {
+            .post("api/login", {
               email: result.user.email,
             })
             .then((res) => {

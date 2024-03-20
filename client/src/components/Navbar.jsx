@@ -15,7 +15,7 @@ const Navbar = ({ linksArray }) => {
 
   (async function () {
     await axios
-      .post("https://192.168.5.61:4000/api/login", {
+      .post("api/login", {
         email: user.email,
       })
       .then((res) => {
@@ -96,7 +96,7 @@ const Navbar = ({ linksArray }) => {
           <svg
             className="w-5 h-5"
             aria-hidden="true"
-            xmlns="https://www.w3.org/2000/svg"
+            xmlns="g"
             fill="none"
             viewBox="0 0 17 14"
           >

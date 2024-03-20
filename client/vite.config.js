@@ -8,6 +8,7 @@ export default defineConfig({
       key: "./certs/cert.key",
       cert: "./certs/cert.crt",
     },
+    host: true,
   },
   plugins: [react()],
 });

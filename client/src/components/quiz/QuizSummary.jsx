@@ -232,7 +232,7 @@ function QuizSummary() {
   useEffect(() => {
     const endSession = async () => {
       await axios
-        .post("https://192.168.5.61:4000/api/endSession", {
+        .post("api/endSession", {
           user: user.user,
           exam: exam,
         })
@@ -245,7 +245,7 @@ function QuizSummary() {
     };
     const saveScore = async () => {
       await axios
-        .post("https://192.168.5.61:4000/api/score", {
+        .post("api/score", {
           fullName: user.user,
           exam: exam,
           scorePercentage: score.toFixed(0),
@@ -259,7 +259,7 @@ function QuizSummary() {
     };
     const registedCompletedUser = async () => {
       await axios
-        .post("https://192.168.5.61:4000/api/completed", {
+        .post("api/completed", {
           user: user.user,
           exam: exam,
         })
