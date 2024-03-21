@@ -10,6 +10,6 @@ router.get("/api/users", (req, res) => {
   res.send(employeeEmails);
 });
 
-router.route("/api/score").post(createScore);
+router.route("/score").post(createScore);
 
 module.exports = router;

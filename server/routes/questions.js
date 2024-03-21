@@ -7,8 +7,8 @@ const {
 
 const router = express.Router();
 
-router.route("/api/submit-exam").post(createExams);
+router.route("/submit-exam").post(createExams);
 // router.route("/api/question-file").post(fileExam);
-router.route("/api/get-exams").get(getExam);
+router.route("/get-exams").get(getExam);
 
 module.exports = router;

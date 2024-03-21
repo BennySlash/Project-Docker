@@ -36,15 +36,15 @@ app.use("/", pageRouter);
 app.use("/", completedRouter);
 app.use("/", questionsRoute);
 
-const privateKey = fs.readFileSync("../../certs/cert.key");
-const privateCert = fs.readFileSync("../../certs/cert.crt");
-const cert = {
-  key: privateKey,
-  cert: privateCert,
-};
-//
+// const privateKey = fs.readFileSync("./certs/cert.key");
+// const privateCert = fs.readFileSync("./certs/cert.crt");
+// const cert = {
+//   key: privateKey,
+//   cert: privateCert,
+// };
+
 // const httpServer = http.createServer(app);
-const httpsServer = https.createServer(cert, app);
+// const httpsServer = https.createServer(cert, app);
 
 // httpServer.listen(4000);
 // httpsServer.listen(4000);
@@ -63,10 +63,9 @@ mongoose
     console.error("Error connecting to MongoDB:", error);
   });
 
-// app.listen(PORT, () => {
-//   console.log(`Server is listening on port ${PORT}`);
-// });
-
-httpsServer.listen(PORT, () => {
-  console.log("server running");
+app.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
 });
+// httpsServer.listen(PORT, () => {
+//   console.log("server running");
+// });
